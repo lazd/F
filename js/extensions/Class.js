@@ -151,6 +151,12 @@ function Class(config) {
 	
 	// Create a chained construct function which calls the superclass' construct function
 	prototype.construct = function() {
+		// Add a blank object as the first arg to the constructor, if none provided
+		if (arguments[0] === undefined) {
+			arguments.length = 1;
+			arguments[0] = {};
+		}
+		
 		// call superclass constructor
 		if (extend && extend.prototype && typeof extend.prototype.construct === 'function') {
 			extend.prototype.construct.apply(this, arguments);			

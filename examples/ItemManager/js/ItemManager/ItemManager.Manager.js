@@ -21,8 +21,6 @@ ItemManager.Manager = new Class({
 	}),
 	
 	construct: function(config) {
-		config = config || {};
-		
 		// Hold the listItem and model associated with the currently selected item
 		this.selectedItem = null;
 		
