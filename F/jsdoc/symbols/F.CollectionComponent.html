@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - F.ModelComponent</title>
+		<title>JsDoc Reference - F.CollectionComponent</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -214,7 +214,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class F.ModelComponent
+				Class F.CollectionComponent
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -227,13 +227,13 @@ ul.inheritsList
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.ModelComponent.js.html">F.ModelComponent.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.CollectionComponent.js.html">F.CollectionComponent.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.ModelComponent.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.CollectionComponent.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -246,9 +246,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.ModelComponent.html#constructor">F.ModelComponent</a></b>()
+								<b><a href="../symbols/F.CollectionComponent.html#constructor">F.CollectionComponent</a></b>()
 							</div>
-							<div class="description">A component that can load and render a model</div>
+							<div class="description">A component that can load and render a collection</div>
 						</td>
 					</tr>
 				</tbody>
@@ -262,7 +262,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.ModelComponent.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.CollectionComponent.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -275,36 +275,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#load">load</a></b>(itemIdOrModel, callback)
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#loadCollection">loadCollection</a></b>(fetchParams, callback)
 								</div>
-								<div class="description">Load an item's model by ID or by model</div>
+								<div class="description">Fetch the collection with optional</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#refresh">refresh</a></b>(Callback)
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#refresh">refresh</a></b>(callback)
 								</div>
-								<div class="description">Refresh the model</div>
+								<div class="description">Refresh this collection with the last parameters used</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#save">save</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#show">show</a></b>(options)
 								</div>
-								<div class="description">Save a model to the server</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#show">show</a></b>(options)
-								</div>
-								<div class="description">Show this component, optionally fetching an item by ID or assiging a new model before render</div>
+								<div class="description">Show this component.</div>
 							</td>
 						</tr>
 					
@@ -329,11 +320,11 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.ModelComponent</b>()
+						<b>F.CollectionComponent</b>()
 				</div>
 				
 				<div class="description">
-					A component that can load and render a model
+					A component that can load and render a collection
 					
 				</div>
 				
@@ -360,15 +351,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="load"> </a>
+					<a name="loadCollection"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>load</b>(itemIdOrModel, callback)
+					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
+					<b>loadCollection</b>(fetchParams, callback)
 					
 					</div>
 					<div class="description">
-						Load an item's model by ID or by model
+						Fetch the collection with optional
 						
 						
 					</div>
@@ -380,16 +371,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>itemIdOrModel</b>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>fetchParams</b>
 									
 								</dt>
-								<dd>ID of the item to fetch or already fetched model</dd>
+								<dd>Optional parameters to pass when fetching</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Function}</span> <b>callback</b>
 									
 								</dt>
-								<dd>Callback to execute on successful fetch</dd>
+								<dd>Optional callback to execute on successful fetch</dd>
 							
 							</dl>
 						
@@ -400,7 +391,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -412,55 +403,12 @@ ul.inheritsList
 					<a name="refresh"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>refresh</b>(Callback)
+					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
+					<b>refresh</b>(callback)
 					
 					</div>
 					<div class="description">
-						Refresh the model
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Function}</span> <b>Callback</b>
-									
-								</dt>
-								<dd>to call after successful refresh</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="save"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>save</b>(callback)
-					
-					</div>
-					<div class="description">
-						Save a model to the server
+						Refresh this collection with the last parameters used
 						
 						
 					</div>
@@ -475,7 +423,7 @@ ul.inheritsList
 									<span class="light fixedFont">{Function}</span> <b>callback</b>
 									
 								</dt>
-								<dd>Callback to execute on successful fetch</dd>
+								<dd>Optional callback to execute on successful fetch</dd>
 							
 							</dl>
 						
@@ -486,7 +434,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -498,12 +446,12 @@ ul.inheritsList
 					<a name="show"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
+					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
 					<b>show</b>(options)
 					
 					</div>
 					<div class="description">
-						Show this component, optionally fetching an item by ID or assiging a new model before render
+						Show this component. Optionally options.params to fetch with new parameters. Will fetch if collection has not already been fetched
 						
 						
 					</div>
@@ -518,7 +466,7 @@ ul.inheritsList
 									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>Pass fetch parameters with options.params</dd>
 							
 							</dl>
 						
@@ -529,7 +477,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -550,7 +498,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:30:59 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:38:58 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

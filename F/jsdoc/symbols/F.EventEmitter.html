@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - F.CollectionComponent</title>
+		<title>JsDoc Reference - F.EventEmitter</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -214,26 +214,24 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class F.CollectionComponent
+				Class F.EventEmitter
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
-				<br />Extends
-					<a href="../symbols/F.Component.html">F.Component</a>.<br />
 				
 			
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.CollectionComponent.js.html">F.CollectionComponent.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.EventEmitter.js.html">F.EventEmitter.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.CollectionComponent.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.EventEmitter.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -246,9 +244,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.CollectionComponent.html#constructor">F.CollectionComponent</a></b>()
+								<b><a href="../symbols/F.EventEmitter.html#constructor">F.EventEmitter</a></b>()
 							</div>
-							<div class="description">A component that can load and render a collection</div>
+							<div class="description">Provides observer pattern for basic eventing</div>
 						</td>
 					</tr>
 				</tbody>
@@ -262,7 +260,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.CollectionComponent.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.EventEmitter.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -273,29 +271,38 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#loadCollection">loadCollection</a></b>(fetchParams, callback)
+								<div class="fixedFont">F.EventEmitter.<b><a href="../symbols/F.EventEmitter.html#.mixin">mixin</a></b>(destObject)
 								</div>
-								<div class="description">Fetch the collection with optional</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#refresh">refresh</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#off">off</a></b>(evt, func)
 								</div>
-								<div class="description">Refresh this collection with the last parameters used</div>
+								<div class="description">Remove en event listener</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#show">show</a></b>(options)
+								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#on">on</a></b>(evt, func)
 								</div>
-								<div class="description">Show this component.</div>
+								<div class="description">Attach en event listener</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#trigger">trigger</a></b>(evt, args)
+								</div>
+								<div class="description">Trigger an event</div>
 							</td>
 						</tr>
 					
@@ -303,10 +310,6 @@ ul.inheritsList
 				</table>
 				
 				
-				
-				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
-				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
@@ -320,11 +323,11 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.CollectionComponent</b>()
+						<b>F.EventEmitter</b>()
 				</div>
 				
 				<div class="description">
-					A component that can load and render a collection
+					Provides observer pattern for basic eventing
 					
 				</div>
 				
@@ -351,15 +354,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="loadCollection"> </a>
-					<div class="fixedFont">
+					<a name=".mixin"> </a>
+					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
-					<b>loadCollection</b>(fetchParams, callback)
+					
+					<span class="light">F.EventEmitter.</span><b>mixin</b>(destObject)
 					
 					</div>
 					<div class="description">
-						Fetch the collection with optional
+						
 						
 						
 					</div>
@@ -371,16 +374,52 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>fetchParams</b>
+									<b>destObject</b>
 									
 								</dt>
-								<dd>Optional parameters to pass when fetching</dd>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="off"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
+					<b>off</b>(evt, func)
+					
+					</div>
+					<div class="description">
+						Remove en event listener
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
 									
 								</dt>
-								<dd>Optional callback to execute on successful fetch</dd>
+								<dd>Name of event that function is bound to</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>func</b>
+									
+								</dt>
+								<dd>Bound function</dd>
 							
 							</dl>
 						
@@ -391,7 +430,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -400,15 +439,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="refresh"> </a>
+					<a name="on"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
-					<b>refresh</b>(callback)
+					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
+					<b>on</b>(evt, func)
 					
 					</div>
 					<div class="description">
-						Refresh this collection with the last parameters used
+						Attach en event listener
 						
 						
 					</div>
@@ -420,10 +459,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
 									
 								</dt>
-								<dd>Optional callback to execute on successful fetch</dd>
+								<dd>Name of event to listen to</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>func</b>
+									
+								</dt>
+								<dd>Function to execute</dd>
 							
 							</dl>
 						
@@ -434,7 +479,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -443,15 +488,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="show"> </a>
+					<a name="trigger"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
-					<b>show</b>(options)
+					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
+					<b>trigger</b>(evt, args)
 					
 					</div>
 					<div class="description">
-						Show this component. Optionally options.params to fetch with new parameters. Will fetch if collection has not already been fetched
+						Trigger an event
 						
 						
 					</div>
@@ -463,10 +508,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
 									
 								</dt>
-								<dd>Pass fetch parameters with options.params</dd>
+								<dd>Name of event to trigger</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Arguments}</span> <b>args</b>
+									
+								</dt>
+								<dd>Additional arguments are passed to the listener functions</dd>
 							
 							</dl>
 						
@@ -477,7 +528,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -498,7 +549,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:30:59 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:38:59 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

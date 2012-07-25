@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - F.EventEmitter</title>
+		<title>JsDoc Reference - F.View</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -214,24 +214,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class F.EventEmitter
+				Class F.View
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
+				<br />Extends
+					Backbone.View.<br />
 				
 			
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.EventEmitter.js.html">F.EventEmitter.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.View.js.html">F.View.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.EventEmitter.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.View.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -244,9 +246,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.EventEmitter.html#constructor">F.EventEmitter</a></b>()
+								<b><a href="../symbols/F.View.html#constructor">F.View</a></b>()
 							</div>
-							<div class="description">Provides observer pattern for basic eventing</div>
+							<div class="description">Generic view class.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -260,7 +262,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.EventEmitter.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.View.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -271,38 +273,56 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">F.EventEmitter.<b><a href="../symbols/F.EventEmitter.html#.mixin">mixin</a></b>(destObject)
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#age">age</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Get the age of this view; how many seconds since it was last rendered</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#off">off</a></b>(evt, func)
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#delegateEvents">delegateEvents</a></b>(events)
 								</div>
-								<div class="description">Remove en event listener</div>
+								<div class="description">Delegate events to this view.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#on">on</a></b>(evt, func)
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#hide">hide</a></b>()
 								</div>
-								<div class="description">Attach en event listener</div>
+								<div class="description">Hide the view</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#trigger">trigger</a></b>(evt, args)
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#render">render</a></b>()
 								</div>
-								<div class="description">Trigger an event</div>
+								<div class="description">Render the view</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#renderOnce">renderOnce</a></b>()
+								</div>
+								<div class="description">Render the view only if it has not been rendered before (or has been reset)</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.View.html#show">show</a></b>()
+								</div>
+								<div class="description">Show the view, rendering the template if necessary</div>
 							</td>
 						</tr>
 					
@@ -323,11 +343,11 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.EventEmitter</b>()
+						<b>F.View</b>()
 				</div>
 				
 				<div class="description">
-					Provides observer pattern for basic eventing
+					Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 					
 				</div>
 				
@@ -354,15 +374,47 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".mixin"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="age"> </a>
+					<div class="fixedFont">
 					
-					
-					<span class="light">F.EventEmitter.</span><b>mixin</b>(destObject)
+					<span class="light">{number}</span>
+					<b>age</b>()
 					
 					</div>
 					<div class="description">
+						Get the age of this view; how many seconds since it was last rendered
 						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> Number of miliseconds since this view was rendered</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="delegateEvents"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.View.html">F.View</a>}</span>
+					<b>delegateEvents</b>(events)
+					
+					</div>
+					<div class="description">
+						Delegate events to this view. This overrides Backbone.View.delegateEvents and lets us specify an object to call methods on instead of the view
 						
 						
 					</div>
@@ -374,7 +426,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>destObject</b>
+									<span class="light fixedFont">{Events hash to delegate}</span> <b>events</b>
 									
 								</dt>
 								<dd></dd>
@@ -385,52 +437,10 @@ ul.inheritsList
 						
 						
 						
-						
-						
-
-					<hr />
-				
-					<a name="off"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>off</b>(evt, func)
-					
-					</div>
-					<div class="description">
-						Remove en event listener
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
-									
-								</dt>
-								<dd>Name of event that function is bound to</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Function}</span> <b>func</b>
-									
-								</dt>
-								<dd>Bound function</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.View.html">F.View</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -439,38 +449,21 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="on"> </a>
+					<a name="hide"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>on</b>(evt, func)
+					<span class="light">{<a href="../symbols/F.View.html">F.View</a>}</span>
+					<b>hide</b>()
 					
 					</div>
 					<div class="description">
-						Attach en event listener
+						Hide the view
 						
 						
 					</div>
 					
 					
 					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
-									
-								</dt>
-								<dd>Name of event to listen to</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Function}</span> <b>func</b>
-									
-								</dt>
-								<dd>Function to execute</dd>
-							
-							</dl>
 						
 						
 						
@@ -479,7 +472,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.View.html">F.View</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -488,38 +481,21 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="trigger"> </a>
+					<a name="render"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>trigger</b>(evt, args)
+					<span class="light">{<a href="../symbols/F.View.html">F.View</a>}</span>
+					<b>render</b>()
 					
 					</div>
 					<div class="description">
-						Trigger an event
+						Render the view
 						
 						
 					</div>
 					
 					
 					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>evt</b>
-									
-								</dt>
-								<dd>Name of event to trigger</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Arguments}</span> <b>args</b>
-									
-								</dt>
-								<dd>Additional arguments are passed to the listener functions</dd>
-							
-							</dl>
 						
 						
 						
@@ -528,7 +504,71 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/F.View.html">F.View</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="renderOnce"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.View.html">F.View</a>}</span>
+					<b>renderOnce</b>()
+					
+					</div>
+					<div class="description">
+						Render the view only if it has not been rendered before (or has been reset)
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.View.html">F.View</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="show"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.View.html">F.View</a>}</span>
+					<b>show</b>()
+					
+					</div>
+					<div class="description">
+						Show the view, rendering the template if necessary
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.View.html">F.View</a>}</span> this, chainable</dd>
 							
 							</dl>
 						
@@ -549,7 +589,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:30:59 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:38:59 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>
