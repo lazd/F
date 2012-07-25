@@ -54,30 +54,6 @@ F.ModelComponent = new Class({
 	},
 		
 	/**
-	 * Save a model to the server
-	 *
-	 * @param {Function} callback	Callback to execute on successful fetch
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
-	save: function(callback) {
-		if (this.model) {
-			this.model.save({
-				success: function() {
-					if (typeof callback === 'function')
-						callback.call(this, this.model);
-
-					this.trigger('saved');
-				}.bind(this)
-			});
-		}
-		else {
-			console.warn('%s: Cannot save, model is not truthy', this.toString());
-		}
-		return this;
-	},
-	
-	/**
 	 * Load an item's model by ID or by model
 	 *
 	 * @param {Function} itemIdOrModel	ID of the item to fetch or already fetched model
@@ -118,6 +94,35 @@ F.ModelComponent = new Class({
 	},
 	
 	/**
+	 * Save a model to the server
+	 *
+	 * @param {Function} callback	Callback to execute on successful fetch
+	 *
+	 * @returns {F.ModelComponent}	this, chainable
+	 */
+	save: function(callback) {
+		if (this.model) {
+			this.model.save({
+				success: function() {
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+
+					this.trigger('saved');
+				}.bind(this),
+				error: function() {
+					// TBD: add meaningful data to event properties
+					console.warn('%s: Error saving model', this);
+					this.trigger('saveFailed', model);
+				}.bind(this)
+			});
+		}
+		else {
+			console.warn('%s: Cannot save, model is not truthy', this);
+		}
+		return this;
+	},
+	
+	/**
 	 * Show this component, optionally fetching an item by ID or assiging a new model before render
 	 *
 	 * @param {Object} options
@@ -128,19 +133,19 @@ F.ModelComponent = new Class({
 		options = options || {};
 		if (options.id) {
 			if (F.options.debug) {
-				console.log('ModelComponent %s: fetching item with ID %s', this.toString(), options.id);
+				console.log('%s: fetching item with ID %s', this, options.id);
 			}
 			
 			// Load the model by itemId, then show
 			this.load(options.id, function(model) {
 				if (F.options.debug) {
-					console.log('ModelComponent %s: fetch complete!', this.toString());
+					console.log('%s: fetch complete!', this);
 				}
 				this.show(); // pass nothing to show and the view will re-render
 			});
 		}
 		else if (options.model) {
-			console.log('ModelComponent %s: showing with new model', this.toString(), options.model);
+			console.log('%s: showing with new model', this, options.model);
 			this._setModel(options.model);
 			this.show();
 		}

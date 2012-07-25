@@ -8,8 +8,9 @@ js/F/F.js
 js/F/F.EventEmitter.js
 js/F/F.View.js
 js/F/F.Component.js
-js/F/F.ModelComponent.js
-js/F/F.CollectionComponent.js
+js/F/components/F.ModelComponent.js
+js/F/components/F.CollectionComponent.js
+js/F/components/F.FormComponent.js
 "
 
 if [ ! -e build ]; then
@@ -38,6 +39,11 @@ cat $includeOrder > build/js/F.js
 for example in examples/*; do
 	# Copy example files
 	cp -R $example build/examples/
+	
+	# Make sure it has a JS folder
+	if [ ! -e build/$example/js/ ]; then
+		mkdir -p build/$example/js/ 
+	fi
 	
 	# Copy F.js
 	cp build/js/F.js build/$example/js/ 
