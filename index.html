@@ -80,79 +80,79 @@
 <h3>2. Build your components</h3>
 <p>Anything that needs a model, view, or controller can be a component.</p>
 <code class="prettyprint">app.Welcome = new Class({
-toString: 'Welcome',
-extend: F.Component,
-construct: function(options) {
-	_.extend(options, {
-		// Render this component with our template
-		template: this.ItemTemplate,
-		// Let events call this component's methods
-		component: this
-	});
+	toString: 'Welcome',
+	extend: F.Component,
+	construct: function(options) {
+		_.extend(options, {
+			// Render this component with our template
+			template: this.ItemTemplate,
+			// Let events call this component's methods
+			component: this
+		});
 
-	// Create your view, no need to render!
-	this.view = new F.View(options);
-},
+		// Create your view, no need to render!
+		this.view = new F.View(options);
+	},
 
-// Store templates and events here so they can be overridden
-Template: Handlebars.compile(
-	'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
-	'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
-),
-events: {
-	'click .sayHi': 'sayHi'
-},
+	// Store templates and events here so they can be overridden
+	Template: Handlebars.compile(
+		'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
+		'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
+	),
+	events: {
+		'click .sayHi': 'sayHi'
+	},
 
-// Define your methods
-sayHi: function() {
-	alert(this.toString()+' says hi!');
-}
+	// Define your methods
+	sayHi: function() {
+		alert(this.toString()+' says hi!');
+	}
 });</code>
 
 <h3>3. Setup your app</h3>
 <p>Your app is just another component.</p>
 <code class="prettyprint">app.Main = new Class({
-toString: 'Main',
-extend: F.Component,
-options: {
-	visible: true
-},
-construct: function(options) {
-	// Config is always passed to the constructor
-	console.log('%s: started. Options:', this, options);
+	toString: 'Main',
+	extend: F.Component,
+	options: {
+		visible: true
+	},
+	construct: function(options) {
+		// Config is always passed to the constructor
+		console.log('%s: started. Options:', this, options);
 
-	_.extend(options, {
-		// Add this component to body of the page
-		parent: document.body,
-		// Render this component with our template
-		template: this.Template,
-		// Let events call this component's methods
-		component: this
-	});
+		_.extend(options, {
+			// Add this component to body of the page
+			parent: document.body,
+			// Render this component with our template
+			template: this.Template,
+			// Let events call this component's methods
+			component: this
+		});
 
-	// Create a view for the app
-	// Render right away if you use selectors below
-	this.view = new F.View(options).render();
+		// Create a view for the app
+		// Render right away if you use selectors below
+		this.view = new F.View(options).render();
 
-	// Add your components
-	this.addComponent(new app.Welcome({
-		// show the component immediately
-		visible: true,
-		// add the sub-component to the div.welcome element
-		parent: this.view.$('.welcome')
-	}));
-},
-destruct: function() {
-	// Superclass destructors are called for you, and F
-	// will call destruct() on all your components for you
-	console.log('%s: shutting down', this.toString());
-},
+		// Add your components
+		this.addComponent(new app.Welcome({
+			// show the component immediately
+			visible: true,
+			// add the sub-component to the div.welcome element
+			parent: this.view.$('.welcome')
+		}));
+	},
+	destruct: function() {
+		// Superclass destructors are called for you, and F
+		// will call destruct() on all your components for you
+		console.log('%s: shutting down', this.toString());
+	},
 
-// tore the template in the prototype so it can be overridden
-Template: Handlebars.compile(
-	'&lt;h1&gt;Killer App&lt;/h1&gt;'+
-	'&lt;div class="welcome"&gt;&lt;/div&gt;'
-)
+	// tore the template in the prototype so it can be overridden
+	Template: Handlebars.compile(
+		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
+		'&lt;div class="welcome"&gt;&lt;/div&gt;'
+	)
 });</code>
 	
 <h3>3. Create an instance of your app</h3>
