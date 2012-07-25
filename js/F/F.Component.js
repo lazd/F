@@ -14,24 +14,24 @@
 		extend: F.EventEmitter,
 		
 		/** @constructor */
-		construct: function(config) {
-			// Looks funny, but it modified config back to the arguments object
-			$.extend(
-				config, 
-				$.extend({}, {
-					singly: true,
+		construct: function(options) {
+			// Looks funny, but it modified options back to the arguments object
+			_.extend(
+				options, 
+				_.extend({}, {
+					singly: false,
 					visible: false
-				}, this.config || {}, config)
+				}, this.options || {}, options)
 			);
 		
 			// Sub components
 			this.components = {};
 		
 			// Show only one subcomponent at a time
-			this.singly = config.singly;
+			this.singly = options.singly;
 		
 			// Visible or not
-			this.visible = config.visible;
+			this.visible = options.visible;
 		
 			// Make sure the following functions are always called in scope
 			this.bind(this._setCurrentComponent); // shorthand for this._setCurrentComponent = this._setCurrentComponent.bind(this);
@@ -175,7 +175,7 @@
 			options = options || {};
 		
 			// Debug output
-			if (F.config.debug) {
+			if (F.options.debug) {
 				// Don't show if already shown
 				if (this.visible) {		
 					console.log('%s: not showing self; already visible', this.toString());
@@ -208,7 +208,7 @@
 			if (!this.visible)
 				return false;
 		
-			if (F.config.debug) {
+			if (F.options.debug) {
 				console.log('%s: hiding self', this.toString());
 			}
 			
@@ -261,7 +261,7 @@
 		},
 		
 		/**
-		 * Hide a sub-component of this component by name. Only useful if config.singly is false
+		 * Hide a sub-component of this component by name. Only useful if options.singly is false
 		 *
 		 * @param {Function} componentName	Component name
 		 *

@@ -1,6 +1,6 @@
 /** @namespace */
 var F = F || {};
 
-F.config = {
+F.options = {
 	debug: false
 };

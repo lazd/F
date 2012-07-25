@@ -2,35 +2,25 @@ ItemManager.Manager = new Class({
 	toString: 'ItemManager',
 	extend: F.Component,
 	
-	// Default configuration, passed to parent constructors
-	config: {
+	// Default optionsuration, passed to parent constructors
+	options: {
 		singly: false // show both components at once
 	},
 	
-	// Components used for List and Details are referenced in the prototype so they can be overridden
-	ListComponent: ItemManager.List,
-	DetailsComponent: ItemManager.Details,
-	
-	// Templates would normally be compiled serverside, specified in the prototype so they can be overridden
-	Template: ItemManager.Templates.Manager,
-	
-	// View is defined in the prototype so it can be overridden
-	View: F.View.extend({
-		tag: 'div',
-		className: 'ItemManager'
-	}),
-	
-	construct: function(config) {
+	/*
+		Options can be used to insert a rendered view into the DOM:		
+			el: options.el,				// Directly use the el provided as this view's container
+			parent: options.parent,		// Or, create a container and insert it into the parent
+	*/
+	construct: function(options) {
 		// Hold the listItem and model associated with the currently selected item
 		this.selectedItem = null;
 		
 		// The main view for the item manager
-		this.view = new this.View({
-			el: config.el,				// Directly use the el provided as this view's container
-			parent: config.parent,		// Or, create a container and insert it into the parent
+		this.view = new this.View(_.extend({
 			component: this,			// Let this view directly call our functions by name in the Backbones event object
 			template: this.Template		// Pass the template from our prototype for rendering
-		}).render();	// Immediately call render so we can pass child nodes to our subcomponents
+		}, options)).render();	// Immediately call render so we can pass child nodes to our subcomponents
 		
 		/*
 			Item list
@@ -56,6 +46,19 @@ ItemManager.Manager = new Class({
 		this.list.on('itemSelected', this.itemSelected);
 	},
 	
+	// Components used for List and Details are referenced in the prototype so they can be overridden
+	ListComponent: ItemManager.List,
+	DetailsComponent: ItemManager.Details,
+	
+	// Templates would normally be compiled serverside, specified in the prototype so they can be overridden
+	Template: ItemManager.Templates.Manager,
+	
+	// View is defined in the prototype so it can be overridden
+	View: F.View.extend({
+		tag: 'div',
+		className: 'ItemManager'
+	}),
+
 	show: function() {
 		// First, show ourself
 		this.inherited(arguments);

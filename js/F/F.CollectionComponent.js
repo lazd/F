@@ -9,10 +9,8 @@ F.CollectionComponent = new Class({
 	extend: F.Component,
 	
 	/** @constructor */
-	construct: function(config) {
-		config = config || {};
-		
-		this.Collection = this.Collection || config.Collection;
+	construct: function(options) {
+		this.Collection = this.Collection || options.Collection;
 		
 		// Create a collection
 		this.collection = new this.Collection();
@@ -20,11 +18,11 @@ F.CollectionComponent = new Class({
 		// Re-render when the collection resets
 		this.collection.on('reset', this.render);
 		
-		// Default parameters are the prototype params + configuration params
-		this.defaultParams = $.extend({}, this.config.params, config.params);
+		// Default parameters are the prototype params + optionsuration params
+		this.defaultParams = _.extend({}, options.params);
 		
 		// Parameters to send with the request
-		this.params = $.extend({}, this.defaultParams);
+		this.params = _.extend({}, this.defaultParams);
 	
 		// Store if this collection has ever been loaded
 		this.collectionLoaded = false;
@@ -57,7 +55,7 @@ F.CollectionComponent = new Class({
 	loadCollection: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
-			this.params = $.extend({}, this.defaultParams, fetchParams);
+			this.params = _.extend({}, this.defaultParams, fetchParams);
 		
 		// Fetch collection contents
 		this.collection.fetch({

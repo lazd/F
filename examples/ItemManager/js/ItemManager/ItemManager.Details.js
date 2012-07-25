@@ -1,8 +1,16 @@
 ItemManager.Details = new Class({
 	toString: 'Details',
 	
-	// Extending model component gives is loadModel and an augmented show method which takes config.id or config.model
+	// Extending model component gives is load and an augmented show method which takes options.id or options.model
 	extend: F.ModelComponent,
+	
+	construct: function(options) {
+		// Just create a view here and we're done; F.ModelComponent takes care of loading and rendering
+		this.view = new this.View(_.extend(options, {
+			template: this.ItemTemplate,
+			component: this
+		}));
+	},
 	
 	// Model, View, and Template are in prototype so they can be overridden
 	Model: ItemManager.Models.Item,
@@ -10,15 +18,5 @@ ItemManager.Details = new Class({
 		tagName: 'div',
 		className: 'itemDetails'
 	}),
-	ItemTemplate: ItemManager.Templates['Item'],
-	
-	construct: function(config) {
-		// Just create a view here and we're done; F.ModelComponent takes care of loading and rendering
-		this.view = new this.View({
-			el: config.el,
-			parent: config.parent,
-			template: this.ItemTemplate,
-			component: this
-		});
-	}
+	ItemTemplate: ItemManager.Templates['Item']
 });
