@@ -78,9 +78,9 @@ F.ModelComponent = new Class({
 	},
 	
 	/**
-	 * Load an item's model by ID
+	 * Load an item's model by ID or by model
 	 *
-	 * @param {Function} itemId	ID of the item to fetch
+	 * @param {Function} itemIdOrModel	ID of the item to fetch or already fetched model
 	 * @param {Function} callback	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
@@ -89,9 +89,9 @@ F.ModelComponent = new Class({
 		// Load models 
 		if (typeof itemIdOrModel === 'string' || typeof itemIdOrModel === 'number') {
 			// Create a blank model
-			var model = new this.Model({
-				id: itemIdOrModel
-			});
+			var data = {};
+			data[this.Model.prototype.idAttribute] = itemIdOrModel;
+			var model = new this.Model(data);
 		
 			// Fetch model contents
 			model.fetch({
@@ -111,7 +111,7 @@ F.ModelComponent = new Class({
 		}
 		else {
 			// It must be an object
-			this._setModel(model);
+			this._setModel(itemIdOrModel);
 		}
 		return this;
 	
@@ -141,7 +141,7 @@ F.ModelComponent = new Class({
 		}
 		else if (options.model) {
 			console.log('ModelComponent %s: showing with new model', this.toString(), options.model);
-			this.setModel(options.model);
+			this._setModel(options.model);
 			this.show();
 		}
 		else
