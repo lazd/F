@@ -1,15 +1,14 @@
-/*
-	Function: Class
-	Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
-	
-	Parameters:
-		descriptor: {
-			toString - a string or method to use for the toString of this class and instances of this class
-			extend - the class to extend
-			construct - the constructor (setup) method for the new class
-			destruct - the destructor (teardown) method for the new class
-			prototype - methods and properties for the new class
-		}
+/**
+ * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
+ * 	
+ * @param {Object} descriptor				Descriptor object
+ * @param {String or Function} descriptor.toString 	A string or method to use for the toString of this class and instances of this class
+ * @param {Object} descriptor.extend		The class to extend
+ * @param {Function} descriptor.construct	The constructor (setup) method for the new class
+ * @param {Function} descriptor.destruct		The destructor (teardown) method for the new class
+ * @param {Anything} descriptor.*	Other methods and properties for the new class
+ * @returns {Class} The created class.
+ * @constructor
 */
 function Class(descriptor) {
 	descriptor = descriptor || {};
@@ -67,12 +66,10 @@ function Class(descriptor) {
 		}
 	}
 	
-	/*
-		Function: inherited
-		A function that calls an inherited method
-	
-		Parameters:
-			args - unadultrated arguments array from calling function
+	/**
+	 * A function that calls an inherited method by the same name as the callee
+	 *
+	 * @param {Arguments} args	Unadultrated arguments array from calling function
 	*/
 	prototype.inherited = function(args) {
 		// Get the function that call us from the passed arguments objected
@@ -118,7 +115,12 @@ function Class(descriptor) {
 			console.warn("Class.inherited: can't call inherited method for '%s': no method by that name found", methodName);			
 		}
 	};
-
+	
+	/**
+	 * Binds a method to the execution scope of this instance
+	 *
+	 * @param {Function} func	The this.method you want to bind
+	 */
 	prototype.bind = function(func) {
 		// Bind the function to always execute in scope
 		var boundFunc = func.bind(this);
@@ -133,10 +135,9 @@ function Class(descriptor) {
 		return boundFunc;
 	};
 
-	/*
-		Function: destruct
-		Call the destruct method of all inherited classes
-	*/
+	/**
+	 * Call the destruct method of all inherited classes
+	 */
 	prototype.destruct = function() {
 		// Call our destruct method first
 		if (typeof destruct === 'function') {
@@ -149,6 +150,9 @@ function Class(descriptor) {
 		}
 	};
 	
+	/**
+	 * Construct is called automatically
+	 */
 	// Create a chained construct function which calls the superclass' construct function
 	prototype.construct = function() {
 		// Add a blank object as the first arg to the constructor, if none provided
@@ -169,6 +173,7 @@ function Class(descriptor) {
 	};
 	
 	// Create a function that generates instances of our class and calls our construct functions
+	/** @private */
 	var instanceGenerator = function() {
 		// Create a new object with the prototype we built
 		var instance = Object.create(prototype);
