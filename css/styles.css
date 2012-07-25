@@ -735,20 +735,13 @@ a.button {
 	font-weight: normal;
 	list-style: none;
 	display: inline;
-	color: white;
 	line-height: 50px;
-	text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
-	font-size: 14px;
-}
-a.button {
-	color: #222 !important;
-	font-weight: bold;
-	font-family: Verdana;
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+	font-size: 14px;
 }
 #header nav li a,
 a.button {
-	color: white;
+	color: #f1f1f1;
 	border: 1px solid #5d910b;
 	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #93bd20), color-stop(100%, #659e10));
 	background: -webkit-linear-gradient(#93bd20, #659e10);
@@ -774,6 +767,7 @@ a.button {
 	display: inline-block;
 	text-align: center;
 }
+	
 #header nav li a:hover,
 a.button:hover {
 	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #749619), color-stop(100%, #527f0e));
@@ -790,16 +784,29 @@ a.button:hover {
 	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0);
 }
 
+#header nav li a i,
+a.button i {
+	font-size: 18px;
+	line-height: 12px;
+	vertical-align: -1px;
+	margin-right: 1px;
+}
+a.button {
+	color: #333;
+	font-weight: bold;
+	font-family: Verdana;
+}
 .buttonDrawer {
 	overflow: hidden;
 }
 
 .buttonDrawer a.button.left {
-	margin-right: 10px;
+	margin-right: 15px;
 }
 .buttonDrawer a.button.right {
-	margin-left: 10px;
+	margin-left: 15px;
 }
+
 a.button i {
 	height: 13px;
 	font-size: 20px;
@@ -809,10 +816,12 @@ a.button i {
 #header nav li.fork,
 #header nav li.downloads {
 	float: right;
-	margin-left: 6px;
+	margin-left: 8px;
 }
 #header nav li.spacer {
-	margin-right: 40px;
+	float: right;
+	width: 50px;
+	height: 2px;
 }
 #header nav li.title {
 	float: right;
