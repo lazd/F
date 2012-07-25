@@ -1,6 +1,6 @@
 ItemManager.Collections = {};
 
 ItemManager.Collections.Items = Backbone.Collection.extend({
-	url: 'items.json',
+	url: 'api/items.json',
 	model: ItemManager.Models.Item
 });

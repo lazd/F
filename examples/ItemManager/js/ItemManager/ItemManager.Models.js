@@ -1,5 +1,5 @@
 ItemManager.Models = {};
 
 ItemManager.Models.Item = Backbone.Model.extend({
-	urlRoot: 'items'
+	urlRoot: 'api/items'
 });
