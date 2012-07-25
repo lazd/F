@@ -736,8 +736,9 @@ a.button {
 	list-style: none;
 	display: inline;
 	line-height: 50px;
-	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+	text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
 	font-size: 14px;
+	font-family: Verdana;
 }
 #header nav li a,
 a.button {
@@ -760,8 +761,8 @@ a.button {
 	-o-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 3px 7px rgba(0, 0, 0, 0.7);
 	box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 3px 7px rgba(0, 0, 0, 0.7);
 	background-color: #93bd20;
-	padding: 10px 12px;
-	margin-top: 6px;
+	padding: 8px 7px;
+	margin-top: 7px;
 	line-height: 14px;
 	font-size: 14px;
 	display: inline-block;
@@ -792,6 +793,7 @@ a.button i {
 	margin-right: 1px;
 }
 a.button {
+	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
 	color: #333;
 	font-weight: bold;
 	font-family: Verdana;
