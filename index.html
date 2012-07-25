@@ -4,10 +4,11 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	<title>F Component Framework</title>
-	<link rel="stylesheet" href="stylesheets/styles.css">
-	<link rel="stylesheet" href="stylesheets/pygment_trac.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/pygment_trac.css">
+	<link rel="stylesheet" href="css/font-awesome.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script src="javascripts/respond.js"></script>
+	<script src="js/respond.js"></script>
 	
 	<link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 	<link href="google-code-prettify/sunburst.css" type="text/css" rel="stylesheet">
@@ -17,7 +18,7 @@
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<!--[if lt IE 8]>
-	<link rel="stylesheet" href="stylesheets/ie.css">
+	<link rel="stylesheet" href="css/ie.css">
 	<![endif]-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
@@ -25,11 +26,17 @@
 <body onload="prettyPrint()">
 	<div id="header">
 		<nav>
-			<li class="fork"><a href="https://github.com/lazd/F">View On GitHub</a></li>
-			<li class="downloads"><a href="https://github.com/lazd/F/zipball/master">ZIP</a></li>
-			<li class="downloads"><a href="https://github.com/lazd/F/tarball/master">TAR</a></li>
-			<li class="downloads"><a href="jsdoc/index.html">Docs</a></li>
-			<li class="title">GET F</li>
+			<div class="logo">&#402;<span>.js</span></div>
+			<li class="fork"><a href="https://github.com/lazd/F"><i class="icon-github"></i> GitHub</a></li>
+			<li class="downloads"><a href="jsdoc/index.html"><i class="icon-info-sign"></i> Docs</a></li>
+			
+			<li class="spacer"></li>
+			
+			<li class="downloads"><a href="https://github.com/lazd/F/tarball/master"><i class="icon-download-alt"></i> TAR</a></li>
+			<li class="downloads"><a href="https://github.com/lazd/F/zipball/master"><i class="icon-download-alt"></i> ZIP</a></li>
+
+			
+			<!-- <li class="title">GET &#402;</li> -->
 		</nav>
 	</div><!-- end header -->
 
@@ -37,113 +44,146 @@
 
 		<section>
 			<div id="title">
-				<h1>F</h1>
+				<h1>&#402;</h1>
 				<p>A component framework for JavaScript applications</p>
 				<hr>
-				<span class="credits right">Maintained by <a href="https://github.com/lazd">lazd</a></span>
-				<!-- <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span> -->
 			</div>
 
-			<h2>F helps you build large, modular apps.</h2>
-			<p>With easy data binding, view showing/hiding, and dead simple inheritance.</p>
+			<h2>&#402; helps you build large, modular apps.</h2>
+			<p>Dead simple inheritance, nested components, view rendering, and easy REST integration.</p>
 
-			<h2>F doesn't reinvent the wheel.</h2>
-			<p>Using Backbone, jQuery, and Handlebars, F provides a simple way to modularize large applications.</p>
+			<h2>&#402; doesn't reinvent the wheel.</h2>
+			<p>Using Backbone, jQuery, and Handlebars, &#402; provides a simple way to modularize large JavaScript applications.</p>
 
-			<h2>F is classy.</h2>
-			<p>F provides an inheritance model, Class. Based on Douglas Crockford's new_constructor, Class lets you create building blocks and extend them, complete with access to super methods and constructor chaining.</p>
+			<h2>&#402; is classy.</h2>
+			<p>&#402; provides an inheritance model, Class. Based on Douglas Crockford's new_constructor, Class lets you create building blocks that you can extend and integrate.</p>
 			
 		</section>
 
-		<section class="clearfix">
-			<a class="button right" href="jsdoc/index.html">View the docs</a>
-			<a class="button left" href="F/examples/ItemManager/index.html">See F in action</a>
+		<section class="buttonDrawer">
+			<a class="button right" href="jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a>
+			<a class="button right" href="manual/index.html">The &#402; Manual</a>
+			<a class="button left" href="F/examples/ItemManager/index.html">See &#402; in action</a>
 		</section>
 		
 		<section class="clear">
 			<h2>Getting started is easy.</h2>
 			
-			<h3>1. Create a namespace:</h3>
-			<p>Nobody likes global variables. Keep it neat with a namespace.</p>
+			<section>
+				
+<h3>1. Create a namespace:</h3>
+<p>Nobody likes global variables. Keep it neat with a namespace.</p>
 <code class="prettyprint">var app = {};</code>
 
-			<h3>2. Build your components</h3>
-			<p>Anything that needs a model, view, or controller can be a component.</p>
+<h3>2. Build your components</h3>
+<p>Anything that needs a model, view, or controller can be a component.</p>
 <code class="prettyprint">app.Welcome = new Class({
-	toString: 'Welcome',
-	extend: F.Component,
-	construct: function(config) {
-		// Tack on your template and events to config
-		config.template = this.Template
-		config.events = this.events;
-		
-		// Make it so events can call methods of this component
-		config.component = this;
+toString: 'Welcome',
+extend: F.Component,
+construct: function(options) {
+	_.extend(options, {
+		// Render this component with our template
+		template: this.ItemTemplate,
+		// Let events call this component's methods
+		component: this
+	});
 
-		// Create your view, no need to render!
-		this.view = new F.View(config);
-	},
-	
-	// Store templates and events here so they can be overridden
-	Template: Handlebars.compile(
-		'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
-		'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
-	),
-	events: {
-		'click .sayHi': 'sayHi'
-	},
-	
-	// Define your methods
-	sayHi: function() {
-		alert(this.toString()+' says hi!');
-	}
+	// Create your view, no need to render!
+	this.view = new F.View(options);
+},
+
+// Store templates and events here so they can be overridden
+Template: Handlebars.compile(
+	'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
+	'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
+),
+events: {
+	'click .sayHi': 'sayHi'
+},
+
+// Define your methods
+sayHi: function() {
+	alert(this.toString()+' says hi!');
+}
 });</code>
 
-			<h3>3. Setup your app</h3>
-			<p>Your app is just another component.</p>
-			<code class="prettyprint">app.Main = new Class({
-	toString: 'Main',
-	extend: F.Component,
-	config: {
-		visible: true
-	},
-	construct: function() {
-		// The superclass constructor is called for you
-		console.log('%s: starting...', this.toString());
-		
-		// Create a view for the app
-		this.view = new F.View({
-			parent: document.body,
-			component: this,
-			template: this.Template
-		}).render(); // Render right away if you use selectors below
-		
-		// Add your components
-		this.addComponent(new app.Welcome({
-			visible: true,
-			parent: this.view.$('.welcome')
-		}));
-	},
-	destruct: function() {
-		// Superclass destructors are called for you, and F
-		// will call destruct() on all your components for you
-		console.log('%s: shutting down', this.toString());
-	},
-	
-	// tore the template in the prototype so it can be overridden
-	Template: Handlebars.compile(
-		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
-		'&lt;div class="welcome"&gt;&lt;/div&gt;'
-	)
+<h3>3. Setup your app</h3>
+<p>Your app is just another component.</p>
+<code class="prettyprint">app.Main = new Class({
+toString: 'Main',
+extend: F.Component,
+options: {
+	visible: true
+},
+construct: function(options) {
+	// Config is always passed to the constructor
+	console.log('%s: started. Options:', this, options);
+
+	_.extend(options, {
+		// Add this component to body of the page
+		parent: document.body,
+		// Render this component with our template
+		template: this.Template,
+		// Let events call this component's methods
+		component: this
+	});
+
+	// Create a view for the app
+	// Render right away if you use selectors below
+	this.view = new F.View(options).render();
+
+	// Add your components
+	this.addComponent(new app.Welcome({
+		// show the component immediately
+		visible: true,
+		// add the sub-component to the div.welcome element
+		parent: this.view.$('.welcome')
+	}));
+},
+destruct: function() {
+	// Superclass destructors are called for you, and F
+	// will call destruct() on all your components for you
+	console.log('%s: shutting down', this.toString());
+},
+
+// tore the template in the prototype so it can be overridden
+Template: Handlebars.compile(
+	'&lt;h1&gt;Killer App&lt;/h1&gt;'+
+	'&lt;div class="welcome"&gt;&lt;/div&gt;'
+)
 });</code>
+	
+<h3>3. Create an instance of your app</h3>
+<p>Fire it up!</p>
+<code class="prettyprint">var myApp = new app.Main();</code>
+
+			</section>
+		</section>
 		
-		<h3>3. Create an instance of your app</h3>
-		<p>Fire it up!</p>
-		<code class="prettyprint">var myApp = new app.Main();</code>
 		
+		<section>
+			<h2>Models, views, and what?</h2>
+			<p>Let's avoid the buzzword game and explain we we're talking about.<p>
+						
+			<section>
+				<h3>Models</h3>
+				<p>Models are a local representation of an object or database entry.</p>
+				<p><strong>tl;dr:</strong> &#402; uses vanilla Backbone models.</p>
+				<h3>Templates</h3>
+				<p>Templates are HTML structure and template code. Templates control the presentation of your models on the page.</p>
+				<p><strong>tl;dr:</strong> &#402; uses vanilla Handlebars templates.</p>
+				<h3>Views</h3>
+				<p>Views render a model with a given template, putting your data into your HTML structure. Views can be shown or hidden.</p>
+				<p><strong>tl;dr:</strong> &#402; uses vanilla Backbone views.</p>
+				<h3>Components</h3>
+				<p>Components are logical units of application code. They have methods, model(s), view(s), and sub-components. They're nested; a component can consist of many components that it connects together via events and method calls.</p>
+				<p><strong>tl;dr:</strong> Components are mini-apps that orchestrate interaction between sub-components.</p>
+			</section>
 		</section>
 	</div>
 	<!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
 
+	<span class="credits right">Maintained by <a href="https://github.com/lazd">lazd</a></span>
+	<!-- <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span> -->
 </body>
 </html>

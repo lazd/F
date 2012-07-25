@@ -532,7 +532,7 @@ body {
 	padding: 0px 0 20px 0px;
 	margin: 0px;
 	font: 14px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #f0e7d5;
+	color: #bebebe;
 	font-weight: normal;
 	background: #252525;
 	background-attachment: fixed !important;
@@ -555,6 +555,10 @@ p, ul, ol, table, pre, dl {
 	margin: 0 0 20px;
 }
 
+p {
+	margin: 20px 10px 30px 10px;
+}
+
 h1, h2, h3 {
 	line-height: 1.1;
 }
@@ -573,6 +577,7 @@ h4, h5, h6 {
 
 h3 {
 	font-size: 18px;
+	margin-top: 20px;
 	line-height: 24px;
 	font-family: 'OpenSansRegular', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	font-weight: normal;
@@ -580,7 +585,7 @@ h3 {
 }
 
 a {
-	color: #ffcc00;
+	color: rgb(116, 166, 23);
 	font-weight: 400;
 	text-decoration: none;
 }
@@ -687,11 +692,15 @@ td {
 }
 
 hr {
-	border: 0;
+	height: 1px;
+	margin: 0 0 10px;
+	
+	border-width: 1px;
+	border-top-color: #999;
+	background-color: #555;
+	border-bottom-color: #777;
+	
 	outline: none;
-	height: 3px;
-	background: transparent url("../images/hr.gif") center center repeat-x;
-	margin: 0 0 20px;
 }
 
 dt {
@@ -718,7 +727,6 @@ dt {
 	max-width: 650px;
 	margin: 0 auto;
 	padding: 0 10px;
-	background: blue;
 	margin: 6px auto;
 }
 #header nav li,
@@ -781,18 +789,44 @@ a.button:hover {
 	-o-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0);
 	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0);
 }
-#header nav li.fork {
-	float: left;
-	margin-left: 0px;
+
+.buttonDrawer {
+	overflow: hidden;
 }
+
+.buttonDrawer a.button.left {
+	margin-right: 10px;
+}
+.buttonDrawer a.button.right {
+	margin-left: 10px;
+}
+a.button i {
+	height: 13px;
+	font-size: 20px;
+	margin-right: 2px;
+}
+
+#header nav li.fork,
 #header nav li.downloads {
 	float: right;
 	margin-left: 6px;
+}
+#header nav li.spacer {
+	margin-right: 40px;
 }
 #header nav li.title {
 	float: right;
 	margin-right: 10px;
 	font-size: 11px;
+}
+#header div.logo {
+	float: left;
+	font-size: 29px;
+	font-weight: 400;
+}
+#header div.logo span {
+	font-size: 20px;
+	font-weight: 200;
 }
 
 section {
@@ -801,7 +835,10 @@ section {
 	margin: 10px 0;
 }
 
-
+section section {
+	padding: 0 10px 0 10px;
+	margin: 0;
+}
 section p:last-child {
 	margin-bottom: 0;
 }
@@ -815,18 +852,19 @@ section #title {
 section #title h1 {
 	font-family: 'OpenSansLight', "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
-	font-size: 40px;
+	font-size: 60px;
 	text-align: center;
-	line-height: 36px;
+	line-height: 62px;
+	font-weight: 200;
 }
 section #title p {
-	color: #d7cfbe;
+	color: #bebebe;
 	font-family: 'OpenSansLight', "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	font-size: 18px;
 	text-align: center;
 }
-section #title .credits {
+.credits {
 	font-size: 11px;
 	font-family: 'OpenSansRegular', "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
@@ -850,17 +888,17 @@ section #title .credits {
 
 
 @media print, screen and (max-width: 720px) {
-	#title .credits {
+	.credits {
 		display: block;
 		width: 100%;
 		line-height: 30px;
 		text-align: center;
 	}
-	#title .credits .left {
+	.credits .left {
 		float: none;
 		display: block;
 	}
-	#title .credits .right {
+	.credits .right {
 		float: none;
 		display: block;
 	}
