@@ -55,8 +55,6 @@ ItemManager.List = new Class({
 	}),
 	
 	construct: function(config) {
-		config = config || {};
-		
 		this.view = new this.ListView({
 			el: config.el,
 			parent: config.parent,

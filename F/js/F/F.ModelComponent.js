@@ -10,8 +10,6 @@ F.ModelComponent = new Class({
 	
 	/** @constructor */
 	construct: function(config) {
-		config = config || {};
-		
 		this.Model = this.Model || config.Model;
 	},
 	

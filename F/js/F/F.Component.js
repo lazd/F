@@ -15,10 +15,14 @@
 		
 		/** @constructor */
 		construct: function(config) {
-			config = $.extend({}, {
-				singly: true,
-				visible: false
-			}, this.config || {}, config);
+			// Looks funny, but it modified config back to the arguments object
+			$.extend(
+				config, 
+				$.extend({}, {
+					singly: true,
+					visible: false
+				}, this.config || {}, config)
+			);
 		
 			// Sub components
 			this.components = {};

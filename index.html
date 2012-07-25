@@ -8,6 +8,11 @@
 	<link rel="stylesheet" href="stylesheets/pygment_trac.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="javascripts/respond.js"></script>
+	
+	<link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
+	<link href="google-code-prettify/sunburst.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="google-code-prettify/prettify.js"></script>
+
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -17,7 +22,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 </head>
-<body>
+<body onload="prettyPrint()">
 	<div id="header">
 		<nav>
 			<li class="fork"><a href="https://github.com/lazd/F">View On GitHub</a></li>
@@ -45,18 +50,92 @@
 			<h2>F doesn't reinvent the wheel.</h2>
 			<p>Using Backbone, jQuery, and Handlebars, F provides a simple way to modularize large applications.</p>
 
-			<h2>F inherits.</h2>
-			<p>F  provides an inheritance model, Class. Based on Douglas Crockford's new_constructor, Class lets you create building blocks and extend them, complete with access to super methods and constructor chaining.</p>
+			<h2>F is classy.</h2>
+			<p>F provides an inheritance model, Class. Based on Douglas Crockford's new_constructor, Class lets you create building blocks and extend them, complete with access to super methods and constructor chaining.</p>
 			
-			<!-- <code>
-				test
-			</code> -->
 		</section>
 
-		<section>
+		<section class="clearfix">
 			<a class="button right" href="jsdoc/index.html">View the docs</a>
 			<a class="button left" href="F/examples/ItemManager/index.html">See F in action</a>
-		</secton>
+		</section>
+		
+		<section class="clear">
+			<h2>Getting started is easy.</h2>
+			
+			<h3>1. Create a namespace:</h3>
+			<p>Nobody likes global variables. Keep it neat.</p>
+<code class="prettyprint">var app = {};</code>
+
+
+			<h3>2. Create a component:</h3>
+			<p>Anything that needs a model, view, or controller can be a component.</p>
+<code class="prettyprint">app.Welcome = new Class({
+	toString: 'Welcome',
+	extend: F.Component,
+	construct: function(config) {
+		this.view = new this.View({
+			el: config.el,
+			parent: config.parent,
+			template: this.Template,
+			component: this
+		});
+	},
+	
+	Template: Handlebars.compile(
+		'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
+		'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
+	),
+	View: F.View.extend({
+		events: {
+			'click .sayHi': 'sayHi'
+		}
+	}),
+	
+	sayHi: function() {
+		alert(this.toString()+' says hi!');
+	}
+});</code>
+
+			<h3>3. Create your app:</h3>
+			<p>An app is just a component.</p>
+			<code class="prettyprint">app.Main = new Class({
+	toString: 'Main',
+	extend: F.Component,
+	config: {
+		visible: true
+	},
+	construct: function() {
+		console.log('%s: starting...', this.toString());
+		
+		this.view = new this.View({
+			parent: document.body,
+			component: this,
+			template: this.Template
+		})
+		
+		// Add your components
+		this.addComponent(new app.Welcome({
+			visible: true,
+			parent
+		}));
+	},
+	destruct: function() {
+		console.log('%s: shutting down', this.toString());
+	},
+	
+	Template: Handlebars.compile(
+		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
+		'&lt;div class="welcome"&gt;&lt;/div&gt;'
+	),
+	View: F.View.extend({
+		events: {
+			'click .sayHi': 'sayHi'
+		}
+	})
+});</code>
+			
+		</section>
 	</div>
 	<!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
 
