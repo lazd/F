@@ -64,41 +64,43 @@
 			<h2>Getting started is easy.</h2>
 			
 			<h3>1. Create a namespace:</h3>
-			<p>Nobody likes global variables. Keep it neat.</p>
+			<p>Nobody likes global variables. Keep it neat with a namespace.</p>
 <code class="prettyprint">var app = {};</code>
 
-
-			<h3>2. Create a component:</h3>
+			<h3>2. Build your components</h3>
 			<p>Anything that needs a model, view, or controller can be a component.</p>
 <code class="prettyprint">app.Welcome = new Class({
 	toString: 'Welcome',
 	extend: F.Component,
 	construct: function(config) {
-		this.view = new this.View({
-			el: config.el,
-			parent: config.parent,
-			template: this.Template,
-			component: this
-		});
+		// Tack on your template and events to config
+		config.template = this.Template
+		config.events = this.events;
+		
+		// Make it so events can call methods of this component
+		config.component = this;
+
+		// Create your view, no need to render!
+		this.view = new F.View(config);
 	},
 	
+	// Store templates and events here so they can be overridden
 	Template: Handlebars.compile(
 		'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
 		'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
 	),
-	View: F.View.extend({
-		events: {
-			'click .sayHi': 'sayHi'
-		}
-	}),
+	events: {
+		'click .sayHi': 'sayHi'
+	},
 	
+	// Define your methods
 	sayHi: function() {
 		alert(this.toString()+' says hi!');
 	}
 });</code>
 
-			<h3>3. Create your app:</h3>
-			<p>An app is just a component.</p>
+			<h3>3. Setup your app</h3>
+			<p>Your app is just another component.</p>
 			<code class="prettyprint">app.Main = new Class({
 	toString: 'Main',
 	extend: F.Component,
@@ -106,35 +108,39 @@
 		visible: true
 	},
 	construct: function() {
+		// The superclass constructor is called for you
 		console.log('%s: starting...', this.toString());
 		
-		this.view = new this.View({
+		// Create a view for the app
+		this.view = new F.View({
 			parent: document.body,
 			component: this,
 			template: this.Template
-		})
+		}).render(); // Render right away if you use selectors below
 		
 		// Add your components
 		this.addComponent(new app.Welcome({
 			visible: true,
-			parent
+			parent: this.view.$('.welcome')
 		}));
 	},
 	destruct: function() {
+		// Superclass destructors are called for you, and F
+		// will call destruct() on all your components for you
 		console.log('%s: shutting down', this.toString());
 	},
 	
+	// tore the template in the prototype so it can be overridden
 	Template: Handlebars.compile(
 		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
 		'&lt;div class="welcome"&gt;&lt;/div&gt;'
-	),
-	View: F.View.extend({
-		events: {
-			'click .sayHi': 'sayHi'
-		}
-	})
+	)
 });</code>
-			
+		
+		<h3>3. Create an instance of your app</h3>
+		<p>Fire it up!</p>
+		<code class="prettyprint">var myApp = new app.Main();</code>
+		
 		</section>
 	</div>
 	<!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
