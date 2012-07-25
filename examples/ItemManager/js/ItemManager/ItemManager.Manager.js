@@ -69,11 +69,11 @@ ItemManager.Manager = new Class({
 	
 	// We'll use this function to pass the itemSelected event up to our parent
 	itemSelected: function(info) {
-		console.log('%s: selected item %s', this.toString(), info.model.get('id'));
+		console.log('%s: selected item %s', this.toString(), info.model.id);
 			
 		// Give the Details componment the model of the selected item
 		this.details.show({
-			id: info.model.get('id')
+			id: info.model.id
 		});
 		
 		if (this.selectedItem) {

@@ -70,7 +70,7 @@ ItemManager.List = new Class({
 	selectItem: function(evt) {
 		var listItem = $(evt.currentTarget);
 		var model = listItem.data('model');
-		this.selectedItem = model.get('_id');
+		this.selectedItem = model.id;
 		
 		this.trigger('itemSelected', {
 			listItem: listItem,
