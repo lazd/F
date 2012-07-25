@@ -9,8 +9,8 @@ F.ModelComponent = new Class({
 	extend: F.Component,
 	
 	/** @constructor */
-	construct: function(config) {
-		this.Model = this.Model || config.Model;
+	construct: function(options) {
+		this.Model = this.Model || options.Model;
 	},
 	
 	/** @lends F.ModelComponent# */
@@ -42,7 +42,7 @@ F.ModelComponent = new Class({
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	setModel: function(model) {
+	_setModel: function(model) {
 		this.model = model;
 		
 		if (this.view) {
@@ -52,35 +52,69 @@ F.ModelComponent = new Class({
 		
 		return this;
 	},
-	
+		
 	/**
-	 * Load an item's model by ID
+	 * Save a model to the server
 	 *
-	 * @param {Function} itemId	ID of the item to fetch
 	 * @param {Function} callback	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	loadModel: function(itemId, callback) {
-		// Create a model
-		var model = new this.Model({
-			id: itemId
-		});
-		
-		// Assign the model to the view
-		this.setModel(model);
-		
-		// Fetch model contents
-		model.fetch({
-			// TBD: add fetch options
-			success: function() {
-				this.trigger('modelLoaded');
-				if (typeof callback === 'function')
-					callback.call(this, model);
-			}.bind(this)
-		});
-		
+	save: function(callback) {
+		if (this.model) {
+			this.model.save({
+				success: function() {
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+
+					this.trigger('saved');
+				}.bind(this)
+			});
+		}
+		else {
+			console.warn('%s: Cannot save, model is not truthy', this.toString());
+		}
 		return this;
+	},
+	
+	/**
+	 * Load an item's model by ID or by model
+	 *
+	 * @param {Function} itemIdOrModel	ID of the item to fetch or already fetched model
+	 * @param {Function} callback	Callback to execute on successful fetch
+	 *
+	 * @returns {F.ModelComponent}	this, chainable
+	 */
+	load: function(itemIdOrModel, callback) {
+		// Load models 
+		if (typeof itemIdOrModel === 'string' || typeof itemIdOrModel === 'number') {
+			// Create a blank model
+			var data = {};
+			data[this.Model.prototype.idAttribute] = itemIdOrModel;
+			var model = new this.Model(data);
+		
+			// Fetch model contents
+			model.fetch({
+				// TBD: add fetch options
+				success: function() {
+					// Assign the model to the view
+					this._setModel(model);
+					
+					// Nofity
+					this.trigger('modelLoaded');
+					
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, model);
+				}.bind(this)
+			});
+		}
+		else {
+			// It must be an object
+			this._setModel(itemIdOrModel);
+		}
+		return this;
+	
 	},
 	
 	/**
@@ -93,13 +127,13 @@ F.ModelComponent = new Class({
 	show: function(options) {
 		options = options || {};
 		if (options.id) {
-			if (F.config.debug) {
+			if (F.options.debug) {
 				console.log('ModelComponent %s: fetching item with ID %s', this.toString(), options.id);
 			}
 			
 			// Load the model by itemId, then show
-			this.loadModel(options.id, function(model) {
-				if (F.config.debug) {
+			this.load(options.id, function(model) {
+				if (F.options.debug) {
 					console.log('ModelComponent %s: fetch complete!', this.toString());
 				}
 				this.show(); // pass nothing to show and the view will re-render
@@ -107,7 +141,7 @@ F.ModelComponent = new Class({
 		}
 		else if (options.model) {
 			console.log('ModelComponent %s: showing with new model', this.toString(), options.model);
-			this.setModel(options.model);
+			this._setModel(options.model);
 			this.show();
 		}
 		else

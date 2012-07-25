@@ -4,13 +4,26 @@ ItemManager.List = new Class({
 	
 	// F.CollectionComponent can send params when it fetches the collection, provide defaults here
 	// Subsequent calls to loadCollection(params, callback) will be merged with default params provided here
-	config: {
+	options: {
 		params: {
 			sort: 'name'
 		}
 	},
 	
-	// Collection component expects to have prototype.Collection or config.collection
+	construct: function(options) {
+		this.view = new this.ListView(_.extend({
+			model: this.collection,
+			template: this.ListItemTemplate,
+			component: this,
+			events: {
+				'click li': 'selectItem'
+			}
+		}, options));
+		
+		this.selectedItem = null;
+	},
+	
+	// Collection component expects to have prototype.Collection or options.collection
 	Collection: ItemManager.Collections.Items,
 		
 	// Create a view for our list
@@ -54,25 +67,10 @@ ItemManager.List = new Class({
 		className: 'listItem'
 	}),
 	
-	construct: function(config) {
-		this.view = new this.ListView({
-			el: config.el,
-			parent: config.parent,
-			model: this.collection,
-			template: this.ListItemTemplate,
-			component: this,
-			events: {
-				'click li': 'selectItem'
-			}
-		});
-		
-		this.selectedItem = null;
-	},
-	
 	selectItem: function(evt) {
 		var listItem = $(evt.currentTarget);
 		var model = listItem.data('model');
-		this.selectedItem = model.get('_id');
+		this.selectedItem = model.id;
 		
 		this.trigger('itemSelected', {
 			listItem: listItem,

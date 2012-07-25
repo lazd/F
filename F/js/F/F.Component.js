@@ -14,24 +14,24 @@
 		extend: F.EventEmitter,
 		
 		/** @constructor */
-		construct: function(config) {
-			// Looks funny, but it modified config back to the arguments object
-			$.extend(
-				config, 
-				$.extend({}, {
-					singly: true,
+		construct: function(options) {
+			// Looks funny, but it modified options back to the arguments object
+			_.extend(
+				options, 
+				_.extend({}, {
+					singly: false,
 					visible: false
-				}, this.config || {}, config)
+				}, this.options || {}, options)
 			);
 		
 			// Sub components
 			this.components = {};
 		
 			// Show only one subcomponent at a time
-			this.singly = config.singly;
-		
+			this.singly = options.singly;
+			
 			// Visible or not
-			this.visible = config.visible;
+			this.visible = options.visible;
 		
 			// Make sure the following functions are always called in scope
 			this.bind(this._setCurrentComponent); // shorthand for this._setCurrentComponent = this._setCurrentComponent.bind(this);
@@ -43,14 +43,6 @@
 					this.show({
 						silent: true
 					});
-				}.bind(this));
-			}
-			else {
-				// Hide the component once the call chain has returned
-				_.defer(function() {
-					if (this.view && this.view.el) {
-						this.view.$el.hide();
-					}
 				}.bind(this));
 			}
 		},
@@ -83,28 +75,33 @@
 		/**
 		 * Add an instance of another component as a sub-component.
 		 *
-		 *  this[subComponent.toString()] is used to reference the sub-component:
-		 *  		
-		 *  		this.List.show();
-		 *  		
-		 *  You can give a component an optional custom name as the second argument, then reference as such:
-		 *  		
-		 *  		this.myCustomComponent.show();
-		 *  		
-		 *
+		 * this[subComponent.toString()] is used to reference the sub-component:
+		 * 
+		 *   this.List.show();
+		 * 
+		 * You can give a component an optional custom name as the second argument, then reference as such:
+		 * 
+		 *  this.myCustomComponent.show();
+		 * 
 		 * @param {F.Component} component	Instance of component
 		 * @param {Function} componentName	Optional custom name for this component
 		 *
 		 * @returns {F.Component}	The sub-component that was added
 		 */
 		addComponent: function(component, componentName) {
-			// Tell component its new name, if provided
-			if (componentName)
-				component.setName(componentName);
-		
 			// Get the name of the component
-			componentName = decapitalize(component.toString());
-		
+			if (componentName) {
+				// Tell component its new name, if provided
+				componentName = decapitalize(componentName);
+			}
+			else {
+				// Use lowercase of toString
+				componentName = decapitalize(component.toString());
+			}
+			
+			// Give component its new name
+			component.setName(componentName);
+			
 			// Store component
 			this[componentName] = this.components[componentName] = component;
 		
@@ -160,7 +157,7 @@
 				}
 			
 				// Show self
-				// this.show(); // should not be necessary?
+				this.show();
 			}
 		},
 	
@@ -175,7 +172,7 @@
 			options = options || {};
 		
 			// Debug output
-			if (F.config.debug) {
+			if (F.options.debug) {
 				// Don't show if already shown
 				if (this.visible) {		
 					console.log('%s: not showing self; already visible', this.toString());
@@ -184,7 +181,7 @@
 					console.log('%s: showing self', this.toString());
 			}
 		
-			if (!this.visible && !options.silent) {
+			if (!options.silent) {
 				// Always trigger event before we show ourself so others can hide/show
 				this.trigger('component:shown', this.toString(), this);	
 			}
@@ -207,8 +204,8 @@
 		hide: function() {
 			if (!this.visible)
 				return false;
-		
-			if (F.config.debug) {
+			
+			if (F.options.debug) {
 				console.log('%s: hiding self', this.toString());
 			}
 			
@@ -261,7 +258,7 @@
 		},
 		
 		/**
-		 * Hide a sub-component of this component by name. Only useful if config.singly is false
+		 * Hide a sub-component of this component by name. Only useful if options.singly is false
 		 *
 		 * @param {Function} componentName	Component name
 		 *

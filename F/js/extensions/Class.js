@@ -3,7 +3,7 @@
 	Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
 	
 	Parameters:
-		config: {
+		descriptor: {
 			toString - a string or method to use for the toString of this class and instances of this class
 			extend - the class to extend
 			construct - the constructor (setup) method for the new class
@@ -11,40 +11,40 @@
 			prototype - methods and properties for the new class
 		}
 */
-function Class(config) {
-	config = config || {};
+function Class(descriptor) {
+	descriptor = descriptor || {};
 	
-	if (config.hasOwnProperty('extend') && !config.extend) {
-		console.warn('Class: %s is attempting to extend a non-truthy thing', config.toString == 'function' ? config.toString : config.toString, config.extend);
+	if (descriptor.hasOwnProperty('extend') && !descriptor.extend) {
+		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString == 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
 	}
 	
 	// Extend Object by default
-	var extend = config.extend || Object;
+	var extend = descriptor.extend || Object;
 
 	// Construct and destruct are not required
-	var construct = config.construct;
-	var destruct = config.destruct;
+	var construct = descriptor.construct;
+	var destruct = descriptor.destruct;
 
-	// Remove special methods and keywords from config
-	delete config.extend;
-	delete config.destruct;
-	delete config.construct;
+	// Remove special methods and keywords from descriptor
+	delete descriptor.extend;
+	delete descriptor.destruct;
+	delete descriptor.construct;
 	
 	// Add toString method, if necessary
-	if (config.hasOwnProperty('toString') && typeof config.toString !== 'function') {
+	if (descriptor.hasOwnProperty('toString') && typeof descriptor.toString !== 'function') {
 		// Return the string provided
-		var classString = config.toString;
-		config.toString = function() {
+		var classString = descriptor.toString;
+		descriptor.toString = function() {
 			return classString.toString();
 		};
 	}
-	else if (!config.hasOwnProperty('toString') && extend.prototype.hasOwnProperty('toString')) {
+	else if (!descriptor.hasOwnProperty('toString') && extend.prototype.hasOwnProperty('toString')) {
 		// Use parent's toString
-		config.toString = extend.prototype.toString;
+		descriptor.toString = extend.prototype.toString;
 	}
 	
-	// The remaining properties in config are our methods
-	var methodsAndProps = config;
+	// The remaining properties in descriptor are our methods
+	var methodsAndProps = descriptor;
 	
 	// Create an object with the prototype of the class we're extending
 	var prototype = Object.create(extend && extend.prototype);

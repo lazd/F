@@ -1,12 +1,14 @@
 /** @namespace */
 var F = F || {};
+
 try {
-	var ƒ = F;
+	window['ƒ'] = F;
 }
 catch (err) {
 	console.log("ƒ: could not set ƒ variable");
 }
 
-F.config = {
+F.options = {
+	idField: 'id',
 	debug: false
 };
