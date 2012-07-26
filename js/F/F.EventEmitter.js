@@ -3,15 +3,13 @@
  *
  * @class
  */
-F.EventEmitter = new Class({
+F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	destruct: function() {
 		delete this._events;
 	},
 	
-	/** @lends F.EventEmitter# */
-	
 	/**
-	 * Attach en event listener
+	 * Attach an event listener
 	 *
 	 * @param {String} evt		Name of event to listen to
 	 * @param {Function} func	Function to execute
@@ -27,7 +25,7 @@ F.EventEmitter = new Class({
 	},
 
 	/**
-	 * Remove en event listener
+	 * Remove an event listener
 	 *
 	 * @param {String} evt		Name of event that function is bound to
 	 * @param {Function} func	Bound function
@@ -60,15 +58,3 @@ F.EventEmitter = new Class({
 		return this;
 	}
 });
-
-/*
- * Mix EventEmitter into a class or object
- * 
- * @param {Object} destObject	Class or object to mix into
- */
-F.EventEmitter.mixin = function(destObject){
-	var props = ['on', 'off', 'trigger'];
-	for (var i = 0; i < props.length; i ++){
-		destObject.prototype[props[i]] = F.EventEmitter.prototype[props[i]];
-	}
-};

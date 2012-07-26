@@ -6,15 +6,13 @@
 		return _.isFunction(object[prop]) ? object[prop]() : object[prop];
 	};
 	
-	/**
-	 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
-	 *
-	 * @class
-	 * @extends Backbone.View
-	 */
-	F.View = Backbone.View.extend({
-		
-		/** @constructor */
+	F.View = Backbone.View.extend(/** @lends F.View# */{
+		/**
+		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
+		 *
+		 * @constructs
+		 * @extends Backbone.View
+		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
 				this.template = this.template || this.options.template;
@@ -24,6 +22,7 @@
 			if (this.options.el) {
 				// TBD: validate options.el has proper tag based on this.tag
 			}
+			
 			// Store parent, if provided
 			this.parent = this.options.parent;
 			
@@ -39,9 +38,7 @@
 			
 			this.rendered = null;
 		},
-	
-		/** @lends F.View# */
-
+		
 		/**
 		 * Get the age of this view; how many seconds since it was last rendered
 		 *
