@@ -64,7 +64,7 @@
 
 	/* Component
 	*******************/
-	F.List = new Class(/** @lends F.List# */{
+	F.ListComponent = new Class(/** @lends F.ListComponent# */{
 		toString: 'ListComponent',
 		extend: F.CollectionComponent,
 	

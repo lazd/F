@@ -23,6 +23,7 @@ IM.Components.App = new Class({
 		*/  
 		this.addComponent(new this.ListComponent({
 			parent: this.view.$('.index'),
+			visible: true,
 			Collection: this.Collection
 		}), 'list');          
 		
