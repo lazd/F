@@ -23,31 +23,24 @@
 	<script src="js/F.js"></script>
 	
 	<!-- Test App: ItemManager -->
-	<script src="js/ItemManager/ItemManager.js"></script>
-	<script src="js/ItemManager/ItemManager.Templates.js"></script>
-	<script src="js/ItemManager/ItemManager.Models.js"></script>
-	<script src="js/ItemManager/ItemManager.Collections.js"></script>
-	<script src="js/ItemManager/ItemManager.List.js"></script>
-	<script src="js/ItemManager/ItemManager.Details.js"></script>
-	<script src="js/ItemManager/ItemManager.Manager.js"></script>
+	<script src="js/IM/IM.js"></script>
+	<script src="js/IM/IM.Components.List.js"></script>
+	<script src="js/IM/IM.Components.Details.js"></script>
+	<script src="js/IM/IM.Components.Manager.js"></script>
 	
 	<script type="text/javascript">
 		
 		// Enable debug output for F
 		// F.options.debug = true;
 		
-		var itemManager;
 		$(function() {
-			itemManager = new ItemManager.Manager({
-				parent: '#itemManager',
-				visible: true // show immediately
-			});
+			IM.init()
 			
-			// Hide the component
-			// itemManager.hide();
+			// Show the list component
+			// IM.app.list.show();
 			
-			// Show the or hide the component's sub-components
-			// itemManager.list.hide();
+			// SHide the list sub-component
+			// IM.app.list.hide();
 		});
 		
 	</script>
