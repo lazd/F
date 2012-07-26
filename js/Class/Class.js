@@ -1,20 +1,20 @@
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
- * 	
- * @param {Object} descriptor				Descriptor object
- * @param {String or Function} descriptor.toString 	A string or method to use for the toString of this class and instances of this class
- * @param {Object} descriptor.extend		The class to extend
- * @param {Function} descriptor.construct	The constructor (setup) method for the new class
- * @param {Function} descriptor.destruct		The destructor (teardown) method for the new class
- * @param {Anything} descriptor.*	Other methods and properties for the new class
+ *
+ * @param {Object} descriptor						Descriptor object
+ * @param {String or Function} descriptor.toString	A string or method to use for the toString of this class and instances of this class
+ * @param {Object} descriptor.extend				The class to extend
+ * @param {Function} descriptor.construct			The constructor (setup) method for the new class
+ * @param {Function} descriptor.destruct			The destructor (teardown) method for the new class
+ * @param {Anything} descriptor.*					Other methods and properties for the new class
+ *
  * @returns {Class} The created class.
- * @constructor
 */
 function Class(descriptor) {
 	descriptor = descriptor || {};
 	
 	if (descriptor.hasOwnProperty('extend') && !descriptor.extend) {
-		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString == 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
+		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString === 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
 	}
 	
 	// Extend Object by default
@@ -156,9 +156,10 @@ function Class(descriptor) {
 	// Create a chained construct function which calls the superclass' construct function
 	prototype.construct = function() {
 		// Add a blank object as the first arg to the constructor, if none provided
-		if (arguments[0] === undefined) {
-			arguments.length = 1;
-			arguments[0] = {};
+		var args = arguments; // get around JSHint complaining about modifying arguments
+		if (args[0] === undefined) {
+			args.length = 1;
+			args[0] = {};
 		}
 		
 		// call superclass constructor
@@ -191,4 +192,19 @@ function Class(descriptor) {
 	prototype.constructor = instanceGenerator;
 	
 	return instanceGenerator;
+}
+
+if (!Object.create) {
+	/**
+	 * Creates a new object with the specified prototype object
+	 * @param {Object} o the prototype to use
+	 */
+	Object.create = function (o) {
+		if (arguments.length > 1) {
+			throw new Error('Object.create implementation only accepts the first parameter.');
+		}
+		function F() {}
+		F.prototype = o;
+		return new F();
+	};
 }
