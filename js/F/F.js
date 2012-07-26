@@ -1,4 +1,9 @@
-/** @namespace */
+/** 
+ * The main F namespace.
+ *	
+ * @property {Object} options	Options for all F components. Set F.options.debug=true to see debug messages.
+ *@namespace 
+*/
 var F = F || {};
 
 try {

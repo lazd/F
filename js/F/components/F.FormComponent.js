@@ -2,7 +2,8 @@
 	
 	/* Views
 	*******************/
-	var FormView = F.View.extend({
+	// Available as F.FormComponent.prototype.View
+	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
 			'submit': 'handleSubmit'

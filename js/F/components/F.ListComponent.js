@@ -3,8 +3,8 @@
 	/* Views
 	*******************/
 	
-	// Available as F.List.prototype.View
-	var ListView = F.View.extend(/** @lends F.List.prototype.View# */{
+	// Available as F.ListComponent.prototype.View
+	var ListView = F.View.extend(/** @lends F.ListComponent.prototype.View# */{
 		tagName: 'ul',
 
 		/**
@@ -56,8 +56,8 @@
 		}
 	});
 
-	// Available as F.List.prototype.ItemView
-	var ItemView = F.View.extend(/** @lends F.List.prototype.ItemView# */{
+	// Available as F.ListComponent.prototype.ItemView
+	var ItemView = F.View.extend(/** @lends F.ListComponent.prototype.ItemView# */{
 		tagName: 'li',
 		className: 'listItem'
 	});
@@ -78,7 +78,7 @@
 		 * @property {Backbone.View} View				The view class this list will be rendered to
 		 * @property {Template} ListTemplate			The template this list will be rendered with, optional if you just want a bare <ul>
 		 * @property {Backbone.View} ItemView			The view that individual items will be rendered to
-		 * @property {Template} ItemTemplate		The template that individual items will be rendered with
+		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {
 			// Set object properties from options object, removing them from the object thereafter
