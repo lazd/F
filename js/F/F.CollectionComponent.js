@@ -1,16 +1,22 @@
-/**
- * A component that can load and render a collection
- *
- * @class
- * @extends F.Component
- */
-F.CollectionComponent = new Class({
+F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
 	
-	/** @constructor */
+	/**
+	 * A component that can load and render a collection
+	 *
+	 * @constructs
+	 * @extends F.Component
+	 *
+	 * @param {Object} options	Options for this component
+	 *
+	 * @property {Backbone.Collection} Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself.
+	 */
 	construct: function(options) {
-		this.Collection = this.Collection || options.Collection;
+		// Store the collection class
+		this.setPropsFromOptions(options, [
+			'Collection'
+		]);
 		
 		// Create a collection
 		this.collection = new this.Collection();
@@ -18,7 +24,7 @@ F.CollectionComponent = new Class({
 		// Re-render when the collection resets
 		this.collection.on('reset', this.render);
 		
-		// Default parameters are the prototype params + optionsuration params
+		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, options.params);
 		
 		// Parameters to send with the request
@@ -28,7 +34,7 @@ F.CollectionComponent = new Class({
 		this.collectionLoaded = false;
 	},
 	
-	/** @lends F.CollectionComponent# */
+	Collection: Backbone.Collection,
 	
 	/**
 	 * Refresh this collection with the last parameters used
@@ -39,7 +45,7 @@ F.CollectionComponent = new Class({
 	 */
 	refresh: function(callback) {
 		// Just load the colleciton with the current params
-		this.loadCollection(this.params, callback);
+		this.load(this.params, callback);
 		
 		return this;
 	},
@@ -52,7 +58,7 @@ F.CollectionComponent = new Class({
 	 *
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
-	loadCollection: function(fetchParams, callback) {
+	load: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
 			this.params = _.extend({}, this.defaultParams, fetchParams);
@@ -83,7 +89,7 @@ F.CollectionComponent = new Class({
 		options = options || {};
 		if (options.params) {
 			// Load the collection by itemId
-			this.loadCollection(options.params, function() {
+			this.load(options.params, function() {
 				this.show();
 			});
 		}
