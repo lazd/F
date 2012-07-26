@@ -1,5 +1,5 @@
-IM.Components.Manager = new Class({
-	toString: 'Manager',
+IM.Components.App = new Class({
+	toString: 'IMApp',
 	extend: F.Component,
 	
 	/*
@@ -23,6 +23,7 @@ IM.Components.Manager = new Class({
 		*/  
 		this.addComponent(new this.ListComponent({
 			parent: this.view.$('.index'),
+			visible: true,
 			Collection: this.Collection
 		}), 'list');          
 		

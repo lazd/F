@@ -33,18 +33,14 @@
 		// Enable debug output for F
 		// F.options.debug = true;
 		
-		var itemManager;
 		$(function() {
-			itemManager = new IM.Components.Manager({
-				parent: '#itemManager',
-				visible: true // show immediately
-			});
+			IM.init()
 			
-			// Hide the list component
-			itemManager.list.show();
+			// Show the list component
+			// IM.app.list.show();
 			
-			// Show the or hide the component's sub-components
-			// itemManager.list.hide();
+			// SHide the list sub-component
+			// IM.app.list.hide();
 		});
 		
 	</script>

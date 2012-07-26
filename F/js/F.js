@@ -211,7 +211,12 @@ if (!Object.create) {
 		return new F();
 	};
 }
-/** @namespace */
+/** 
+ * The main F namespace.
+ *	
+ * @property {Object} options	Options for all F components. Set F.options.debug=true to see debug messages.
+ *@namespace 
+*/
 var F = F || {};
 
 try {
@@ -1101,7 +1106,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	/* Views
 	*******************/
-	var FormView = F.View.extend({
+	// Available as F.FormComponent.prototype.View
+	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
 			'submit': 'handleSubmit'
@@ -1111,7 +1117,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	/* Component
 	*******************/
-	F.Form = new Class(/** @lends F.FormComponent# */{
+	F.FormComponent = new Class(/** @lends F.FormComponent# */{
 		toString: 'FormComponent',
 		extend: F.ModelComponent,
 	
@@ -1188,8 +1194,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	/* Views
 	*******************/
 	
-	// Available as F.List.prototype.View
-	var ListView = F.View.extend(/** @lends F.List.prototype.View# */{
+	// Available as F.ListComponent.prototype.View
+	var ListView = F.View.extend(/** @lends F.ListComponent.prototype.View# */{
 		tagName: 'ul',
 
 		/**
@@ -1241,15 +1247,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		}
 	});
 
-	// Available as F.List.prototype.ItemView
-	var ItemView = F.View.extend(/** @lends F.List.prototype.ItemView# */{
+	// Available as F.ListComponent.prototype.ItemView
+	var ItemView = F.View.extend(/** @lends F.ListComponent.prototype.ItemView# */{
 		tagName: 'li',
 		className: 'listItem'
 	});
 
 	/* Component
 	*******************/
-	F.List = new Class(/** @lends F.List# */{
+	F.ListComponent = new Class(/** @lends F.ListComponent# */{
 		toString: 'ListComponent',
 		extend: F.CollectionComponent,
 	
@@ -1263,7 +1269,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @property {Backbone.View} View				The view class this list will be rendered to
 		 * @property {Template} ListTemplate			The template this list will be rendered with, optional if you just want a bare <ul>
 		 * @property {Backbone.View} ItemView			The view that individual items will be rendered to
-		 * @property {Template} ItemTemplate		The template that individual items will be rendered with
+		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {
 			// Set object properties from options object, removing them from the object thereafter
