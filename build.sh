@@ -1,16 +1,16 @@
 # Get http://jsdoc-toolkit.googlecode.com/files/jsdoc_toolkit-2.4.0.zip
 
 includeOrder="
-js/extensions/Object.js
-js/extensions/Class.js
+js/Class/Class.js
 
 js/F/F.js
 js/F/F.EventEmitter.js
 js/F/F.View.js
 js/F/F.Component.js
-js/F/components/F.ModelComponent.js
-js/F/components/F.CollectionComponent.js
-js/F/components/F.FormComponent.js
+js/F/F.ModelComponent.js
+js/F/F.CollectionComponent.js
+
+js/F/components/*
 "
 
 if [ ! -e build ]; then
@@ -29,11 +29,17 @@ if [ ! -e build/examples ]; then
 	mkdir build/examples;
 fi
 
-# Make docs
-java -jar jsdoc-toolkit/jsrun.jar jsdoc-toolkit/app/run.js -a -t=jsdoc-toolkit/templates/jsdoc js/F/* js/extensions/* -d=build/jsdoc
-
-# Rollup CSS
+# Rollup JS
 cat $includeOrder > build/js/F.js
+
+# Build components
+# for componentPath in js/F/components/*; do
+# 	componentName=$(basename "$componentPath")
+# 	echo "Building component $componentName..."
+# 	
+# 	# Rollup and copy
+# 	ls $componentPath/* | sort -r | xargs cat > build/js/F.$componentName.js
+# done
 
 # Copy examples
 for example in examples/*; do
@@ -48,3 +54,6 @@ for example in examples/*; do
 	# Copy F.js
 	cp build/js/F.js build/$example/js/ 
 done
+
+# Make docs
+java -jar jsdoc-toolkit/jsrun.jar jsdoc-toolkit/app/run.js -a -t=jsdoc-toolkit/templates/jsdoc $includeOrder -d=build/jsdoc
