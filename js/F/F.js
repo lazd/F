@@ -9,6 +9,5 @@ catch (err) {
 }
 
 F.options = {
-	idField: 'id',
 	debug: false
 };
