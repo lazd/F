@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - Class</title>
+		<title>JsDoc Reference - F.List.View</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -191,11 +191,25 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
-	<li><a href="../symbols/Class.html">Class</a></li>
+	<li><a href="../symbols/F.html">F</a></li>
+	
+	<li><a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a></li>
+	
+	<li><a href="../symbols/F.Component.html">F.Component</a></li>
+	
+	<li><a href="../symbols/F.EventEmitter.html">F.EventEmitter</a></li>
+	
+	<li><a href="../symbols/F.FormComponent.html">F.FormComponent</a></li>
+	
+	<li><a href="../symbols/F.List.View.html">F.List.View</a></li>
+	
+	<li><a href="../symbols/F.ListComponent.html">F.ListComponent</a></li>
+	
+	<li><a href="../symbols/F.ModelComponent.html">F.ModelComponent</a></li>
+	
+	<li><a href="../symbols/F.View.html">F.View</a></li>
 	
 	<li><a href="../symbols/Object.html">Object</a></li>
-	
-	<li><a href="../symbols/String.html">String</a></li>
 	
 </ul>
 <hr />
@@ -206,24 +220,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class Class
+				Class F.List.View
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
+				<br />Extends
+					<a href="../symbols/F.View.html">F.View</a>.<br />
 				
 			
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/js_extensions_Class.js.html">Class.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_components_F.List.js.html">F.List.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Class.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.List.View.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -236,9 +252,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/Class.html#constructor">Class</a></b>(descriptor)
+								<b><a href="../symbols/F.List.View.html#constructor">F.List.View</a></b>(options)
 							</div>
-							<div class="description">Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods</div>
+							<div class="description">View class that renders a collection as a list</div>
 						</td>
 					</tr>
 				</tbody>
@@ -249,6 +265,37 @@ ul.inheritsList
 			
 
 <!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.List.View.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.List.View.html#render">render</a></b>()
+								</div>
+								<div class="description">Render the list as individual item</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Methods borrowed from class <a href="../symbols/F.View.html">F.View</a>: </dt><dd><a href="../symbols/F.View.html#age">age</a>, <a href="../symbols/F.View.html#delegateEvents">delegateEvents</a>, <a href="../symbols/F.View.html#hide">hide</a>, <a href="../symbols/F.View.html#renderOnce">renderOnce</a>, <a href="../symbols/F.View.html#show">show</a></dd>
+				</dl>
+				
 			
 <!-- ============================== events summary ======================== -->
 			
@@ -261,11 +308,11 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>Class</b>(descriptor)
+						<b>F.List.View</b>(options)
 				</div>
 				
 				<div class="description">
-					Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
+					View class that renders a collection as a list
 					
 				</div>
 				
@@ -277,53 +324,16 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>descriptor</b>
+								 <b>options</b>
 								
 							</dt>
-								<dd>Descriptor object</dd>
-						
-							<dt>
-								<span class="light fixedFont">{<a href="../symbols/String.html">String</a> or Function}</span>  <b>descriptor.toString</b>
-								
-							</dt>
-								<dd>A string or method to use for the toString of this class and instances of this class</dd>
-						
-							<dt>
-								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>descriptor.extend</b>
-								
-							</dt>
-								<dd>The class to extend</dd>
-						
-							<dt>
-								<span class="light fixedFont">{Function}</span>  <b>descriptor.construct</b>
-								
-							</dt>
-								<dd>The constructor (setup) method for the new class</dd>
-						
-							<dt>
-								<span class="light fixedFont">{Function}</span>  <b>descriptor.destruct</b>
-								
-							</dt>
-								<dd>The destructor (teardown) method for the new class</dd>
-						
-							<dt>
-								<span class="light fixedFont">{Anything}</span>  <b>descriptor.*</b>
-								
-							</dt>
-								<dd>Other methods and properties for the new class</dd>
+								<dd></dd>
 						
 						</dl>
 					
 					
 					
 					
-					
-						<dl class="detailList">
-						<dt class="heading">Returns:</dt>
-						
-								<dd><span class="light fixedFont">{<a href="../symbols/Class.html">Class</a>}</span> The created class.</dd>
-						
-						</dl>
 					
 					
 					
@@ -336,6 +346,36 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="render"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>render</b>()
+					
+					</div>
+					<div class="description">
+						Render the list as individual item
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -347,7 +387,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:30:33 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 14:39:10 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

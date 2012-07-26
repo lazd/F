@@ -191,19 +191,23 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/F.html">F</a></li>
+	
 	<li><a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a></li>
 	
 	<li><a href="../symbols/F.Component.html">F.Component</a></li>
 	
 	<li><a href="../symbols/F.EventEmitter.html">F.EventEmitter</a></li>
 	
+	<li><a href="../symbols/F.FormComponent.html">F.FormComponent</a></li>
+	
+	<li><a href="../symbols/F.List.html">F.List</a></li>
+	
 	<li><a href="../symbols/F.ModelComponent.html">F.ModelComponent</a></li>
 	
 	<li><a href="../symbols/F.View.html">F.View</a></li>
 	
 	<li><a href="../symbols/Object.html">Object</a></li>
-	
-	<li><a href="../symbols/String.html">String</a></li>
 	
 </ul>
 <hr />
@@ -246,7 +250,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.ModelComponent.html#constructor">F.ModelComponent</a></b>()
+								<b><a href="../symbols/F.ModelComponent.html#constructor">F.ModelComponent</a></b>(options)
 							</div>
 							<div class="description">A component that can load and render a model</div>
 						</td>
@@ -256,6 +260,38 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class F.ModelComponent.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/F.ModelComponent.html#Model">Model</a></b>
+								</div>
+								<div class="description">The model class to operate on.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				
+				</dl>
+				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -293,7 +329,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#save">save</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#save">save</a></b>(callback, callback)
 								</div>
 								<div class="description">Save a model to the server</div>
 							</td>
@@ -314,7 +350,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
@@ -329,7 +365,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.ModelComponent</b>()
+						<b>F.ModelComponent</b>(options)
 				</div>
 				
 				<div class="description">
@@ -340,6 +376,17 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options</b>
+								
+							</dt>
+								<dd>Options for this component</dd>
+						
+						</dl>
 					
 					
 					
@@ -352,6 +399,33 @@ ul.inheritsList
 			
 
 <!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="Model"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Backbone.Model}</span>
+					<b>Model</b>
+					
+					</div>
+					<div class="description">
+						The model class to operate on. Not an instance of a model, but the model class itself.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
 			
 
 <!-- ============================== method details ========================= -->		
@@ -456,7 +530,7 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>save</b>(callback)
+					<b>save</b>(callback, callback)
 					
 					</div>
 					<div class="description">
@@ -476,6 +550,12 @@ ul.inheritsList
 									
 								</dt>
 								<dd>Callback to execute on successful fetch</dd>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
 							
 							</dl>
 						
@@ -550,7 +630,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:38:59 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 14:45:37 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

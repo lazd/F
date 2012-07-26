@@ -1,34 +1,20 @@
-if (!Object.create) {
-	/**
-	 * Creates a new object with the specified prototype object
-	 * @param {Object} o the prototype to use
-	 */
-	Object.create = function (o) {
-		if (arguments.length > 1) {
-			throw new Error('Object.create implementation only accepts the first parameter.');
-		}
-		function F() {}
-		F.prototype = o;
-		return new F();
-	};
-}
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
- * 	
- * @param {Object} descriptor				Descriptor object
- * @param {String or Function} descriptor.toString 	A string or method to use for the toString of this class and instances of this class
- * @param {Object} descriptor.extend		The class to extend
- * @param {Function} descriptor.construct	The constructor (setup) method for the new class
- * @param {Function} descriptor.destruct		The destructor (teardown) method for the new class
- * @param {Anything} descriptor.*	Other methods and properties for the new class
+ *
+ * @param {Object} descriptor						Descriptor object
+ * @param {String or Function} descriptor.toString	A string or method to use for the toString of this class and instances of this class
+ * @param {Object} descriptor.extend				The class to extend
+ * @param {Function} descriptor.construct			The constructor (setup) method for the new class
+ * @param {Function} descriptor.destruct			The destructor (teardown) method for the new class
+ * @param {Anything} descriptor.*					Other methods and properties for the new class
+ *
  * @returns {Class} The created class.
- * @constructor
 */
 function Class(descriptor) {
 	descriptor = descriptor || {};
 	
 	if (descriptor.hasOwnProperty('extend') && !descriptor.extend) {
-		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString == 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
+		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString === 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
 	}
 	
 	// Extend Object by default
@@ -170,9 +156,10 @@ function Class(descriptor) {
 	// Create a chained construct function which calls the superclass' construct function
 	prototype.construct = function() {
 		// Add a blank object as the first arg to the constructor, if none provided
-		if (arguments[0] === undefined) {
-			arguments.length = 1;
-			arguments[0] = {};
+		var args = arguments; // get around JSHint complaining about modifying arguments
+		if (args[0] === undefined) {
+			args.length = 1;
+			args[0] = {};
 		}
 		
 		// call superclass constructor
@@ -206,6 +193,24 @@ function Class(descriptor) {
 	
 	return instanceGenerator;
 }
+
+if (!Object.create) {
+	/**
+	 * Polyfill for Object.create. Creates a new object with the specified prototype object.
+	 * 
+	 * @author Mozilla MDN https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/create/
+	 *
+	 * @param {Object} o	The prototype to create a new object with
+	 */
+	Object.create = function (o) {
+		if (arguments.length > 1) {
+			throw new Error('Object.create implementation only accepts the first parameter.');
+		}
+		function F() {}
+		F.prototype = o;
+		return new F();
+	};
+}
 /** @namespace */
 var F = F || {};
 
@@ -217,7 +222,6 @@ catch (err) {
 }
 
 F.options = {
-	idField: 'id',
 	debug: false
 };
 /**
@@ -225,15 +229,13 @@ F.options = {
  *
  * @class
  */
-F.EventEmitter = new Class({
+F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	destruct: function() {
 		delete this._events;
 	},
 	
-	/** @lends F.EventEmitter# */
-	
 	/**
-	 * Attach en event listener
+	 * Attach an event listener
 	 *
 	 * @param {String} evt		Name of event to listen to
 	 * @param {Function} func	Function to execute
@@ -249,7 +251,7 @@ F.EventEmitter = new Class({
 	},
 
 	/**
-	 * Remove en event listener
+	 * Remove an event listener
 	 *
 	 * @param {String} evt		Name of event that function is bound to
 	 * @param {Function} func	Bound function
@@ -282,18 +284,6 @@ F.EventEmitter = new Class({
 		return this;
 	}
 });
-
-/*
- * Mix EventEmitter into a class or object
- * 
- * @param {Object} destObject	Class or object to mix into
- */
-F.EventEmitter.mixin = function(destObject){
-	var props = ['on', 'off', 'trigger'];
-	for (var i = 0; i < props.length; i ++){
-		destObject.prototype[props[i]] = F.EventEmitter.prototype[props[i]];
-	}
-};
 (function() {
 	// A couple functions required to override delegateEvents
 	var delegateEventSplitter = /^(\S+)\s*(.*)$/;
@@ -302,15 +292,13 @@ F.EventEmitter.mixin = function(destObject){
 		return _.isFunction(object[prop]) ? object[prop]() : object[prop];
 	};
 	
-	/**
-	 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
-	 *
-	 * @class
-	 * @extends Backbone.View
-	 */
-	F.View = Backbone.View.extend({
-		
-		/** @constructor */
+	F.View = Backbone.View.extend(/** @lends F.View# */{
+		/**
+		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
+		 *
+		 * @constructs
+		 * @extends Backbone.View
+		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
 				this.template = this.template || this.options.template;
@@ -320,6 +308,7 @@ F.EventEmitter.mixin = function(destObject){
 			if (this.options.el) {
 				// TBD: validate options.el has proper tag based on this.tag
 			}
+			
 			// Store parent, if provided
 			this.parent = this.options.parent;
 			
@@ -335,9 +324,7 @@ F.EventEmitter.mixin = function(destObject){
 			
 			this.rendered = null;
 		},
-	
-		/** @lends F.View# */
-
+		
 		/**
 		 * Get the age of this view; how many seconds since it was last rendered
 		 *
@@ -479,40 +466,37 @@ F.EventEmitter.mixin = function(destObject){
 		return str.slice(0, 1).toLowerCase()+str.slice(1);	
 	}
 	
-	/**
-	 * Generic component class
-	 *
-	 * @class
-	 * @extends F.EventEmitter
-	 */
-	F.Component = new Class({
+	F.Component = new Class(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
-		
-		/** @constructor */
+		/**
+		 * Generic component class
+		 *
+		 * @extends F.EventEmitter
+		 * @constructs
+		 * @param {Object} options	Component options
+		 */
 		construct: function(options) {
-			// Looks funny, but it modified options back to the arguments object
-			_.extend(
-				options, 
-				_.extend({}, {
-					singly: false,
-					visible: false
-				}, this.options || {}, options)
-			);
-		
+			// Looks funny, but it modifies options with defaults and makes them available to other constructors
+			this.mergeOptions({
+				singly: false, // Show only one subcomponent at a time
+				visible: false // Visible immediately or not
+			}, options);
+			
+			// Store options into object
+			this.setPropsFromOptions(options, [
+				'singly', 
+				'visible'
+			]);
+			
 			// Sub components
 			this.components = {};
-		
-			// Show only one subcomponent at a time
-			this.singly = options.singly;
 			
-			// Visible or not
-			this.visible = options.visible;
-		
 			// Make sure the following functions are always called in scope
-			this.bind(this._setCurrentComponent); // shorthand for this._setCurrentComponent = this._setCurrentComponent.bind(this);
+			// They are used in event handlers, and we want to be able to remove them
+			this.bind(this._setCurrentComponent);
 			this.bind(this.render);
-		
+			
 			if (this.visible) {
 				// Show the component once the call chain has returned
 				_.defer(function() {
@@ -522,8 +506,6 @@ F.EventEmitter.mixin = function(destObject){
 				}.bind(this));
 			}
 		},
-		
-		/** @lends F.Component# */
 		
 		/**
 		 * Destroy this instance and free associated memory
@@ -542,10 +524,17 @@ F.EventEmitter.mixin = function(destObject){
 		/**
 		 * Render the view associated with this component, if it has one
 		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		render: function() {
-			if (this.view)
+			if (this.view) {
+				if (F.options.debug)
+					console.warn('%s: Rendering', this.toString());
+					
 				this.view.render();
+			}
+			
+			return this;
 		},
 	
 		/**
@@ -608,7 +597,7 @@ F.EventEmitter.mixin = function(destObject){
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._componentShowHandler);
+				component.off('component:shown', this._setCurrentComponent);
 		
 				delete this[componentName];
 				delete this.components[componentName];
@@ -707,21 +696,6 @@ F.EventEmitter.mixin = function(destObject){
 		},
 	
 		/**
-		 * Set a custom name for this component. Only useful before passing to addComponent
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		setName: function(customName) {
-			this.toString = function() {
-				return customName;
-			};
-			
-			return this;
-		},
-	
-		/**
 		 * Hide all sub-components
 		 *
 		 */
@@ -783,25 +757,82 @@ F.EventEmitter.mixin = function(destObject){
 			}
 		
 			return this;
+		},
+		
+		/**
+		 * Set a custom name for this component. Only useful before passing to addComponent
+		 *
+		 * @param {Function} componentName	Component name
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		setName: function(customName) {
+			this.toString = function() {
+				return customName;
+			};
+			
+			return this;
+		},
+		
+		/**
+		 * Set properties of this instance from an options object, then remove the properties from the options object
+		 *
+		 * @param {Object} options	Options object with many properties
+		 * @param {Array} props		Properties to copy from options object
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		setPropsFromOptions: function(options, props) {
+			_.each(props, function(prop) {
+				// Add the property to this instance, or use existing property if it's already there
+				this[prop] = options[prop] || this[prop];
+				// Delete the property from the options object
+				delete options[prop];
+			}.bind(this));
+			
+			return this;
+		},
+		
+		/**
+		 * Merges options in the following order:
+		 *   Instance Options
+		 *   Class options
+		 *   Class defaults
+		 *
+		 * @param {Object} defaults	Default options object
+		 * @param {Object} options	Instance options object (argument to constructor)
+		 *
+		 * @returns {Object}	Merged options object
+		 */
+		mergeOptions: function(defaults, options) {
+			_.extend(
+				options, 
+				_.extend({}, defaults || {}, this.options || {}, options)
+			);
+			
+			return options;
 		}
 	});
 }());
-/**
- * A component that can load and render a model
- *
- * @class
- * @extends F.Component
- */
-F.ModelComponent = new Class({
+F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
-	
-	/** @constructor */
+
+	/**
+	 * A component that can load and render a model
+	 *
+	 * @constructs
+	 * @extends F.Component
+	 *
+	 * @param {Object} options	Options for this component
+	 *
+	 * @property {Backbone.Model} Model		The model class to operate on. Not an instance of a model, but the model class itself.
+	 */
 	construct: function(options) {
 		this.Model = this.Model || options.Model;
 	},
 	
-	/** @lends F.ModelComponent# */
+	Model: Backbone.Model,
 	
 	/***
 	 * Refresh the model
@@ -831,6 +862,11 @@ F.ModelComponent = new Class({
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
+		if (this.model) {
+			// Unsubscribe from old model's change event
+			this.model.off('change', this.render);
+		}
+		
 		this.model = model;
 		
 		if (this.view) {
@@ -838,33 +874,12 @@ F.ModelComponent = new Class({
 			this.view.rendered = null;
 		}
 		
+		// Subscribe to new model's change event
+		this.model.on('change', this.render);
+		
 		return this;
 	},
 		
-	/**
-	 * Save a model to the server
-	 *
-	 * @param {Function} callback	Callback to execute on successful fetch
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
-	save: function(callback) {
-		if (this.model) {
-			this.model.save({
-				success: function() {
-					if (typeof callback === 'function')
-						callback.call(this, this.model);
-
-					this.trigger('saved');
-				}.bind(this)
-			});
-		}
-		else {
-			console.warn('%s: Cannot save, model is not truthy', this.toString());
-		}
-		return this;
-	},
-	
 	/**
 	 * Load an item's model by ID or by model
 	 *
@@ -888,7 +903,7 @@ F.ModelComponent = new Class({
 					// Assign the model to the view
 					this._setModel(model);
 					
-					// Nofity
+					// Noftify
 					this.trigger('modelLoaded');
 					
 					// Call callback
@@ -901,8 +916,44 @@ F.ModelComponent = new Class({
 			// It must be an object
 			this._setModel(itemIdOrModel);
 		}
+		
 		return this;
+	},
 	
+	/**
+	 * Save a model to the server
+	 *
+	 * @param {Function} callback	Callback to execute on successful fetch
+	 *
+	 * @returns {F.ModelComponent}	this, chainable
+	 */
+	save: function(data, callback) {
+		if (this.model) {
+			if (F.options.debug)
+				console.log('%s: Saving...', this.toString());
+			
+			this.model.save(data || {}, {
+				success: function() {
+					if (F.options.debug)
+						console.log('%s: Save successful', this.toString());
+					
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+						
+					this.trigger('saved', this.model);
+				}.bind(this),
+				error: function() {
+					// TBD: add meaningful data to event properties
+					console.warn('%s: Error saving model', this.toString());
+					
+					this.trigger('saveFailed', this.model);
+				}.bind(this)
+			});
+		}
+		else {
+			console.warn('%s: Cannot save, model is not truthy', this.toString());
+		}
+		return this;
 	},
 	
 	/**
@@ -914,22 +965,23 @@ F.ModelComponent = new Class({
 	 */
 	show: function(options) {
 		options = options || {};
+		
 		if (options.id) {
 			if (F.options.debug) {
-				console.log('ModelComponent %s: fetching item with ID %s', this.toString(), options.id);
+				console.log('%s: fetching item with ID %s', this.toString(), options.id);
 			}
 			
 			// Load the model by itemId, then show
 			this.load(options.id, function(model) {
 				if (F.options.debug) {
-					console.log('ModelComponent %s: fetch complete!', this.toString());
+					console.log('%s: fetch complete!', this.toString());
 				}
 				this.show(); // pass nothing to show and the view will re-render
 			});
 		}
 		else if (options.model) {
-			console.log('ModelComponent %s: showing with new model', this.toString(), options.model);
-			this._setModel(options.model);
+			console.log('%s: showing with new model', this.toString(), options.model);
+			this.load(options.model);
 			this.show();
 		}
 		else
@@ -938,19 +990,25 @@ F.ModelComponent = new Class({
 		return this;
 	}
 });
-/**
- * A component that can load and render a collection
- *
- * @class
- * @extends F.Component
- */
-F.CollectionComponent = new Class({
+F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
 	
-	/** @constructor */
+	/**
+	 * A component that can load and render a collection
+	 *
+	 * @constructs
+	 * @extends F.Component
+	 *
+	 * @param {Object} options	Options for this component
+	 *
+	 * @property {Backbone.Collection} Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself.
+	 */
 	construct: function(options) {
-		this.Collection = this.Collection || options.Collection;
+		// Store the collection class
+		this.setPropsFromOptions(options, [
+			'Collection'
+		]);
 		
 		// Create a collection
 		this.collection = new this.Collection();
@@ -958,7 +1016,7 @@ F.CollectionComponent = new Class({
 		// Re-render when the collection resets
 		this.collection.on('reset', this.render);
 		
-		// Default parameters are the prototype params + optionsuration params
+		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, options.params);
 		
 		// Parameters to send with the request
@@ -968,7 +1026,7 @@ F.CollectionComponent = new Class({
 		this.collectionLoaded = false;
 	},
 	
-	/** @lends F.CollectionComponent# */
+	Collection: Backbone.Collection,
 	
 	/**
 	 * Refresh this collection with the last parameters used
@@ -979,7 +1037,7 @@ F.CollectionComponent = new Class({
 	 */
 	refresh: function(callback) {
 		// Just load the colleciton with the current params
-		this.loadCollection(this.params, callback);
+		this.load(this.params, callback);
 		
 		return this;
 	},
@@ -992,7 +1050,7 @@ F.CollectionComponent = new Class({
 	 *
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
-	loadCollection: function(fetchParams, callback) {
+	load: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
 			this.params = _.extend({}, this.defaultParams, fetchParams);
@@ -1023,7 +1081,7 @@ F.CollectionComponent = new Class({
 		options = options || {};
 		if (options.params) {
 			// Load the collection by itemId
-			this.loadCollection(options.params, function() {
+			this.load(options.params, function() {
 				this.show();
 			});
 		}
@@ -1039,3 +1097,220 @@ F.CollectionComponent = new Class({
 		return this;
 	}
 });
+(function() {
+	
+	/* Views
+	*******************/
+	var FormView = F.View.extend({
+		tagName: 'form',
+		events: {
+			'submit': 'handleSubmit'
+		}
+	});
+	
+	
+	/* Component
+	*******************/
+	F.Form = new Class(/** @lends F.FormComponent# */{
+		toString: 'FormComponent',
+		extend: F.ModelComponent,
+	
+		/**
+		 * A component that can display an add/edit form for a model and handle form submission and save events
+		 *
+		 * @constructs
+		 * @extends F.ModelComponent
+		 *
+		 * @property {Backbone.View} View	The view class that the form will be rendered to
+		 * @property {Template} Template	The template that the form will be rendered with
+		 */
+		construct: function(options) {
+			this.setPropsFromOptions(options, [
+				'View',
+				'Model',
+				'Template'
+			]);
+		
+			this.View = this.View || F.Form.View;
+		
+			// Create a new edit view that responds to submit events
+			this.view = new this.View(_.extend({
+				component: this,
+				template: this.Template
+			}, options));
+		
+			// Create a blank model
+			this.model = new this.Model();
+		},
+	
+		View: FormView,
+	
+		Template: null,
+
+		/**
+		 * Clears the form by rendering it with a new, empty model
+		 */
+		clear: function() {
+			// Create a new model instead of resetting the old one
+			this.model = new this.Model();
+
+			// Render the view so it will be blank again
+			this.render();
+		
+			return this;
+		},
+	
+		/**
+		 * Handles form submit events
+		 *
+		 * @param {Event} evt	The jQuery event object
+		 */
+		handleSubmit: function(evt) {
+			// Get the data from the form fields
+			var fields = this.view.$el.serializeArray();
+		
+			// Build a data object from fields
+			var data = {};
+			_.each(fields, function(field) {
+				data[field.name] = field.value;
+			});
+		
+			// Perform the save, passing our modified as the second arg
+			this.save(data);
+
+			// Since this is a DOM event handler, prevent form submission
+			return false;
+		}
+	});
+
+}());(function() {
+	
+	/* Views
+	*******************/
+	
+	// Available as F.List.prototype.View
+	var ListView = F.View.extend(/** @lends F.List.prototype.View# */{
+		tagName: 'ul',
+
+		/**
+		 * View class that renders a collection as a list
+		 *
+		 * @constructs
+		 * @extends F.View
+		 */
+		initialize: function(options) {
+			options = options || {};
+
+			// Clumsy backbone way of calling parent class' constructor
+			F.View.prototype.initialize.apply(this, arguments);
+
+			this.collection = options.collection;
+			this.ItemView = options.ItemView || this.ItemView;
+			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
+		},
+
+		/**
+		 * Render the list as individual item
+		 */
+		render: function() {
+			if (this.parent && !$(this.el.parentNode).is(this.parent))
+				$(this.parent).append(this.el);
+
+			// Clear the list
+			this.$el.children().remove();
+
+			// Add and render each list item
+			this.collection.each(function(model) {
+				var view = new this.ItemView({
+					model: model,
+					template: this.ItemTemplate
+				});
+				view.render();
+
+				// Store model
+				view.$el.data('model', model);
+
+				// Add the list item to the List
+				this.$el.append(view.el);
+			}.bind(this));
+
+			// Store the last time this view was rendered
+			this.rendered = new Date().getTime();
+
+			return this;
+		}
+	});
+
+	// Available as F.List.prototype.ItemView
+	var ItemView = F.View.extend(/** @lends F.List.prototype.ItemView# */{
+		tagName: 'li',
+		className: 'listItem'
+	});
+
+	/* Component
+	*******************/
+	F.List = new Class(/** @lends F.List# */{
+		toString: 'ListComponent',
+		extend: F.CollectionComponent,
+	
+		/**
+		 * A component that can load and render a collection as a list
+		 *
+		 * @constructs
+		 * @extends F.CollectionComponent
+		 *
+		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
+		 * @property {Backbone.View} View				The view class this list will be rendered to
+		 * @property {Template} ListTemplate			The template this list will be rendered with, optional if you just want a bare <ul>
+		 * @property {Backbone.View} ItemView			The view that individual items will be rendered to
+		 * @property {Template} ItemTemplate		The template that individual items will be rendered with
+		 */
+		construct: function(options) {
+			// Set object properties from options object, removing them from the object thereafter
+			this.setPropsFromOptions(options, [
+				'Collection',
+				'ListTemplate',
+				'ListView',
+				'ItemTemplate',
+				'ItemView'
+			]);
+			
+			this.view = new this.ListView(_.extend({
+				component: this,
+				collection: this.collection,
+				ItemView: this.ItemView,
+				ItemTemplate: this.ItemTemplate,
+				events: {
+					'click li': 'handleSelect'
+				}
+			}, options));
+		
+			this.selectedItem = null;
+		},
+	
+		Collection: Backbone.Collection, // Collection component expects to have prototype.Collection or options.Collection
+	
+		ListTemplate: null,
+		ListView: ListView,
+	
+		ItemTemplate: null,
+		ItemView: ItemView,
+	
+		/**
+		 * Handles item selection events
+		 *
+		 * @param {Event} evt	The jQuery event object
+		 */
+		handleSelect: function(evt) {
+			var listItem = $(evt.currentTarget);
+			var model = listItem.data('model');
+			this.selectedItem = model.id;
+		
+			this.trigger('itemSelected', {
+				listItem: listItem,
+				model: model
+			});
+		}
+	});
+}());
+

@@ -191,19 +191,23 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/F.html">F</a></li>
+	
 	<li><a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a></li>
 	
 	<li><a href="../symbols/F.Component.html">F.Component</a></li>
 	
 	<li><a href="../symbols/F.EventEmitter.html">F.EventEmitter</a></li>
 	
+	<li><a href="../symbols/F.FormComponent.html">F.FormComponent</a></li>
+	
+	<li><a href="../symbols/F.List.html">F.List</a></li>
+	
 	<li><a href="../symbols/F.ModelComponent.html">F.ModelComponent</a></li>
 	
 	<li><a href="../symbols/F.View.html">F.View</a></li>
 	
 	<li><a href="../symbols/Object.html">Object</a></li>
-	
-	<li><a href="../symbols/String.html">String</a></li>
 	
 </ul>
 <hr />
@@ -246,7 +250,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.Component.html#constructor">F.Component</a></b>()
+								<b><a href="../symbols/F.Component.html#constructor">F.Component</a></b>(options)
 							</div>
 							<div class="description">Generic component class</div>
 						</td>
@@ -329,6 +333,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a></b>(defaults, options)
+								</div>
+								<div class="description">Merges options in the following order:
+  Instance Options
+  Class options
+  Class defaults</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.Component.html#removeComponent">removeComponent</a></b>(componentName)
 								</div>
 								<div class="description">Remove a sub-component</div>
@@ -350,6 +366,15 @@ ul.inheritsList
 								<div class="fixedFont"><b><a href="../symbols/F.Component.html#setName">setName</a></b>(componentName)
 								</div>
 								<div class="description">Set a custom name for this component.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a></b>(options, props)
+								</div>
+								<div class="description">Set properties of this instance from an options object, then remove the properties from the options object</div>
 							</td>
 						</tr>
 					
@@ -401,7 +426,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.Component</b>()
+						<b>F.Component</b>(options)
 				</div>
 				
 				<div class="description">
@@ -412,6 +437,17 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options</b>
+								
+							</dt>
+								<dd>Component options</dd>
+						
+						</dl>
 					
 					
 					
@@ -646,6 +682,58 @@ You can give a component an optional custom name as the second argument, then re
 
 					<hr />
 				
+					<a name="mergeOptions"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<b>mergeOptions</b>(defaults, options)
+					
+					</div>
+					<div class="description">
+						Merges options in the following order:
+  Instance Options
+  Class options
+  Class defaults
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>defaults</b>
+									
+								</dt>
+								<dd>Default options object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
+									
+								</dt>
+								<dd>Instance options object (argument to constructor)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Merged options object</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="removeComponent"> </a>
 					<div class="fixedFont">
 					
@@ -692,7 +780,7 @@ You can give a component an optional custom name as the second argument, then re
 					<a name="render"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
 					<b>render</b>()
 					
 					</div>
@@ -708,6 +796,13 @@ You can give a component an optional custom name as the second argument, then re
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> this, chainable</dd>
+							
+							</dl>
 						
 						
 						
@@ -738,6 +833,55 @@ You can give a component an optional custom name as the second argument, then re
 									
 								</dt>
 								<dd>Component name</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="setPropsFromOptions"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
+					<b>setPropsFromOptions</b>(options, props)
+					
+					</div>
+					<div class="description">
+						Set properties of this instance from an options object, then remove the properties from the options object
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
+									
+								</dt>
+								<dd>Options object with many properties</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Array}</span> <b>props</b>
+									
+								</dt>
+								<dd>Properties to copy from options object</dd>
 							
 							</dl>
 						
@@ -880,7 +1024,7 @@ You can give a component an optional custom name as the second argument, then re
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jul 25 2012 01:38:59 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 14:45:37 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

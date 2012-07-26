@@ -7,21 +7,21 @@
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
-<span class='line'>  3</span>  * 	
-<span class='line'>  4</span>  * @param {Object} descriptor				Descriptor object
-<span class='line'>  5</span>  * @param {String or Function} descriptor.toString 	A string or method to use for the toString of this class and instances of this class
-<span class='line'>  6</span>  * @param {Object} descriptor.extend		The class to extend
-<span class='line'>  7</span>  * @param {Function} descriptor.construct	The constructor (setup) method for the new class
-<span class='line'>  8</span>  * @param {Function} descriptor.destruct		The destructor (teardown) method for the new class
-<span class='line'>  9</span>  * @param {Anything} descriptor.*	Other methods and properties for the new class
-<span class='line'> 10</span>  * @returns {Class} The created class.
-<span class='line'> 11</span>  * @constructor
+<span class='line'>  3</span>  *
+<span class='line'>  4</span>  * @param {Object} descriptor						Descriptor object
+<span class='line'>  5</span>  * @param {String or Function} descriptor.toString	A string or method to use for the toString of this class and instances of this class
+<span class='line'>  6</span>  * @param {Object} descriptor.extend				The class to extend
+<span class='line'>  7</span>  * @param {Function} descriptor.construct			The constructor (setup) method for the new class
+<span class='line'>  8</span>  * @param {Function} descriptor.destruct			The destructor (teardown) method for the new class
+<span class='line'>  9</span>  * @param {Anything} descriptor.*					Other methods and properties for the new class
+<span class='line'> 10</span>  *
+<span class='line'> 11</span>  * @returns {Class} The created class.
 <span class='line'> 12</span> */</span><span class="WHIT">
 <span class='line'> 13</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Class</span><span class="PUNC">(</span><span class="NAME">descriptor</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 14</span> </span><span class="WHIT">	</span><span class="NAME">descriptor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">descriptor</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 15</span> </span><span class="WHIT">	
 <span class='line'> 16</span> 	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">descriptor.hasOwnProperty</span><span class="PUNC">(</span><span class="STRN">'extend'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">descriptor.extend</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">		</span><span class="NAME">console.warn</span><span class="PUNC">(</span><span class="STRN">'Class: %s is attempting to extend a non-truthy thing'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">descriptor.extend</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">		</span><span class="NAME">console.warn</span><span class="PUNC">(</span><span class="STRN">'Class: %s is attempting to extend a non-truthy thing'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">descriptor.toString</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">descriptor.extend</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 18</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 19</span> </span><span class="WHIT">	
 <span class='line'> 20</span> 	</span><span class="COMM">// Extend Object by default</span><span class="WHIT">
@@ -163,40 +163,59 @@
 <span class='line'>156</span> </span><span class="WHIT">	</span><span class="COMM">// Create a chained construct function which calls the superclass' construct function</span><span class="WHIT">
 <span class='line'>157</span> </span><span class="WHIT">	</span><span class="NAME">prototype.construct</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>158</span> </span><span class="WHIT">		</span><span class="COMM">// Add a blank object as the first arg to the constructor, if none provided</span><span class="WHIT">
-<span class='line'>159</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>160</span> </span><span class="WHIT">			</span><span class="NAME">arguments.length</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>161</span> </span><span class="WHIT">			</span><span class="NAME">arguments</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>162</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>163</span> </span><span class="WHIT">		
-<span class='line'>164</span> 		</span><span class="COMM">// call superclass constructor</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">extend</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">extend.prototype</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">extend.prototype.construct</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">			</span><span class="NAME">extend.prototype.construct.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			
-<span class='line'>167</span> 		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>168</span> 
-<span class='line'>169</span> </span><span class="WHIT">		</span><span class="COMM">// call constructor</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">construct</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>171</span> </span><span class="WHIT">			</span><span class="NAME">construct.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>172</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>173</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>174</span> </span><span class="WHIT">	
-<span class='line'>175</span> 	</span><span class="COMM">// Create a function that generates instances of our class and calls our construct functions</span><span class="WHIT">
-<span class='line'>176</span> </span><span class="WHIT">	</span><span class="COMM">/** @private */</span><span class="WHIT">
-<span class='line'>177</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>178</span> </span><span class="WHIT">		</span><span class="COMM">// Create a new object with the prototype we built</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">instance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Object.create</span><span class="PUNC">(</span><span class="NAME">prototype</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">		
-<span class='line'>181</span> 		</span><span class="COMM">// Call all inherited construct functions</span><span class="WHIT">
-<span class='line'>182</span> </span><span class="WHIT">		</span><span class="NAME">prototype.construct.apply</span><span class="PUNC">(</span><span class="NAME">instance</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>183</span> </span><span class="WHIT">		
-<span class='line'>184</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">instance</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>185</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>186</span> </span><span class="WHIT">	
-<span class='line'>187</span> 	</span><span class="COMM">// Set the prototype of our instance generator to the prototype of our new class so things like MyClass.prototype.method.apply(this) work</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">	</span><span class="NAME">instanceGenerator.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">prototype</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">	
-<span class='line'>190</span> 	</span><span class="COMM">// The constructor, as far as JS is concerned, is actually our instance generator</span><span class="WHIT">
-<span class='line'>191</span> </span><span class="WHIT">	</span><span class="NAME">prototype.constructor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>192</span> </span><span class="WHIT">	
-<span class='line'>193</span> 	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>194</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>195</span> </span></pre></body></html>
+<span class='line'>159</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// get around JSHint complaining about modifying arguments</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">			</span><span class="NAME">args.length</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">			</span><span class="NAME">args</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">		
+<span class='line'>165</span> 		</span><span class="COMM">// call superclass constructor</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">extend</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">extend.prototype</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">extend.prototype.construct</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">			</span><span class="NAME">extend.prototype.construct.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			
+<span class='line'>168</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>169</span> 
+<span class='line'>170</span> </span><span class="WHIT">		</span><span class="COMM">// call constructor</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">construct</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">			</span><span class="NAME">construct.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">	
+<span class='line'>176</span> 	</span><span class="COMM">// Create a function that generates instances of our class and calls our construct functions</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">	</span><span class="COMM">/** @private */</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">		</span><span class="COMM">// Create a new object with the prototype we built</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">instance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Object.create</span><span class="PUNC">(</span><span class="NAME">prototype</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">		
+<span class='line'>182</span> 		</span><span class="COMM">// Call all inherited construct functions</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">		</span><span class="NAME">prototype.construct.apply</span><span class="PUNC">(</span><span class="NAME">instance</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">		
+<span class='line'>185</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">instance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">	
+<span class='line'>188</span> 	</span><span class="COMM">// Set the prototype of our instance generator to the prototype of our new class so things like MyClass.prototype.method.apply(this) work</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">	</span><span class="NAME">instanceGenerator.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">prototype</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">	
+<span class='line'>191</span> 	</span><span class="COMM">// The constructor, as far as JS is concerned, is actually our instance generator</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">	</span><span class="NAME">prototype.constructor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">	
+<span class='line'>194</span> 	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">instanceGenerator</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">Object.create</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>199</span> 	 * Polyfill for Object.create. Creates a new object with the specified prototype object.
+<span class='line'>200</span> 	 * 
+<span class='line'>201</span> 	 * @author Mozilla MDN https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/create/
+<span class='line'>202</span> 	 *
+<span class='line'>203</span> 	 * @param {Object} o	The prototype to create a new object with
+<span class='line'>204</span> 	 */</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">	</span><span class="NAME">Object.create</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">o</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">arguments.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">			</span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Object.create implementation only accepts the first parameter.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">		</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">F</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">		</span><span class="NAME">F.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">o</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">F</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>214</span> </span></pre></body></html>

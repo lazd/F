@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - F.EventEmitter</title>
+		<title>JsDoc Reference - F.FormComponent</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -218,24 +218,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class F.EventEmitter
+				Class F.FormComponent
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
+				<br />Extends
+					<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>.<br />
 				
 			
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_F.EventEmitter.js.html">F.EventEmitter.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_F_components_F.Form.js.html">F.Form.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.EventEmitter.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class F.FormComponent.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -248,9 +250,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.EventEmitter.html#constructor">F.EventEmitter</a></b>()
+								<b><a href="../symbols/F.FormComponent.html#constructor">F.FormComponent</a></b>(options)
 							</div>
-							<div class="description">Provides observer pattern for basic eventing</div>
+							<div class="description">A component that can display an add/edit form for a model and handle form submission and save events</div>
 						</td>
 					</tr>
 				</tbody>
@@ -259,12 +261,54 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class F.FormComponent.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/F.FormComponent.html#Template">Template</a></b>
+								</div>
+								<div class="description">The template that the form will be rendered with</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/F.FormComponent.html#View">View</a></b>
+								</div>
+								<div class="description">The view class that the form will be rendered to</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Fields borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#Model">Model</a></dd>
+				</dl>
+				
+			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.EventEmitter.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.FormComponent.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -277,36 +321,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#destruct">destruct</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#clear">clear</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Clears the form by rendering it with a new, empty model</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#off">off</a></b>(evt, func)
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#handleSubmit">handleSubmit</a></b>(evt)
 								</div>
-								<div class="description">Remove an event listener</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#on">on</a></b>(evt, func)
-								</div>
-								<div class="description">Attach an event listener</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.EventEmitter.html#trigger">trigger</a></b>(evt, args)
-								</div>
-								<div class="description">Trigger an event</div>
+								<div class="description">Handles form submit events</div>
 							</td>
 						</tr>
 					
@@ -314,6 +340,10 @@ ul.inheritsList
 				</table>
 				
 				
+				
+				<dl class="inheritsList">
+				<dt>Methods borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#load">load</a>, <a href="../symbols/F.ModelComponent.html#refresh">refresh</a>, <a href="../symbols/F.ModelComponent.html#save">save</a>, <a href="../symbols/F.ModelComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
@@ -327,17 +357,28 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.EventEmitter</b>()
+						<b>F.FormComponent</b>(options)
 				</div>
 				
 				<div class="description">
-					Provides observer pattern for basic eventing
+					A component that can display an add/edit form for a model and handle form submission and save events
 					
 				</div>
 				
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								 <b>options</b>
+								
+							</dt>
+								<dd></dd>
+						
+						</dl>
 					
 					
 					
@@ -351,6 +392,55 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="Template"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Template}</span>
+					<b>Template</b>
+					
+					</div>
+					<div class="description">
+						The template that the form will be rendered with
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="View"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Backbone.View}</span>
+					<b>View</b>
+					
+					</div>
+					<div class="description">
+						The view class that the form will be rendered to
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -358,15 +448,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="destruct"> </a>
+					<a name="clear"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>destruct</b>()
+					<b>clear</b>()
 					
 					</div>
 					<div class="description">
-						
+						Clears the form by rendering it with a new, empty model
 						
 						
 					</div>
@@ -383,15 +473,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="off"> </a>
+					<a name="handleSubmit"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>off</b>(evt, func)
+					
+					<b>handleSubmit</b>(evt)
 					
 					</div>
 					<div class="description">
-						Remove an event listener
+						Handles form submit events
 						
 						
 					</div>
@@ -403,127 +493,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{String}</span> <b>evt</b>
+									<span class="light fixedFont">{Event}</span> <b>evt</b>
 									
 								</dt>
-								<dd>Name of event that function is bound to</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Function}</span> <b>func</b>
-									
-								</dt>
-								<dd>Bound function</dd>
+								<dd>The jQuery event object</dd>
 							
 							</dl>
 						
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="on"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>on</b>(evt, func)
-					
-					</div>
-					<div class="description">
-						Attach an event listener
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{String}</span> <b>evt</b>
-									
-								</dt>
-								<dd>Name of event to listen to</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Function}</span> <b>func</b>
-									
-								</dt>
-								<dd>Function to execute</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="trigger"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span>
-					<b>trigger</b>(evt, args)
-					
-					</div>
-					<div class="description">
-						Trigger an event
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{String}</span> <b>evt</b>
-									
-								</dt>
-								<dd>Name of event to trigger</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Arguments}</span> <b>args</b>
-									
-								</dt>
-								<dd>Additional arguments are passed to the listener functions</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>}</span> this, chainable</dd>
-							
-							</dl>
 						
 						
 						
