@@ -3,40 +3,37 @@
 		return str.slice(0, 1).toLowerCase()+str.slice(1);	
 	}
 	
-	/**
-	 * Generic component class
-	 *
-	 * @class
-	 * @extends F.EventEmitter
-	 */
-	F.Component = new Class({
+	F.Component = new Class(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
-		
-		/** @constructor */
+		/**
+		 * Generic component class
+		 *
+		 * @extends F.EventEmitter
+		 * @constructs
+		 * @param {Object} options	Component options
+		 */
 		construct: function(options) {
-			// Looks funny, but it modified options back to the arguments object
-			_.extend(
-				options, 
-				_.extend({}, {
-					singly: false,
-					visible: false
-				}, this.options || {}, options)
-			);
-		
+			// Looks funny, but it modifies options with defaults and makes them available to other constructors
+			this.mergeOptions({
+				singly: false, // Show only one subcomponent at a time
+				visible: false // Visible immediately or not
+			}, options);
+			
+			// Store options into object
+			this.setPropsFromOptions(options, [
+				'singly', 
+				'visible'
+			]);
+			
 			// Sub components
 			this.components = {};
-		
-			// Show only one subcomponent at a time
-			this.singly = options.singly;
 			
-			// Visible or not
-			this.visible = options.visible;
-		
 			// Make sure the following functions are always called in scope
-			this.bind(this._setCurrentComponent); // shorthand for this._setCurrentComponent = this._setCurrentComponent.bind(this);
+			// They are used in event handlers, and we want to be able to remove them
+			this.bind(this._setCurrentComponent);
 			this.bind(this.render);
-		
+			
 			if (this.visible) {
 				// Show the component once the call chain has returned
 				_.defer(function() {
@@ -46,8 +43,6 @@
 				}.bind(this));
 			}
 		},
-		
-		/** @lends F.Component# */
 		
 		/**
 		 * Destroy this instance and free associated memory
@@ -66,10 +61,17 @@
 		/**
 		 * Render the view associated with this component, if it has one
 		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		render: function() {
-			if (this.view)
+			if (this.view) {
+				if (F.options.debug)
+					console.warn('%s: Rendering', this.toString());
+					
 				this.view.render();
+			}
+			
+			return this;
 		},
 	
 		/**
@@ -132,7 +134,7 @@
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._componentShowHandler);
+				component.off('component:shown', this._setCurrentComponent);
 		
 				delete this[componentName];
 				delete this.components[componentName];
@@ -231,21 +233,6 @@
 		},
 	
 		/**
-		 * Set a custom name for this component. Only useful before passing to addComponent
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		setName: function(customName) {
-			this.toString = function() {
-				return customName;
-			};
-			
-			return this;
-		},
-	
-		/**
 		 * Hide all sub-components
 		 *
 		 */
@@ -307,6 +294,60 @@
 			}
 		
 			return this;
+		},
+		
+		/**
+		 * Set a custom name for this component. Only useful before passing to addComponent
+		 *
+		 * @param {Function} componentName	Component name
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		setName: function(customName) {
+			this.toString = function() {
+				return customName;
+			};
+			
+			return this;
+		},
+		
+		/**
+		 * Set properties of this instance from an options object, then remove the properties from the options object
+		 *
+		 * @param {Object} options	Options object with many properties
+		 * @param {Array} props		Properties to copy from options object
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		setPropsFromOptions: function(options, props) {
+			_.each(props, function(prop) {
+				// Add the property to this instance, or use existing property if it's already there
+				this[prop] = options[prop] || this[prop];
+				// Delete the property from the options object
+				delete options[prop];
+			}.bind(this));
+			
+			return this;
+		},
+		
+		/**
+		 * Merges options in the following order:
+		 *   Instance Options
+		 *   Class options
+		 *   Class defaults
+		 *
+		 * @param {Object} defaults	Default options object
+		 * @param {Object} options	Instance options object (argument to constructor)
+		 *
+		 * @returns {Object}	Merged options object
+		 */
+		mergeOptions: function(defaults, options) {
+			_.extend(
+				options, 
+				_.extend({}, defaults || {}, this.options || {}, options)
+			);
+			
+			return options;
 		}
 	});
 }());
