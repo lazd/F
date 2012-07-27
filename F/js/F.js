@@ -303,6 +303,17 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 *
 		 * @constructs
 		 * @extends Backbone.View
+		 *
+		 * @param {Object} options	Options for this view
+		 * @param {Template} options.template	The template to render this view with
+		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
+		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
+		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
+		 * @param {Component} [options.component]	The compnent that events should be delegated to
+		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
+		 *
+		 * @property {Template} template		The template to render this view with
+		 *
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
@@ -331,7 +342,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		},
 		
 		/**
-		 * Get the age of this view; how many seconds since it was last rendered
+		 * Get the number of miliseconds seconds since the view was last rendered
 		 *
 		 * @returns {number} Number of miliseconds since this view was rendered
 		 */
@@ -340,7 +351,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		},
 		
 		/**
-		 * Show the view, rendering the template if necessary
+		 * Show the view. The view will be rendered before it is shown if it hasn't already been rendered
 		 *
 		 * @returns {F.View}	this, chainable
 		 */
@@ -479,7 +490,12 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 *
 		 * @extends F.EventEmitter
 		 * @constructs
+		 *
 		 * @param {Object} options	Component options
+		 * @param {Boolean} options.singly		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
+		 * @param {Boolean} options.visible		If true, this component will be visible immediately.
+		 *
+		 * @property {Object} options	Default options for this component. These will be merged with options passed to the constructor.
 		 */
 		construct: function(options) {
 			// Looks funny, but it modifies options with defaults and makes them available to other constructors
@@ -489,6 +505,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			}, options);
 			
 			// Store options into object
+			// TBD: figure out what to do with these props if set on the object already
 			this.setPropsFromOptions(options, [
 				'singly', 
 				'visible'
@@ -830,6 +847,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @extends F.Component
 	 *
 	 * @param {Object} options	Options for this component
+	 * @param {Object} options.Model	Model class this component will be operating on. Sets this.Model
 	 *
 	 * @property {Backbone.Model} Model		The model class to operate on. Not an instance of a model, but the model class itself.
 	 */
@@ -1005,9 +1023,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @constructs
 	 * @extends F.Component
 	 *
-	 * @param {Object} options	Options for this component
+	 * @param {Object} options							Options for this component
+	 * @param {Backbone.Collection} options.Collection	The collection class this component should operate on. Sets this.Collection
+	 * @param {Object} [options.defaultParams ]			Default parameters to use when fetching this collection
 	 *
-	 * @property {Backbone.Collection} Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself.
+	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
+	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
 	 */
 	construct: function(options) {
 		// Store the collection class
@@ -1022,9 +1043,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection.on('reset', this.render);
 		
 		// Default parameters are the prototype params + options params
-		this.defaultParams = _.extend({}, options.params);
+		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
 		
-		// Parameters to send with the request
+		// Parameters to send with the request: just copy the default params
 		this.params = _.extend({}, this.defaultParams);
 	
 		// Store if this collection has ever been loaded
@@ -1032,6 +1053,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	Collection: Backbone.Collection,
+	
+	/**
+	 * Get the collection associated with this component
+	 *
+	 * @returns {Backbone.Collection}	The collection associated with this component
+	 */
+	getCollection: function() {
+		return this.collection;
+	},
 	
 	/**
 	 * Refresh this collection with the last parameters used
@@ -1076,7 +1106,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Show this component. Optionally options.params to fetch with new parameters. Will fetch if collection has not already been fetched
+	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
 	 *
 	 * @param {Object} options	Pass fetch parameters with options.params
 	 *
@@ -1127,17 +1157,21 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @constructs
 		 * @extends F.ModelComponent
 		 *
+		 * @param {Object} options					Options for this component and its view. Options not listed below will be passed to the view.
+		 * @param {Backbone.Model} options.Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
+		 * @param {Backbone.View} options.View		The view class that the form will be rendered to
+		 * @param {Template} options.Template		The template that the form will be rendered with
+		 *
+		 * @property {Backbone.Model} Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
 		 * @property {Backbone.View} View	The view class that the form will be rendered to
 		 * @property {Template} Template	The template that the form will be rendered with
 		 */
 		construct: function(options) {
 			this.setPropsFromOptions(options, [
-				'View',
 				'Model',
+				'View',
 				'Template'
 			]);
-		
-			this.View = this.View || F.Form.View;
 		
 			// Create a new edit view that responds to submit events
 			this.view = new this.View(_.extend({
@@ -1195,15 +1229,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	*******************/
 	
 	// Available as F.ListComponent.prototype.View
-	var ListView = F.View.extend(/** @lends F.ListComponent.prototype.View# */{
+	var ListView = F.View.extend({
 		tagName: 'ul',
 
-		/**
-		 * View class that renders a collection as a list
-		 *
-		 * @constructs
-		 * @extends F.View
-		 */
 		initialize: function(options) {
 			options = options || {};
 
@@ -1215,9 +1243,6 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
 		},
 
-		/**
-		 * Render the list as individual item
-		 */
 		render: function() {
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
@@ -1248,7 +1273,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	});
 
 	// Available as F.ListComponent.prototype.ItemView
-	var ItemView = F.View.extend(/** @lends F.ListComponent.prototype.ItemView# */{
+	var ItemView = F.View.extend({
 		tagName: 'li',
 		className: 'listItem'
 	});
@@ -1265,10 +1290,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @constructs
 		 * @extends F.CollectionComponent
 		 *
+		 * @param {Object} options							Options for this component and its view. Options not listed below will be passed to the view.
+		 * @param {Backbone.Collection} options.Collection	The collection class this list will be rendered from
+		 * @param {Backbone.View} options.ListView			The view class this list will be rendered with
+		 * @param {Template} [options.ListTemplate]			The template this list will be rendered with. Renders to a UL tag by default
+		 * @param {Backbone.View} options.ItemView			The view that individual items will be rendered with
+		 * @param {Template} options.ItemTemplate			The template that individual items will be rendered with
+		 *
 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
-		 * @property {Backbone.View} View				The view class this list will be rendered to
-		 * @property {Template} ListTemplate			The template this list will be rendered with, optional if you just want a bare <ul>
-		 * @property {Backbone.View} ItemView			The view that individual items will be rendered to
+		 * @property {Backbone.View} ListView			The view class this list will be rendered with
+		 * @property {Template} ListTemplate			The template this list will be rendered with. Renders to a UL tag by default
+		 * @property {Backbone.View} ItemView			The view that individual items will be rendered with
 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {

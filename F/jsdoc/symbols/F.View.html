@@ -250,7 +250,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/F.View.html#constructor">F.View</a></b>()
+								<b><a href="../symbols/F.View.html#constructor">F.View</a></b>(options)
 							</div>
 							<div class="description">Generic view class.</div>
 						</td>
@@ -260,6 +260,34 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class F.View.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/F.View.html#template">template</a></b>
+								</div>
+								<div class="description">The template to render this view with</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -281,7 +309,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.View.html#age">age</a></b>()
 								</div>
-								<div class="description">Get the age of this view; how many seconds since it was last rendered</div>
+								<div class="description">Get the number of miliseconds seconds since the view was last rendered</div>
 							</td>
 						</tr>
 					
@@ -326,7 +354,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.View.html#show">show</a></b>()
 								</div>
-								<div class="description">Show the view, rendering the template if necessary</div>
+								<div class="description">Show the view.</div>
 							</td>
 						</tr>
 					
@@ -347,7 +375,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>F.View</b>()
+						<b>F.View</b>(options)
 				</div>
 				
 				<div class="description">
@@ -358,6 +386,53 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options</b>
+								
+							</dt>
+								<dd>Options for this view</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Template}</span>  <b>options.template</b>
+								
+							</dt>
+								<dd>The template to render this view with</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Element}</span>  <b>options.el</b>
+								<i>Optional</i>
+							</dt>
+								<dd>The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Element}</span>  <b>options.parent</b>
+								<i>Optional</i>
+							</dt>
+								<dd>The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Backbone.Model}</span>  <b>options.model</b>
+								<i>Optional</i>
+							</dt>
+								<dd>Instance of a Backbone model to render this view from</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Component}</span>  <b>options.component</b>
+								<i>Optional</i>
+							</dt>
+								<dd>The compnent that events should be delegated to</dd>
+						
+							<dt>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options.events</b>
+								<i>Optional</i>
+							</dt>
+								<dd>Backbone events object indicating events to listen for on this view</dd>
+						
+						</dl>
 					
 					
 					
@@ -370,6 +445,33 @@ ul.inheritsList
 			
 
 <!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="template"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Template}</span>
+					<b>template</b>
+					
+					</div>
+					<div class="description">
+						The template to render this view with
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
 			
 
 <!-- ============================== method details ========================= -->		
@@ -386,7 +488,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Get the age of this view; how many seconds since it was last rendered
+						Get the number of miliseconds seconds since the view was last rendered
 						
 						
 					</div>
@@ -557,7 +659,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Show the view, rendering the template if necessary
+						Show the view. The view will be rendered before it is shown if it hasn't already been rendered
 						
 						
 					</div>
@@ -593,7 +695,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 15:18:57 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 17:31:18 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

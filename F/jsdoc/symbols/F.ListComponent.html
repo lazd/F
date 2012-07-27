@@ -225,7 +225,7 @@ ul.inheritsList
 			<p class="description">
 				
 				<br />Extends
-					<a href="../symbols/F.View.html">F.View</a>.<br />
+					<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>.<br />
 				
 			
 				
@@ -252,7 +252,7 @@ ul.inheritsList
 							<div class="fixedFont">
 								<b><a href="../symbols/F.ListComponent.html#constructor">F.ListComponent</a></b>(options)
 							</div>
-							<div class="description">View class that renders a collection as a list</div>
+							<div class="description">A component that can load and render a collection as a list</div>
 						</td>
 					</tr>
 				</tbody>
@@ -299,7 +299,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/F.ListComponent.html#ItemView">ItemView</a></b>
 								</div>
-								<div class="description">The view that individual items will be rendered to</div>
+								<div class="description">The view that individual items will be rendered with</div>
 							</td>
 						</tr>
 					
@@ -309,7 +309,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/F.ListComponent.html#ListTemplate">ListTemplate</a></b>
 								</div>
-								<div class="description">The template this list will be rendered with, optional if you just want a bare <ul></div>
+								<div class="description">The template this list will be rendered with.</div>
 							</td>
 						</tr>
 					
@@ -317,9 +317,9 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/F.ListComponent.html#View">View</a></b>
+								<b><a href="../symbols/F.ListComponent.html#ListView">ListView</a></b>
 								</div>
-								<div class="description">The view class this list will be rendered to</div>
+								<div class="description">The view class this list will be rendered with</div>
 							</td>
 						</tr>
 					
@@ -329,7 +329,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				
+				<dt>Fields borrowed from class <a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>: </dt><dd><a href="../symbols/F.CollectionComponent.html#defaultParams">defaultParams</a></dd><dt>Fields borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#options">options</a></dd>
 				</dl>
 				
 			
@@ -363,7 +363,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.View.html">F.View</a>: </dt><dd><a href="../symbols/F.View.html#age">age</a>, <a href="../symbols/F.View.html#delegateEvents">delegateEvents</a>, <a href="../symbols/F.View.html#hide">hide</a>, <a href="../symbols/F.View.html#render">render</a>, <a href="../symbols/F.View.html#renderOnce">renderOnce</a>, <a href="../symbols/F.View.html#show">show</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>: </dt><dd><a href="../symbols/F.CollectionComponent.html#getCollection">getCollection</a>, <a href="../symbols/F.CollectionComponent.html#load">load</a>, <a href="../symbols/F.CollectionComponent.html#refresh">refresh</a>, <a href="../symbols/F.CollectionComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
@@ -382,7 +382,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="description">
-					View class that renders a collection as a list
+					A component that can load and render a collection as a list
 					
 				</div>
 				
@@ -394,10 +394,40 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								 <b>options</b>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options</b>
 								
 							</dt>
-								<dd></dd>
+								<dd>Options for this component and its view. Options not listed below will be passed to the view.</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Backbone.Collection}</span>  <b>options.Collection</b>
+								
+							</dt>
+								<dd>The collection class this list will be rendered from</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Backbone.View}</span>  <b>options.ListView</b>
+								
+							</dt>
+								<dd>The view class this list will be rendered with</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Template}</span>  <b>options.ListTemplate</b>
+								<i>Optional</i>
+							</dt>
+								<dd>The template this list will be rendered with. Renders to a UL tag by default</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Backbone.View}</span>  <b>options.ItemView</b>
+								
+							</dt>
+								<dd>The view that individual items will be rendered with</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Template}</span>  <b>options.ItemTemplate</b>
+								
+							</dt>
+								<dd>The template that individual items will be rendered with</dd>
 						
 						</dl>
 					
@@ -469,7 +499,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						The view that individual items will be rendered to
+						The view that individual items will be rendered with
 						
 						
 					</div>
@@ -491,7 +521,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						The template this list will be rendered with, optional if you just want a bare <ul>
+						The template this list will be rendered with. Renders to a UL tag by default
 						
 						
 					</div>
@@ -505,15 +535,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="View"> </a>
+					<a name="ListView"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{Backbone.View}</span>
-					<b>View</b>
+					<b>ListView</b>
 					
 					</div>
 					<div class="description">
-						The view class this list will be rendered to
+						The view class this list will be rendered with
 						
 						
 					</div>
@@ -583,7 +613,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 15:18:57 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 26 2012 17:31:18 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>
