@@ -54,8 +54,8 @@ W.Templates['Step2'] = Handlebars.compile([
 	'<button class="next">Next</button>',
 	'<h2>Step 2: Planning</h1>',
 	'<p>Break your process into logical steps.</p>',
-	'<a href="wizard/step2/part1">Do Part 1</a>',
-	'<a href="wizard/step2/part2">Do Part 2</a>',
+	'<a href="#wizard/step2/part1">Do Part 1</a><br>',
+	'<a href="#wizard/step2/part2">Do Part 2</a>',
 	'<div class="part1"></div>',
 	'<div class="part2"></div>'
 ].join(''));
