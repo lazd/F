@@ -401,13 +401,18 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		render: function() {
 			if (this.template) {
 				// Render template
+				
+				// Use this view's model, or the model of the component it's part of
 				var model = this.model || this.component && this.component.model;
-				this.$el.html(this.template(model && model.toJSON() || {}));
+				
+				// First, see if the model exists. If so, see if it has toJSON. If so, use model.toJSON. Otherwise, if model exists, use model. Otherwise, use {}
+				this.$el.html(this.template(model && model.toJSON && model.toJSON() || model || {}));
 			}
 			
 			// Add to parent, if not already there
-			if (this.parent && !$(this.el.parentNode).is(this.parent))
+			if (this.parent && !$(this.el.parentNode).is(this.parent)) {
 				$(this.parent).append(this.el);
+			}
 		
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
@@ -521,6 +526,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			
 			if (this.visible) {
 				// Show the component once the call chain has returned
+				// TBD: this doesn't work as expected, overrides the router sometimes
 				_.defer(function() {
 					this.show({
 						silent: true
