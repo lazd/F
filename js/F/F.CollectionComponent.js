@@ -8,9 +8,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @constructs
 	 * @extends F.Component
 	 *
-	 * @param {Object} options	Options for this component
+	 * @param {Object} options							Options for this component
+	 * @param {Backbone.Collection} options.Collection	The collection class this component should operate on. Sets this.Collection
+	 * @param {Object} [options.defaultParams ]			Default parameters to use when fetching this collection
 	 *
-	 * @property {Backbone.Collection} Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself.
+	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
+	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
 	 */
 	construct: function(options) {
 		// Store the collection class
@@ -25,9 +28,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection.on('reset', this.render);
 		
 		// Default parameters are the prototype params + options params
-		this.defaultParams = _.extend({}, options.params);
+		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
 		
-		// Parameters to send with the request
+		// Parameters to send with the request: just copy the default params
 		this.params = _.extend({}, this.defaultParams);
 	
 		// Store if this collection has ever been loaded
@@ -35,6 +38,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	Collection: Backbone.Collection,
+	
+	/**
+	 * Get the collection associated with this component
+	 *
+	 * @returns {Backbone.Collection}	The collection associated with this component
+	 */
+	getCollection: function() {
+		return this.collection;
+	},
 	
 	/**
 	 * Refresh this collection with the last parameters used
@@ -79,7 +91,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Show this component. Optionally options.params to fetch with new parameters. Will fetch if collection has not already been fetched
+	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
 	 *
 	 * @param {Object} options	Pass fetch parameters with options.params
 	 *

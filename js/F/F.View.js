@@ -12,6 +12,17 @@
 		 *
 		 * @constructs
 		 * @extends Backbone.View
+		 *
+		 * @param {Object} options	Options for this view
+		 * @param {Template} options.template	The template to render this view with
+		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
+		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
+		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
+		 * @param {Component} [options.component]	The compnent that events should be delegated to
+		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
+		 *
+		 * @property {Template} template		The template to render this view with
+		 *
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
@@ -40,7 +51,7 @@
 		},
 		
 		/**
-		 * Get the age of this view; how many seconds since it was last rendered
+		 * Get the number of miliseconds seconds since the view was last rendered
 		 *
 		 * @returns {number} Number of miliseconds since this view was rendered
 		 */
@@ -49,7 +60,7 @@
 		},
 		
 		/**
-		 * Show the view, rendering the template if necessary
+		 * Show the view. The view will be rendered before it is shown if it hasn't already been rendered
 		 *
 		 * @returns {F.View}	this, chainable
 		 */

@@ -11,7 +11,12 @@
 		 *
 		 * @extends F.EventEmitter
 		 * @constructs
+		 *
 		 * @param {Object} options	Component options
+		 * @param {Boolean} options.singly		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
+		 * @param {Boolean} options.visible		If true, this component will be visible immediately.
+		 *
+		 * @property {Object} options	Default options for this component. These will be merged with options passed to the constructor.
 		 */
 		construct: function(options) {
 			// Looks funny, but it modifies options with defaults and makes them available to other constructors
@@ -21,6 +26,7 @@
 			}, options);
 			
 			// Store options into object
+			// TBD: figure out what to do with these props if set on the object already
 			this.setPropsFromOptions(options, [
 				'singly', 
 				'visible'

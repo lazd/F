@@ -4,15 +4,9 @@
 	*******************/
 	
 	// Available as F.ListComponent.prototype.View
-	var ListView = F.View.extend(/** @lends F.ListComponent.prototype.View# */{
+	var ListView = F.View.extend({
 		tagName: 'ul',
 
-		/**
-		 * View class that renders a collection as a list
-		 *
-		 * @constructs
-		 * @extends F.View
-		 */
 		initialize: function(options) {
 			options = options || {};
 
@@ -24,9 +18,6 @@
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
 		},
 
-		/**
-		 * Render the list as individual item
-		 */
 		render: function() {
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
@@ -57,7 +48,7 @@
 	});
 
 	// Available as F.ListComponent.prototype.ItemView
-	var ItemView = F.View.extend(/** @lends F.ListComponent.prototype.ItemView# */{
+	var ItemView = F.View.extend({
 		tagName: 'li',
 		className: 'listItem'
 	});
@@ -74,10 +65,17 @@
 		 * @constructs
 		 * @extends F.CollectionComponent
 		 *
+		 * @param {Object} options							Options for this component and its view. Options not listed below will be passed to the view.
+		 * @param {Backbone.Collection} options.Collection	The collection class this list will be rendered from
+		 * @param {Backbone.View} options.ListView			The view class this list will be rendered with
+		 * @param {Template} [options.ListTemplate]			The template this list will be rendered with. Renders to a UL tag by default
+		 * @param {Backbone.View} options.ItemView			The view that individual items will be rendered with
+		 * @param {Template} options.ItemTemplate			The template that individual items will be rendered with
+		 *
 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
-		 * @property {Backbone.View} View				The view class this list will be rendered to
-		 * @property {Template} ListTemplate			The template this list will be rendered with, optional if you just want a bare <ul>
-		 * @property {Backbone.View} ItemView			The view that individual items will be rendered to
+		 * @property {Backbone.View} ListView			The view class this list will be rendered with
+		 * @property {Template} ListTemplate			The template this list will be rendered with. Renders to a UL tag by default
+		 * @property {Backbone.View} ItemView			The view that individual items will be rendered with
 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {

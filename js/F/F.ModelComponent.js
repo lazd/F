@@ -9,6 +9,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @extends F.Component
 	 *
 	 * @param {Object} options	Options for this component
+	 * @param {Object} options.Model	Model class this component will be operating on. Sets this.Model
 	 *
 	 * @property {Backbone.Model} Model		The model class to operate on. Not an instance of a model, but the model class itself.
 	 */
