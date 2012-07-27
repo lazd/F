@@ -42,6 +42,7 @@
 			
 			if (this.visible) {
 				// Show the component once the call chain has returned
+				// TBD: this doesn't work as expected, overrides the router sometimes
 				_.defer(function() {
 					this.show({
 						silent: true
