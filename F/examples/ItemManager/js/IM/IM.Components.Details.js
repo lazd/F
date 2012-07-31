@@ -12,7 +12,7 @@ IM.Components.Details = new Class({
 		]);
 		
 		// Just create a view here and we're done; F.ModelComponent takes care of loading and rendering
-		this.view = new this.View(_.extend( {
+		this.view = new this.View(_.extend({
 			template: this.ItemTemplate,
 			component: this
 		}, options));

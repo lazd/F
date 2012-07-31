@@ -1328,7 +1328,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 					'click li': 'handleSelect'
 				}
 			}, options));
-		
+			
 			this.selectedItem = null;
 		},
 	
@@ -1357,4 +1357,3 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		}
 	});
 }());
-

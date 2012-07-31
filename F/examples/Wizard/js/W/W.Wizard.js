@@ -9,7 +9,7 @@ W.Wizard = new Class({
 	
 	construct: function(options) {
 		// Make sure next step is always called in the scope of this
-		this.bind(this.nextStep);
+		this.bind(this.nextStep); // equivalent to: this.nextStep = this.nextStep.bind(this);
 		this.bind(this.prevStep);
 		
 		// The main view for the wizard
