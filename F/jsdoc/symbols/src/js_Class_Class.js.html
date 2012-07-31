@@ -76,7 +76,7 @@
 <span class='line'> 69</span> 	</span><span class="COMM">/**
 <span class='line'> 70</span> 	 * A function that calls an inherited method by the same name as the callee
 <span class='line'> 71</span> 	 *
-<span class='line'> 72</span> 	 * @param {Arguments} args	Unadultrated arguments array from calling function
+<span class='line'> 72</span> 	 * @param {Arguments} args	Unadulterated arguments array from calling function
 <span class='line'> 73</span> 	*/</span><span class="WHIT">
 <span class='line'> 74</span> </span><span class="WHIT">	</span><span class="NAME">prototype.inherited</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">args</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 75</span> </span><span class="WHIT">		</span><span class="COMM">// Get the function that call us from the passed arguments objected</span><span class="WHIT">
@@ -103,10 +103,10 @@
 <span class='line'> 96</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 97</span> </span><span class="WHIT">		
 <span class='line'> 98</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">inheritedFunc</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="WHIT">			</span><span class="COMM">// Store our inherted function</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">			</span><span class="COMM">// Store our inherited function</span><span class="WHIT">
 <span class='line'>100</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">oldInherited</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.inherited</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>101</span> </span><span class="WHIT">			
-<span class='line'>102</span> 			</span><span class="COMM">// Overwrite our inherted function with that of the prototype so the called function can call its parent</span><span class="WHIT">
+<span class='line'>102</span> 			</span><span class="COMM">// Overwrite our inherited function with that of the prototype so the called function can call its parent</span><span class="WHIT">
 <span class='line'>103</span> </span><span class="WHIT">			</span><span class="NAME">this.inherited</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">curProto.inherited</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>104</span> </span><span class="WHIT">			
 <span class='line'>105</span> 			</span><span class="COMM">// Call the inherited function our scope, apply the passed args array</span><span class="WHIT">

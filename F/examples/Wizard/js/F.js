@@ -69,7 +69,7 @@ function Class(descriptor) {
 	/**
 	 * A function that calls an inherited method by the same name as the callee
 	 *
-	 * @param {Arguments} args	Unadultrated arguments array from calling function
+	 * @param {Arguments} args	Unadulterated arguments array from calling function
 	*/
 	prototype.inherited = function(args) {
 		// Get the function that call us from the passed arguments objected
@@ -96,10 +96,10 @@ function Class(descriptor) {
 		}
 		
 		if (typeof inheritedFunc === 'function') {
-			// Store our inherted function
+			// Store our inherited function
 			var oldInherited = this.inherited;
 			
-			// Overwrite our inherted function with that of the prototype so the called function can call its parent
+			// Overwrite our inherited function with that of the prototype so the called function can call its parent
 			this.inherited = curProto.inherited;
 			
 			// Call the inherited function our scope, apply the passed args array
@@ -298,7 +298,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	};
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
-		/**
+		/**;
 		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 		 *
 		 * @constructs
@@ -309,7 +309,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
 		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
 		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
-		 * @param {Component} [options.component]	The compnent that events should be delegated to
+		 * @param {Component} [options.component]	The component that events should be delegated to
 		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
 		 *
 		 * @property {Template} template		The template to render this view with
@@ -318,7 +318,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		initialize: function() {
 			if (this.template || this.options.template) {
 				this.template = this.template || this.options.template;
-				// For preocompiled templates: this.template = Handlebars.template(this.template || this.options.template);
+				// For pre-compiled templates: this.template = Handlebars.template(this.template || this.options.template);
 			}
 			
 			if (this.options.el) {
@@ -342,9 +342,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		},
 		
 		/**
-		 * Get the number of miliseconds seconds since the view was last rendered
+		 * Get the number of milliseconds seconds since the view was last rendered
 		 *
-		 * @returns {number} Number of miliseconds since this view was rendered
+		 * @returns {number} Number of milliseconds since this view was rendered
 		 */
 		age: function() {
 			return this.rendered !== null ? new Date().getTime() - this.rendered : -1;
@@ -556,9 +556,6 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 */
 		render: function() {
 			if (this.view) {
-				if (F.options.debug)
-					console.warn('%s: Rendering', this.toString());
-					
 				this.view.render();
 			}
 			
@@ -932,7 +929,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					// Assign the model to the view
 					this._setModel(model);
 					
-					// Noftify
+					// Notify
 					this.trigger('modelLoaded');
 					
 					// Call callback
@@ -986,7 +983,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Show this component, optionally fetching an item by ID or assiging a new model before render
+	 * Show this component, optionally fetching an item by ID or assigning a new model before render
 	 *
 	 * @param {Object} options
 	 *
@@ -1077,7 +1074,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
 	refresh: function(callback) {
-		// Just load the colleciton with the current params
+		// Just load the collection with the current params
 		this.load(this.params, callback);
 		
 		return this;

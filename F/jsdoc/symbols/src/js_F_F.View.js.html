@@ -14,7 +14,7 @@
 <span class='line'>  7</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>  8</span> </span><span class="WHIT">	
 <span class='line'>  9</span> 	</span><span class="NAME">F.View</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Backbone.View.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends F.View# */</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 10</span> </span><span class="WHIT">		</span><span class="COMM">/**
+<span class='line'> 10</span> </span><span class="WHIT">		</span><span class="COMM">/**;
 <span class='line'> 11</span> 		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 <span class='line'> 12</span> 		 *
 <span class='line'> 13</span> 		 * @constructs
@@ -25,7 +25,7 @@
 <span class='line'> 18</span> 		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
 <span class='line'> 19</span> 		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
 <span class='line'> 20</span> 		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
-<span class='line'> 21</span> 		 * @param {Component} [options.component]	The compnent that events should be delegated to
+<span class='line'> 21</span> 		 * @param {Component} [options.component]	The component that events should be delegated to
 <span class='line'> 22</span> 		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
 <span class='line'> 23</span> 		 *
 <span class='line'> 24</span> 		 * @property {Template} template		The template to render this view with
@@ -34,7 +34,7 @@
 <span class='line'> 27</span> </span><span class="WHIT">		</span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 28</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.template</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.options.template</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 29</span> </span><span class="WHIT">				</span><span class="NAME">this.template</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.template</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.options.template</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 30</span> </span><span class="WHIT">				</span><span class="COMM">// For preocompiled templates: this.template = Handlebars.template(this.template || this.options.template);</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">				</span><span class="COMM">// For pre-compiled templates: this.template = Handlebars.template(this.template || this.options.template);</span><span class="WHIT">
 <span class='line'> 31</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 32</span> </span><span class="WHIT">			
 <span class='line'> 33</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.options.el</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
@@ -58,9 +58,9 @@
 <span class='line'> 51</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 52</span> </span><span class="WHIT">		
 <span class='line'> 53</span> 		</span><span class="COMM">/**
-<span class='line'> 54</span> 		 * Get the number of miliseconds seconds since the view was last rendered
+<span class='line'> 54</span> 		 * Get the number of milliseconds seconds since the view was last rendered
 <span class='line'> 55</span> 		 *
-<span class='line'> 56</span> 		 * @returns {number} Number of miliseconds since this view was rendered
+<span class='line'> 56</span> 		 * @returns {number} Number of milliseconds since this view was rendered
 <span class='line'> 57</span> 		 */</span><span class="WHIT">
 <span class='line'> 58</span> </span><span class="WHIT">		</span><span class="NAME">age</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 59</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.rendered</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Date</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getTime</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">this.rendered</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">

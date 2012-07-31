@@ -13,8 +13,8 @@ W.Router = Backbone.Router.extend({
     },
 	
 	/*
-	Given the assumption that we've designed our component hierarchy to match out
-	hash path hierarchy, find the component that should be shown according to the hash path
+	Given the assumption that we've designed our component hierarchy to match our
+	hash path, find the component that should be shown according to the hash path
 	*/
 	showComponent: function(path) {
 		// Get each folder in the hash path
@@ -27,7 +27,7 @@ W.Router = Backbone.Router.extend({
 			if (component[part])
 				component = component[part];
 			else {
-				console.warn('W.Router: route specificy an invalid part: %s', path);
+				console.warn('W.Router: route specifies an invalid part: %s', path);
 				return true;
 			}
 		});
