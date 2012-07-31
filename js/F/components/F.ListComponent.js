@@ -97,7 +97,7 @@
 					'click li': 'handleSelect'
 				}
 			}, options));
-		
+			
 			this.selectedItem = null;
 		},
 	
@@ -126,4 +126,3 @@
 		}
 	});
 }());
-
