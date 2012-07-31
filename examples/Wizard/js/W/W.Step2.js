@@ -15,7 +15,6 @@ W.Step2 = new Class({
 		this.addComponent( 
 			new W.Part({
 				parent: this.view.$('.part1'),
-				Template: W.Templates['Step2_Part'],
 				model: {
 					name: 'Part 1',
 					content: 'Do the dew.'
@@ -25,10 +24,10 @@ W.Step2 = new Class({
 		)
 		.on('done', function() { this.part1Done = true; this.showNextButton() }.bind(this)); // react to the done event from this part
 		
+		// To reference this component: W.wizard.step2.part2
 		this.addComponent( 
 			new W.Part({
 				parent: this.view.$('.part2'),
-				Template: W.Templates['Step2_Part'],
 				model: {
 					name: 'Part 2',
 					content: 'Write the code.'

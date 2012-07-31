@@ -7,10 +7,6 @@ W.Part = new Class({
 	extend: F.Component,
 	
 	construct: function(options) {
-		this.setPropsFromOptions(options, [
-			'Template'
-		]);
-	
 		this.view = new F.View({
 			parent: options.parent,
 			model: options.model,
@@ -24,5 +20,7 @@ W.Part = new Class({
 	done: function() {
 		this.trigger('done');
 		this.hide();
-	}
+	},
+	
+	Template: W.Templates['Step2_Part']
 });
