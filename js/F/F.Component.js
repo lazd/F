@@ -72,9 +72,6 @@
 		 */
 		render: function() {
 			if (this.view) {
-				if (F.options.debug)
-					console.warn('%s: Rendering', this.toString());
-					
 				this.view.render();
 			}
 			
