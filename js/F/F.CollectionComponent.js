@@ -56,7 +56,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
 	refresh: function(callback) {
-		// Just load the colleciton with the current params
+		// Just load the collection with the current params
 		this.load(this.params, callback);
 		
 		return this;

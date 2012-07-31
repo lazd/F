@@ -48,7 +48,7 @@ IM.Components.App = new Class({
 	ListComponent: IM.Components.List,
 	DetailsComponent: IM.Components.Details,
 	
-	// Templates would normally be compiled serverside, then referenced in the prototype so they can be overridden
+	// Templates would normally be compiled server-side, then referenced in the prototype so they can be overridden
 	Template: IM.Templates.Manager,
 	
 	// View is defined in the prototype so it can be overridden
@@ -74,7 +74,7 @@ IM.Components.App = new Class({
 		});
 		
 		/*
-		// Or, give the Details componment the model of the selected item and it will use it as is
+		// Or, give the Details component the model of the selected item and it will use it as is
 		this.details.show({
 			model: info.model
 		});

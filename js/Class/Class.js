@@ -69,7 +69,7 @@ function Class(descriptor) {
 	/**
 	 * A function that calls an inherited method by the same name as the callee
 	 *
-	 * @param {Arguments} args	Unadultrated arguments array from calling function
+	 * @param {Arguments} args	Unadulterated arguments array from calling function
 	*/
 	prototype.inherited = function(args) {
 		// Get the function that call us from the passed arguments objected
@@ -96,10 +96,10 @@ function Class(descriptor) {
 		}
 		
 		if (typeof inheritedFunc === 'function') {
-			// Store our inherted function
+			// Store our inherited function
 			var oldInherited = this.inherited;
 			
-			// Overwrite our inherted function with that of the prototype so the called function can call its parent
+			// Overwrite our inherited function with that of the prototype so the called function can call its parent
 			this.inherited = curProto.inherited;
 			
 			// Call the inherited function our scope, apply the passed args array

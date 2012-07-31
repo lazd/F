@@ -7,7 +7,7 @@
 	};
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
-		/**
+		/**;
 		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 		 *
 		 * @constructs
@@ -18,7 +18,7 @@
 		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
 		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
 		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
-		 * @param {Component} [options.component]	The compnent that events should be delegated to
+		 * @param {Component} [options.component]	The component that events should be delegated to
 		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
 		 *
 		 * @property {Template} template		The template to render this view with
@@ -27,7 +27,7 @@
 		initialize: function() {
 			if (this.template || this.options.template) {
 				this.template = this.template || this.options.template;
-				// For preocompiled templates: this.template = Handlebars.template(this.template || this.options.template);
+				// For pre-compiled templates: this.template = Handlebars.template(this.template || this.options.template);
 			}
 			
 			if (this.options.el) {
@@ -51,9 +51,9 @@
 		},
 		
 		/**
-		 * Get the number of miliseconds seconds since the view was last rendered
+		 * Get the number of milliseconds seconds since the view was last rendered
 		 *
-		 * @returns {number} Number of miliseconds since this view was rendered
+		 * @returns {number} Number of milliseconds since this view was rendered
 		 */
 		age: function() {
 			return this.rendered !== null ? new Date().getTime() - this.rendered : -1;

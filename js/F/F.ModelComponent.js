@@ -88,7 +88,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					// Assign the model to the view
 					this._setModel(model);
 					
-					// Noftify
+					// Notify
 					this.trigger('modelLoaded');
 					
 					// Call callback
@@ -142,7 +142,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Show this component, optionally fetching an item by ID or assiging a new model before render
+	 * Show this component, optionally fetching an item by ID or assigning a new model before render
 	 *
 	 * @param {Object} options
 	 *

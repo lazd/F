@@ -27,7 +27,7 @@ W.Router = Backbone.Router.extend({
 			if (component[part])
 				component = component[part];
 			else {
-				console.warn('W.Router: route specificy an invalid part: %s', path);
+				console.warn('W.Router: route specifies an invalid part: %s', path);
 				return true;
 			}
 		});
