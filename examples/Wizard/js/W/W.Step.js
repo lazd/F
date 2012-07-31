@@ -15,7 +15,7 @@ W.Step = new Class({
 			parent: options.parent,
 			template: this.Template,
 			component: this
-		}).render(); // render right away so subclasses can add other views and components to their templates
+		}).render(); // render right away so subclasses can add other views and components to this templates
 	},
 	
 	// Create a view and delegate the events
