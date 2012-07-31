@@ -5,15 +5,6 @@
 	A namespace also helps keep your organized. Large apps only get larger
 */
 var W = {
-	// Store your components in your namespace as IM.Components
-	Components: {},
-	
-	// Models go in IM.Models
-	Models: {},
-	
-	// Collections as well
-	Collections: {},
-	
 	// And templates
 	Templates: {},
 	
