@@ -35,6 +35,9 @@
 			// Sub components
 			this.components = {};
 			
+			// Hold the bubbled event listeners
+			this._bubbledEvts = {};
+			
 			// Make sure the following functions are always called in scope
 			// They are used in event handlers, and we want to be able to remove them
 			this.bind(this._setCurrentComponent);
@@ -78,6 +81,61 @@
 			return this;
 		},
 	
+		/**
+		 * Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it
+		 * 
+		 * @param {String} componentName	Name of the component whose event to bubble
+		 * @param {String} evt				Name of event to bubble up
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		bubble: function(componentName, evt) {
+			if (!this[componentName]) {
+				console.error("%s: cannot set event '%s' for bubbling from component '%s', component does not exist", this.toString(), evt, componentName);
+				return this;
+			}
+			
+			if (!this._bubbledEvts[componentName])
+				this._bubbledEvts[componentName] = {};
+			
+			// Create a handler
+			var handler = this._bubbledEvts[componentName][evt] = function() {
+				// Turn the event arguments into an array
+				var args = Array.prototype.slice.call(arguments);
+				
+				// Add the name of the event to the arguments array
+				args.unshift(evt);
+				
+				// Call to bubble the event up
+				this.trigger.apply(this, args);
+			}.bind(this);
+			
+			// Add the listener
+			this[componentName].on(evt, handler);
+			
+			return this;
+		},
+	
+		/**
+		 * Discontinue bubbling of a given event
+		 * 
+		 * @param {String} componentName	Name of the component whose event to stop bubbling
+		 * @param {String} evt				Name of event that was set to bubble
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		unbubble: function(componentName, evt) {
+			if (!this._bubbledEvts[componentName] || !this._bubbledEvts[componentName][evt]) {
+				console.warn("%s: cannot discontinue bubbling of event '%s' for component '%s', event was not set for bubbling", this.toString(), evt, componentName);
+				return this;
+			}
+
+			// Remove the listener
+			this[componentName].off(evt, this._bubbledEvts[componentName][evt]);
+
+			return this;
+		},
+
 		/**
 		 * Add an instance of another component as a sub-component.
 		 *
