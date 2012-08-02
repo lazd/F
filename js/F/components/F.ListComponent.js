@@ -19,6 +19,10 @@
 		},
 
 		render: function() {
+			if (F.options.debug) {
+				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
+			}
+			
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
 
@@ -29,7 +33,8 @@
 			this.collection.each(function(model) {
 				var view = new this.ItemView({
 					model: model,
-					template: this.ItemTemplate
+					template: this.ItemTemplate,
+					component: this.component
 				});
 				view.render();
 
