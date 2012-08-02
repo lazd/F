@@ -211,3 +211,34 @@ if (!Object.create) {
 		return new Func();
 	};
 }
+
+if (!Function.prototype.bind) {
+	/**
+	 * Polyfill for Function.bind. Binds a function to always execute in a specific scope.
+	 * 
+	 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">Mozilla MDN</a>
+	 *
+	 * @param {Object} oThis	The scope to bind the function to
+	 */
+  Function.prototype.bind = function (oThis) {
+	if (typeof this !== "function") {
+	  // closest thing possible to the ECMAScript 5 internal IsCallable function
+	  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+	}
+
+	var aArgs = Array.prototype.slice.call(arguments, 1), 
+		fToBind = this, 
+		fNOP = function () {},
+		fBound = function () {
+		  return fToBind.apply(this instanceof fNOP
+								 ? this
+								 : oThis,
+							   aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
+
+	fNOP.prototype = this.prototype;
+	fBound.prototype = new fNOP();
+
+	return fBound;
+  };
+}
