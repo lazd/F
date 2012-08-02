@@ -1,0 +1,70 @@
+/* CSS3 Flexbox
+/* --------------------------------- */
+
+.box-horizontal() {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-align: stretch;
+
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	-moz-box-align: stretch;
+
+	display: box;
+	box-orient: horizontal;
+	box-align: stretch;
+}
+
+.box-vertical() {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: stretch;
+
+	display: -moz-box;
+	-moz-box-orient: vertical;
+	-moz-box-align: stretch;
+
+	display: box;
+	box-orient: vertical;
+	box-align: stretch;
+}
+
+.box-reverse() {
+	-webkit-box-direction: reverse;
+	-moz-box-direction: reverse;
+	box-direction: reverse;
+}
+
+.box-flex(@number) {
+	-webkit-box-flex: @number;
+	-moz-box-flex: @number;
+	box-flex: @number;
+}
+
+.box-group(@number) {
+	-webkit-box-flex-group: @number;
+	-moz-box-flex-group: @number;
+	box-flex-group: @number;
+}
+
+.box-pack-start() {
+	-webkit-box-pack: start;
+	-moz-box-pack: start;
+	box-pack: start;
+}
+
+.box-pack-end() {
+	-webkit-box-pack: end;
+	-moz-box-pack: end;
+	box-pack: end;
+}
+
+.box-pack-center() {
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	box-pack: center;
+
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	box-align: center;
+}

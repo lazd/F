@@ -322,7 +322,16 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			}
 			
 			if (this.options.el) {
-				// TBD: validate options.el has proper tag based on this.tag
+				// Make sure the element is of the right tag
+				var actualNodeName = this.$el[0].nodeName.toUpperCase();
+				var requiredNodeName =  this.tagName.toUpperCase();
+				
+				if (actualNodeName != requiredNodeName) {
+					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
+				}
+			
+				// Add the CSS class if it doesn't have it
+				this.$el.addClass(this.className);
 			}
 			
 			// Store parent, if provided
@@ -399,6 +408,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 * @returns {F.View}	this, chainable
 		 */
 		render: function() {
+			if (F.options.debug) {
+				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
+			}
+			
 			if (this.template) {
 				// Render template
 				
@@ -519,6 +532,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// Sub components
 			this.components = {};
 			
+			// Hold the bubbled event listeners
+			this._bubbledEvts = {};
+			
 			// Make sure the following functions are always called in scope
 			// They are used in event handlers, and we want to be able to remove them
 			this.bind(this._setCurrentComponent);
@@ -562,6 +578,61 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			return this;
 		},
 	
+		/**
+		 * Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it
+		 * 
+		 * @param {String} componentName	Name of the component whose event to bubble
+		 * @param {String} evt				Name of event to bubble up
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		bubble: function(componentName, evt) {
+			if (!this[componentName]) {
+				console.error("%s: cannot set event '%s' for bubbling from component '%s', component does not exist", this.toString(), evt, componentName);
+				return this;
+			}
+			
+			if (!this._bubbledEvts[componentName])
+				this._bubbledEvts[componentName] = {};
+			
+			// Create a handler
+			var handler = this._bubbledEvts[componentName][evt] = function() {
+				// Turn the event arguments into an array
+				var args = Array.prototype.slice.call(arguments);
+				
+				// Add the name of the event to the arguments array
+				args.unshift(evt);
+				
+				// Call to bubble the event up
+				this.trigger.apply(this, args);
+			}.bind(this);
+			
+			// Add the listener
+			this[componentName].on(evt, handler);
+			
+			return this;
+		},
+	
+		/**
+		 * Discontinue bubbling of a given event
+		 * 
+		 * @param {String} componentName	Name of the component whose event to stop bubbling
+		 * @param {String} evt				Name of event that was set to bubble
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		unbubble: function(componentName, evt) {
+			if (!this._bubbledEvts[componentName] || !this._bubbledEvts[componentName][evt]) {
+				console.warn("%s: cannot discontinue bubbling of event '%s' for component '%s', event was not set for bubbling", this.toString(), evt, componentName);
+				return this;
+			}
+
+			// Remove the listener
+			this[componentName].off(evt, this._bubbledEvts[componentName][evt]);
+
+			return this;
+		},
+
 		/**
 		 * Add an instance of another component as a sub-component.
 		 *
@@ -1006,7 +1077,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			});
 		}
 		else if (options.model) {
-			console.log('%s: showing with new model', this.toString(), options.model);
+			if (F.options.debug) {
+				console.log('%s: showing with new model', this.toString(), options.model);
+			}
+			
 			this.load(options.model);
 			this.show();
 		}
@@ -1042,8 +1116,11 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
-		// Re-render when the collection resets
+		// Re-render when the collection changes
 		this.collection.on('reset', this.render);
+		this.collection.on('change', this.render);
+		this.collection.on('add', this.render);
+		this.collection.on('remove', this.render);
 		
 		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
@@ -1247,6 +1324,10 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		},
 
 		render: function() {
+			if (F.options.debug) {
+				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
+			}
+			
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
 
@@ -1257,7 +1338,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.collection.each(function(model) {
 				var view = new this.ItemView({
 					model: model,
-					template: this.ItemTemplate
+					template: this.ItemTemplate,
+					component: this.component
 				});
 				view.render();
 

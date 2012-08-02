@@ -1,0 +1,186 @@
+/* Base
+/* --------------------------------- */
+@base-size: 14;
+
+@px: 1 / @base-size + 0em;
+
+@import 'FlexBox';
+
+/* Fonts
+/* --------------------------------- */
+@font-face {
+    font-family: 'AdobeCleanLightRegular';
+    src: url('../fonts/adobeclean-light-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AdobeCleanLightItalic';
+    src: url('../fonts/adobeclean-lightit-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AdobeCleanRegular';
+    src: url('../fonts/adobeclean-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AdobeCleanSemiCondensedRg';
+    src: url('../fonts/adobeclean-semicn-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AdobeCleanSemiCondensedItalic';
+    src: url('../fonts/adobeclean-semicnit-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Buttons
+/* --------------------------------- */
+@button-text-color: rgb(255, 255, 255);
+
+/* Button: Blue */
+@button-blue-border-color: rgba(14, 64, 107, 0.70);
+
+@button-blue-gradient-start-color: rgb(80, 163, 226);
+@button-blue-gradient-end-color: rgb(36, 127, 204);
+
+@button-blue-down-gradient-start-color: rgb(43, 133, 207);
+@button-blue-down-gradient-end-color: rgb(41, 112, 170);
+
+/* Button: Gray */
+@button-gray-border-color: rgba(51, 51, 51, 0.50);
+
+@button-gray-gradient-start-color: rgb(206, 206, 206);
+@button-gray-gradient-end-color: rgb(156, 156, 156);
+
+@button-gray-down-gradient-start-color: rgb(174, 174, 174);
+@button-gray-down-gradient-end-color: rgb(135, 135, 135);
+
+/* Button: Red */
+@button-red-border-color: rgba(156, 0, 0, 0.70);
+
+@button-red-gradient-start-color: rgb(255, 51, 51);
+@button-red-gradient-end-color: rgb(206, 2, 2);
+
+@button-red-down-gradient-start-color: darken(@button-red-gradient-start-color, 10%);
+@button-red-down-gradient-end-color: darken(@button-red-gradient-end-color, 10%);
+
+/* Button: Disabled */
+@button-disabled-border-color: rgba(51, 51, 51, 0.20);
+
+@button-disabled-gradient-start-color: rgb(213, 213, 213);
+@button-disabled-gradient-end-color: rgb(198, 198, 198);
+
+/* Mixins
+/* --------------------------------- */
+.border-radius (@radius: 0.357em) {
+	border-radius: @radius;
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+}
+
+.gradient(@start, @end) {
+	background: @start;
+	background: -moz-linear-gradient(top, @start 0%, @end 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,@end));
+	background: -webkit-linear-gradient(top, @start 0%,@end 100%);
+	background: -o-linear-gradient(top, @start 0%,@end 100%);
+	background: -ms-linear-gradient(top, @start 0%,@end 100%);
+	background: linear-gradient(to bottom, @start 0%,@end 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@start', endColorstr='@end',GradientType=0 );	
+}
+
+.border-box() {
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+   -ms-box-sizing:     border-box;
+    box-sizing:        border-box;
+}
+
+/* Layout
+/* --------------------------------- */
+body {
+	font-family: AdobeCleanRegular;
+	font-size: @base-size + 0px;
+	
+	padding: 0;
+	margin: 0;
+}
+
+/* Button: Default: gray */
+button,
+a.button {
+	padding: 0.313em 0.5em;
+	border: @px solid;
+	
+	box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25),
+				inset -1px -1px 0 rgba(0, 0, 0, 0.15);
+	
+	.border-radius(0.5em);
+	
+	cursor: pointer;
+	
+	font-size: 1em;
+
+	border-color: @button-gray-border-color;
+
+	color: @button-text-color;
+	text-decoration: none; /* Reset underline on a.button */
+	
+	.gradient(@button-gray-gradient-start-color, @button-gray-gradient-end-color);
+}
+
+button:active,
+a.button:active {
+	.gradient(@button-gray-down-gradient-start-color, @button-gray-down-gradient-end-color);
+}
+
+/* Button:Primary: blue */
+button.primary,
+a.button.primary {
+	border-color: @button-blue-border-color;
+	
+	.gradient(@button-blue-gradient-start-color, @button-blue-gradient-end-color);
+}
+
+button.primary:active,
+a.button.primary:active {
+	.gradient(@button-blue-down-gradient-start-color, @button-blue-down-gradient-end-color);
+}
+
+/* Button:Warning: red */
+button.warning,
+a.button.warning {
+	border-color: @button-red-border-color;
+	
+	.gradient(@button-red-gradient-start-color, @button-red-gradient-end-color);
+}
+
+button.warning:active,
+a.button.warning:active {
+	.gradient(@button-red-down-gradient-start-color, @button-red-down-gradient-end-color);
+}
+
+/* Button: Disabled */
+
+button.disabled,
+button[disabled],
+a.button.disabled
+button.disabled:active,
+button[disabled]:active,
+a.button.disabled:active, {
+	cursor: default;
+	border-color: @button-disabled-border-color;
+
+	.gradient(@button-disabled-gradient-start-color, @button-disabled-gradient-end-color);
+}

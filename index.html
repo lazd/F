@@ -62,7 +62,7 @@
 		<section class="buttonDrawer">
 			<a class="button right" href="F/manual/index.html">Read The &#402; Manual</a>
 			<a class="button right" href="F/jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a>
-			<a class="button left" href="F/examples/ItemManager/index.html">See &#402; in action</a>
+			<a class="button left" href="F/examples/Contacts/index.html">See &#402; in action</a>
 			<a class="button left" href="https://github.com/lazd/F/zipball/master"><i class="icon-download-alt"></i> ZIP</a>
 			<a class="button left" href="https://github.com/lazd/F/tarball/master"><i class="icon-download-alt"></i> TAR</a>
 		</section>
@@ -74,11 +74,11 @@
 				
 <h3>1. Create a namespace:</h3>
 <p>Nobody likes global variables. Keep it neat with a namespace.</p>
-<code class="prettyprint">var app = {};</code>
+<code class="prettyprint">var App = {};</code>
 
 <h3>2. Build your components</h3>
 <p>Anything that needs a model, view, or controller can be a component.</p>
-<code class="prettyprint">app.Welcome = new Class({
+<code class="prettyprint">App.Welcome = new Class({
 	toString: 'Welcome',
 	extend: F.Component,
 	construct: function(options) {
@@ -110,7 +110,7 @@
 
 <h3>3. Setup your app</h3>
 <p>Your app is just another component.</p>
-<code class="prettyprint">app.Main = new Class({
+<code class="prettyprint">App.Main = new Class({
 	toString: 'Main',
 	extend: F.Component,
 	options: {
@@ -134,7 +134,7 @@
 		this.view = new F.View(options).render();
 
 		// Add your components
-		this.addComponent(new app.Welcome({
+		this.addComponent(new App.Welcome({
 			// show the component immediately
 			visible: true,
 			// add the sub-component to element div.welcome
@@ -156,7 +156,7 @@
 	
 <h3>3. Create an instance of your app</h3>
 <p>Fire it up!</p>
-<code class="prettyprint">var myApp = new app.Main();</code>
+<code class="prettyprint">var myApp = new App.Main();</code>
 
 			</section>
 		</section>
