@@ -165,7 +165,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			});
 		}
 		else if (options.model) {
-			console.log('%s: showing with new model', this.toString(), options.model);
+			if (F.options.debug) {
+				console.log('%s: showing with new model', this.toString(), options.model);
+			}
+			
 			this.load(options.model);
 			this.show();
 		}
