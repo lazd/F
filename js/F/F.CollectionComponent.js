@@ -24,8 +24,11 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
-		// Re-render when the collection resets
+		// Re-render when the collection changes
 		this.collection.on('reset', this.render);
+		this.collection.on('change', this.render);
+		this.collection.on('add', this.render);
+		this.collection.on('remove', this.render);
 		
 		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
