@@ -31,7 +31,16 @@
 			}
 			
 			if (this.options.el) {
-				// TBD: validate options.el has proper tag based on this.tag
+				// Make sure the element is of the right tag
+				var actualNodeName = this.$el[0].nodeName.toUpperCase();
+				var requiredNodeName =  this.tagName.toUpperCase();
+				
+				if (actualNodeName != requiredNodeName) {
+					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
+				}
+			
+				// Add the CSS class if it doesn't have it
+				this.$el.addClass(this.className);
 			}
 			
 			// Store parent, if provided
@@ -108,6 +117,10 @@
 		 * @returns {F.View}	this, chainable
 		 */
 		render: function() {
+			if (F.options.debug) {
+				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
+			}
+			
 			if (this.template) {
 				// Render template
 				
