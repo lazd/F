@@ -1,8 +1,8 @@
 /*
-	First, declare a namespace for your app
-	
-	Using a namespace keeps your code out of the global scope.
-	A namespace also helps keep your large app organized.
+First, declare a namespace for your app
+
+Using a namespace keeps your code out of the global scope.
+A namespace also helps keep your large app organized.
 */
 var Contacts = {
 	// Models go in Contacts.Models
@@ -41,7 +41,13 @@ var Contacts = {
 
 // Define your models
 Contacts.Models.Contact = Backbone.Model.extend({
-	urlRoot: 'api/contacts'
+	urlRoot: 'api/contacts',
+	change: function() {
+	    this.dirty = true;
+	},
+	url: function() {
+		return this.urlRoot+ (!this.dirty ? '/'+this.id : 'dontActuallySaveOrThisDemoDoesntWork');
+	}
 });
 
 
@@ -54,8 +60,10 @@ Contacts.Collections.Contacts = Backbone.Collection.extend({
 		Backbone.Collection.prototype.fetch.apply(this, arguments);
 	},
 	parse: function(response) {
-		// Note: this routine is only here to simulate server-side filtering
-		// Normally, you'll just take what the server gives according to the search query you passed
+		/*
+		Note: this routine is only here to simulate server-side filtering
+		Normally, you'll just take what the server gives according to the search query you passed
+		*/
 		return this.searchQuery ? _.filter(response, function(record, index) {
 			return ~record.name.toLowerCase().indexOf(this.searchQuery.toLowerCase());
 		}.bind(this)) : response;
@@ -90,7 +98,7 @@ Contacts.Templates['ContactEditor'] = Handlebars.compile([
 	'<div class="header">',
 		'<div><button class="back" type="button">Cancel</button></div>',
 		'<h1>{{# if name}}Edit Contact{{else}}New Contact{{/if}}</h1>',
-		'<div><button class="save">Done</button></div>',
+		'<div><button class="save" type="submit">Done</button></div>',
 	'</div>',
 	'<div class="scrollContainer">',
 		'<div class="fields">',
