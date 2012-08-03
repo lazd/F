@@ -218,29 +218,31 @@ if (!Function.prototype.bind) {
 	 * 
 	 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">Mozilla MDN</a>
 	 *
-	 * @param {Object} oThis	The scope to bind the function to
+	 * @param {Object} scope	The scope to bind the function to
 	 */
-  Function.prototype.bind = function (oThis) {
-	if (typeof this !== "function") {
-	  // closest thing possible to the ECMAScript 5 internal IsCallable function
-	  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-	}
+	Function.prototype.bind = function (scope) {
+		if (typeof this !== "function") {
+			// closest thing possible to the ECMAScript 5 internal IsCallable function
+			throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+		}
 
-	var aArgs = Array.prototype.slice.call(arguments, 1), 
-		fToBind = this, 
-		fNOP = function () {},
-		fBound = function () {
-		  return fToBind.apply(this instanceof fNOP
-								 ? this
-								 : oThis,
-							   aArgs.concat(Array.prototype.slice.call(arguments)));
-		};
+		var aArgs = Array.prototype.slice.call(arguments, 1), 
+			fToBind = this, 
+			/** @ignore */
+			fNOP = function() {},
+			/** @ignore */
+			fBound = function() {
+				return fToBind.apply(this instanceof fNOP
+									 ? this
+									 : scope,
+									 aArgs.concat(Array.prototype.slice.call(arguments)));
+			};
 
-	fNOP.prototype = this.prototype;
-	fBound.prototype = new fNOP();
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
 
-	return fBound;
-  };
+		return fBound;
+	};
 }
 /** 
  * The main F namespace.
@@ -871,6 +873,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		/**
 		 * Hide all sub-components
 		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		hideComponents: function() {
 			for (var componentName in this.components) {
@@ -940,6 +943,11 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 * @returns {F.Component}	this, chainable
 		 */
 		setName: function(customName) {
+			/**
+			 * Get this component's name
+			 *
+			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
+			 */
 			this.toString = function() {
 				return customName;
 			};
@@ -1376,6 +1384,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 
 		/**
 		 * Clears the form by rendering it with a new, empty model
+		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		clear: function() {
 			// Create a new model instead of resetting the old one
@@ -1454,7 +1464,6 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		},
 
 		render: function() {
-			
 			if (F.options.debug) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}

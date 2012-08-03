@@ -65,42 +65,44 @@
 <span class='line'> 58</span> 
 <span class='line'> 59</span> </span><span class="WHIT">		</span><span class="COMM">/**
 <span class='line'> 60</span> 		 * Clears the form by rendering it with a new, empty model
-<span class='line'> 61</span> 		 */</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">		</span><span class="NAME">clear</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">			</span><span class="COMM">// Create a new model instead of resetting the old one</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">			</span><span class="NAME">this.model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.Model</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> 
-<span class='line'> 66</span> </span><span class="WHIT">			</span><span class="COMM">// Render the view so it will be blank again</span><span class="WHIT">
-<span class='line'> 67</span> </span><span class="WHIT">			</span><span class="NAME">this.render</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">		
-<span class='line'> 69</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">	
-<span class='line'> 72</span> 		</span><span class="COMM">/**
-<span class='line'> 73</span> 		 * Handles form submit events
-<span class='line'> 74</span> 		 *
-<span class='line'> 75</span> 		 * @param {Event} evt	The jQuery event object
-<span class='line'> 76</span> 		 */</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="WHIT">		</span><span class="NAME">handleSubmit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 78</span> </span><span class="WHIT">			</span><span class="COMM">// Blur focus to the submit button in order to hide keyboard on iOS</span><span class="WHIT">
-<span class='line'> 79</span> </span><span class="WHIT">			</span><span class="COMM">// This won't work for every situation, such as forms that don't have submit buttons</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">			</span><span class="NAME">this.view.$el.find</span><span class="PUNC">(</span><span class="STRN">'[type="submit"]'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">first</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">			
-<span class='line'> 82</span> 			</span><span class="COMM">// Since this is a DOM event handler, prevent form submission</span><span class="WHIT">
-<span class='line'> 83</span> </span><span class="WHIT">			</span><span class="NAME">evt.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 84</span> </span><span class="WHIT">			
-<span class='line'> 85</span> 			</span><span class="COMM">// Get the data from the form fields</span><span class="WHIT">
-<span class='line'> 86</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.view.$el.serializeArray</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 87</span> </span><span class="WHIT">		
-<span class='line'> 88</span> 			</span><span class="COMM">// Build a data object from fields</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">			</span><span class="NAME">_.each</span><span class="PUNC">(</span><span class="NAME">fields</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 91</span> </span><span class="WHIT">				</span><span class="NAME">data</span><span class="PUNC">[</span><span class="NAME">field.name</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">field.value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">		
-<span class='line'> 94</span> 			</span><span class="COMM">// Perform the save, passing our modified as the second arg</span><span class="WHIT">
-<span class='line'> 95</span> </span><span class="WHIT">			</span><span class="NAME">this.save</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 96</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 97</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 98</span> 
-<span class='line'> 99</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'> 61</span> 		 *
+<span class='line'> 62</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'> 63</span> 		 */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">		</span><span class="NAME">clear</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">			</span><span class="COMM">// Create a new model instead of resetting the old one</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">			</span><span class="NAME">this.model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.Model</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> 
+<span class='line'> 68</span> </span><span class="WHIT">			</span><span class="COMM">// Render the view so it will be blank again</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">			</span><span class="NAME">this.render</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">		
+<span class='line'> 71</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">	
+<span class='line'> 74</span> 		</span><span class="COMM">/**
+<span class='line'> 75</span> 		 * Handles form submit events
+<span class='line'> 76</span> 		 *
+<span class='line'> 77</span> 		 * @param {Event} evt	The jQuery event object
+<span class='line'> 78</span> 		 */</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">		</span><span class="NAME">handleSubmit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">			</span><span class="COMM">// Blur focus to the submit button in order to hide keyboard on iOS</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">			</span><span class="COMM">// This won't work for every situation, such as forms that don't have submit buttons</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">			</span><span class="NAME">this.view.$el.find</span><span class="PUNC">(</span><span class="STRN">'[type="submit"]'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">first</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">			
+<span class='line'> 84</span> 			</span><span class="COMM">// Since this is a DOM event handler, prevent form submission</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">			</span><span class="NAME">evt.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">			
+<span class='line'> 87</span> 			</span><span class="COMM">// Get the data from the form fields</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">fields</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.view.$el.serializeArray</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">		
+<span class='line'> 90</span> 			</span><span class="COMM">// Build a data object from fields</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">			</span><span class="NAME">_.each</span><span class="PUNC">(</span><span class="NAME">fields</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">field</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">				</span><span class="NAME">data</span><span class="PUNC">[</span><span class="NAME">field.name</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">field.value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">		
+<span class='line'> 96</span> 			</span><span class="COMM">// Perform the save, passing our modified as the second arg</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">			</span><span class="NAME">this.save</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>

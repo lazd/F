@@ -29,8 +29,21 @@ Contacts.Index = new Class({
 			visible: true
 		}), 'list');
 		
-		// Hide the search field when the list is done rendering the first time only
-		this.list.view.on('renderComplete', _.once(this.hideSearch.bind(this)));
+		// Hide the search field when the list is done rendering the first time only, if it's blank
+		// It won't be blank if the search was loaded from the hash
+		this.list.view.on('renderComplete', _.once(function() {
+			if (this.view.$('input').val() == '')
+				this.hideSearch();
+		}.bind(this)));
+		
+		// Hide the search field when we show the view
+		this.on('component:shown', function() {
+			// Defer this so we give the router a chance to set the input field's value
+			_.defer(function() {
+				if (this.view.$('input').val() == '')
+					this.hideSearch();
+			}.bind(this));
+		});
 		
 		// Bubble the itemSelected event of our list upward
 		this.bubble('list', 'itemSelected');
@@ -54,16 +67,6 @@ Contacts.Index = new Class({
 	newContact: function() {
 		// Tell our parent to switch to the contact editor component with a blank contact
 		this.trigger('newContact');
-	},
-	
-	show: function() {
-		var wasVisible = this.visible;
-		
-		this.inherited(arguments);
-		
-		// Hide the search field on show
-		if (!wasVisible)
-			this.hideSearch();
 	},
 	
 	hideSearch: function() {
@@ -95,6 +98,9 @@ Contacts.Index = new Class({
 		// Clear the value of the filter field
 		this.view.$('input').val('');
 		
+		// Clear the search from the hash
+		Contacts.router.navigate('', { trigger: true });
+			
 		// Clears fetch parameters before fetching
 		this.list.load();
 		
