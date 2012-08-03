@@ -32,6 +32,9 @@
 					this.template = this.template || this.options.template;
 			}
 			
+			// Always call in our scope so parents can remove change listeners on models by referencing view.render
+			this.render = this.render.bind(this);
+			
 			if (this.options.el) {
 				// Make sure the element is of the right tag
 				var actualNodeName = this.$el[0].nodeName.toUpperCase();
@@ -57,6 +60,24 @@
 			// Add events
 			if (this.options.events)
 				this.delegateEvents(this.options.events);
+
+			// Add change listeners to the model
+			if (this.model) {
+				this.model.on('change', this.render);
+				
+				// TBD: Should we do these?
+				// this.model.on('reset', function() {
+				// 	console.log("View caught model reset!");
+				// 	console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
+				// 	this.render();
+				// }.bind(this));
+				
+				// TBD: Should we do these?
+				// this.model.on('loaded', function() {
+				// 	console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
+				// 	this.render();
+				// }.bind(this));
+			}
 			
 			this.rendered = null;
 		},
@@ -68,6 +89,17 @@
 		 */
 		age: function() {
 			return this.rendered !== null ? new Date().getTime() - this.rendered : -1;
+		},
+		
+		/**
+		 * Remove this view from the DOM and stop listening to model change events
+		 */
+		remove: function() {
+			this.$el.remove();
+		
+			// Remove change listener
+			if (this.model)
+				this.model.off('change', this.render);
 		},
 		
 		/**
