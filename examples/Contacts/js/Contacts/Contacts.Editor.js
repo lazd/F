@@ -8,16 +8,6 @@ Contacts.Editor = new Class({
 	*/
 	extend: F.FormComponent,
 	
-	construct: function(options) {
-		// Overwrite defaults directly into options
-		_.extend(options, {
-			template: this.Template,
-			component: this
-		});
-		
-		this.view = new this.View(options);
-	},
-	
 	// We'll be loading and saving contacts, so indicate we're using that model
 	Model: Contacts.Models.Contact,
 	
