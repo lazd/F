@@ -24,7 +24,7 @@ Contacts.Editor = new Class({
 	// Our template and view should go in the prototype so they can be overridden
 	Template: Contacts.Templates['ContactEditor'],
 
-	//Extend the default form component's view
+	// Extend the default form component's view
 	View: F.FormComponent.prototype.View.extend({
 		// Not only do we extend the View, but we also extend its events
 		events: _.extend({}, F.FormComponent.prototype.View.prototype.events, {

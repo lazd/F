@@ -127,7 +127,7 @@
 <span class='line'>120</span> </span><span class="WHIT">			</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>121</span> </span><span class="WHIT">			
 <span class='line'>122</span> 			</span><span class="NAME">this.view</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.ListView</span><span class="PUNC">(</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>123</span> </span><span class="WHIT">				</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">				</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// pass this as component so ItemView can trigger handleSelect if it likes</span><span class="WHIT">
 <span class='line'>124</span> </span><span class="WHIT">				</span><span class="NAME">collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>125</span> </span><span class="WHIT">				</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemView</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>126</span> </span><span class="WHIT">				</span><span class="NAME">ItemTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemTemplate</span><span class="PUNC">,</span><span class="WHIT">
@@ -148,20 +148,33 @@
 <span class='line'>141</span> </span><span class="WHIT">		</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">ItemView</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>142</span> </span><span class="WHIT">	
 <span class='line'>143</span> 		</span><span class="COMM">/**
-<span class='line'>144</span> 		 * Handles item selection events
+<span class='line'>144</span> 		 * Get the model associated with a list item
 <span class='line'>145</span> 		 *
-<span class='line'>146</span> 		 * @param {Event} evt	The jQuery event object
-<span class='line'>147</span> 		 */</span><span class="WHIT">
-<span class='line'>148</span> </span><span class="WHIT">		</span><span class="NAME">handleSelect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">listItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">listItem.data</span><span class="PUNC">(</span><span class="STRN">'model'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">		
-<span class='line'>153</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">				</span><span class="NAME">listItem</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">listItem</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">				</span><span class="NAME">model</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>158</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>159</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>160</span> </span></pre></body></html>
+<span class='line'>146</span> 		 * @param {Node}	Node or jQuery Object to get model from
+<span class='line'>147</span> 		 *
+<span class='line'>148</span> 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
+<span class='line'>149</span> 		 */</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">		</span><span class="NAME">getModelFromLi</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">data</span><span class="PUNC">(</span><span class="STRN">'model'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">	
+<span class='line'>154</span> 		</span><span class="COMM">/**
+<span class='line'>155</span> 		 * Handles item selection events
+<span class='line'>156</span> 		 *
+<span class='line'>157</span> 		 * @param {Event} evt	The jQuery event object
+<span class='line'>158</span> 		 */</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">		</span><span class="NAME">handleSelect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">			</span><span class="COMM">// Get model from DOM el's data</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getModelFromLi</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">			
+<span class='line'>163</span> 			</span><span class="COMM">// Store ID of selected item</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">		
+<span class='line'>166</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">				</span><span class="NAME">listItem</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">				</span><span class="NAME">model</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> </span></pre></body></html>
