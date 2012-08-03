@@ -28,8 +28,7 @@ Contacts.App = new Class({
 			This component will display the list of items
 		*/  
 		this.addComponent(new this.IndexComponent({
-			el: this.view.$('.index'),
-			visible: true
+			el: this.view.$('.index')
 		}), 'index')
 		.on('itemSelected', this.showDetails)
 		.on('newContact', this.newContact);
@@ -96,13 +95,17 @@ Contacts.App = new Class({
 	}),
 	
 	navigateBack: function(component) {
-		if (component === this.editor && this.details.model)
-			this.details.show();
-		else
-			this.index.show();
+		if (component === this.editor && this.editor.model && this.editor.model.id) {
+			Contacts.router.navigate('details/'+this.editor.model.id, { trigger: true });
+		}
+		else { // just go to the list
+			Contacts.router.navigate('', { trigger: true });
+		}
 	},
 	
 	newContact: function() {
+		Contacts.router.navigate('new', { trigger: false });
+		
 		this.editor.clear();
 		this.editor.show();
 	},
@@ -110,7 +113,10 @@ Contacts.App = new Class({
 	showEditor: function(model) {
 		if (F.options.debug)
 			console.log('%s: showing editor for %s', this.toString());
-	
+
+		// Set route, but don't navigate. Normally, you would navigate and aboid the call below, but we're not fetching models from the server
+		Contacts.router.navigate('edit/'+model.id, { trigger: false });
+
 		// Give the editor component the model to edit
 		this.editor.show({
 			model: model
@@ -122,6 +128,9 @@ Contacts.App = new Class({
 		if (F.options.debug)
 			console.log('%s: showing details for %s', this.toString(), info.model.name);
 		
+		// Set route, but don't navigate. Normally, you would navigate and aboid the call below, but we're not fetching models from the server
+		Contacts.router.navigate('details/'+info.model.id, { trigger: false });
+
 		// Give the Details component the model of the selected item and it will use it as is
 		// Note: we don't generally do this because someone may have edited the contact on the server
 		this.details.show({
