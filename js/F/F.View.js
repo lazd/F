@@ -61,8 +61,8 @@
 			if (this.options.events)
 				this.delegateEvents(this.options.events);
 
-			// Add change listeners to the model
-			if (this.model) {
+			// Add change listeners to the model, but only if has an on method
+			if (this.model && this.model.on) {
 				this.model.on('change', this.render);
 				
 				// TBD: Should we do these?
