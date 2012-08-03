@@ -302,7 +302,6 @@
 	
 		/**
 		 * Hide all sub-components
-		 *
 		 */
 		hideComponents: function() {
 			for (var componentName in this.components) {

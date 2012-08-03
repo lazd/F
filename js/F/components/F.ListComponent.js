@@ -38,7 +38,6 @@
 		},
 
 		render: function() {
-			
 			if (F.options.debug) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
