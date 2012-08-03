@@ -66,6 +66,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
+	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
+	 *
+	 * @returns {F.CollectionComponent}	this, chainable
+	 */
+	clearParams: function() {
+		this.params = {};
+		
+		return this;
+	},
+	
+	/**
 	 * Fetch the collection with optional 
 	 *
 	 * @param {Object} fetchParams	Optional parameters to pass when fetching
@@ -77,6 +88,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
 			this.params = _.extend({}, this.defaultParams, fetchParams);
+		else // Overwrite old params with defaults and send a request with only default params
+			this.params = _.extend({}, this.defaultParams);
 		
 		// Fetch collection contents
 		this.collection.fetch({
@@ -105,13 +118,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		if (options.params) {
 			// Load the collection by itemId
 			this.load(options.params, function() {
-				this.show();
+				this.show({
+					silent: options.silent
+				});
 			});
 		}
 		else if (!this.collectionLoaded) {
 			// Perform initial load
 			this.refresh(function() {
-				this.show(); // show when we're fully loaded
+				this.show({
+					silent: options.silent
+				}); // show when we're fully loaded
 			});
 		}
 		else
