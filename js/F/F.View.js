@@ -26,8 +26,10 @@
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
-				this.template = this.template || this.options.template;
-				// For pre-compiled templates: this.template = Handlebars.template(this.template || this.options.template);
+				if (F.options.wrapTemplates)
+					this.template = Handlebars.template(this.template || this.options.template);
+				else // For pre-compiled templates
+					this.template = this.template || this.options.template;
 			}
 			
 			if (this.options.el) {
@@ -138,6 +140,11 @@
 		
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
+			
+			// Notify render has completed
+			_.defer(function() {
+				this.trigger('renderComplete');
+			}.bind(this));
 			
 			return this;
 		},

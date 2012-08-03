@@ -14,5 +14,6 @@ catch (err) {
 }
 
 F.options = {
-	debug: false
+	debug: false,			// True to display debug messages
+	wrapTemplates: false	// True if you need Handlebars.template() called on your templates
 };
