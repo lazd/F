@@ -6,7 +6,7 @@
 	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
-			'submit': 'handleSubmit'
+			// 'submit': 'handleSubmit'	// Can't do it this way: submit event is fired twice!
 		}
 	});
 	
@@ -47,6 +47,9 @@
 		
 			// Create a blank model
 			this.model = new this.Model();
+			
+			// Have to do it this way: with delegate, submit event is fired twice!
+			this.view.$el.on('submit', this.handleSubmit.bind(this));
 		},
 	
 		View: FormView,
@@ -72,6 +75,13 @@
 		 * @param {Event} evt	The jQuery event object
 		 */
 		handleSubmit: function(evt) {
+			// Blur focus to the submit button in order to hide keyboard on iOS
+			// This won't work for every situation, such as forms that don't have submit buttons
+			this.view.$el.find('[type="submit"]').first().focus();
+			
+			// Since this is a DOM event handler, prevent form submission
+			evt.preventDefault();
+			
 			// Get the data from the form fields
 			var fields = this.view.$el.serializeArray();
 		
@@ -83,9 +93,6 @@
 		
 			// Perform the save, passing our modified as the second arg
 			this.save(data);
-
-			// Since this is a DOM event handler, prevent form submission
-			return false;
 		}
 	});
 
