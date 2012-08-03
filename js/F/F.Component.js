@@ -48,6 +48,10 @@
 		 * Destroy this instance and free associated memory
 		 */
 		destruct: function() {
+			// If this module has a view in this.view, destroy it automatically
+			if (this.view)
+				this.view.remove();
+			
 			// Destroy sub-components
 			for (var component in this.components) {
 				this.components[component].destruct();
