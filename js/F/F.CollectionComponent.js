@@ -24,11 +24,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
-		// Re-render when the collection changes
-		this.collection.on('reset', this.render);
-		this.collection.on('change', this.render);
+		// Re-render when the collection is fetched, items are added or removed
 		this.collection.on('add', this.render);
 		this.collection.on('remove', this.render);
+		this.collection.on('loaded', this.render); // custom event we call after fetches
+		// Don't re-render on change! let the sub-views do that
+		// this.collection.on('change', this.render);
 		
 		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
@@ -95,6 +96,10 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection.fetch({
 			data: this.params,
 			success: function() {
+				// Collection event
+				this.collection.trigger('loaded');
+
+				// Component event
 				this.trigger('collectionLoaded');
 				this.collectionLoaded = true;
 				
