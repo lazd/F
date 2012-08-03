@@ -45,8 +45,9 @@ Contacts.Index = new Class({
 			}.bind(this));
 		});
 		
-		// Bubble the itemSelected event of our list upward
+		// Bubble specific events of our list upward to the app
 		this.bubble('list', 'itemSelected');
+		this.bubble('list', 'deleteItem');
 	},
 	
 	// Our template and view should go in the prototype so they can be overridden

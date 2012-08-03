@@ -120,7 +120,7 @@
 			]);
 			
 			this.view = new this.ListView(_.extend({
-				component: this,
+				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
 				collection: this.collection,
 				ItemView: this.ItemView,
 				ItemTemplate: this.ItemTemplate,
@@ -141,17 +141,30 @@
 		ItemView: ItemView,
 	
 		/**
+		 * Get the model associated with a list item
+		 *
+		 * @param {Node}	Node or jQuery Object to get model from
+		 *
+		 * @returns {Backbone.Model}	The model associated with the passed DOM element
+		 */
+		getModelFromLi: function(listItem) {
+			return $(listItem).data('model');
+		},
+	
+		/**
 		 * Handles item selection events
 		 *
 		 * @param {Event} evt	The jQuery event object
 		 */
 		handleSelect: function(evt) {
-			var listItem = $(evt.currentTarget);
-			var model = listItem.data('model');
+			// Get model from DOM el's data
+			var model = this.getModelFromLi(evt.currentTarget);
+			
+			// Store ID of selected item
 			this.selectedItem = model.id;
 		
 			this.trigger('itemSelected', {
-				listItem: listItem,
+				listItem: $(evt.currentTarget),
 				model: model
 			});
 		}

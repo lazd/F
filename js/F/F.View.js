@@ -229,8 +229,11 @@
 				var match = key.match(delegateEventSplitter);
 				var eventName = match[1], selector = match[2];
 
+				// Execute in the scope of the base
+				// TBD: determine if we ought to execute in the scope of the view itself ever?
+				//		or leave that up to implementors to pass a bound function
 				method = this.component ? _.bind(method, base) : _.bind(method, this);
-
+				
 				eventName += '.delegateEvents' + this.cid;
 				if (selector === '') {
 					this.$el.bind(eventName, method);
