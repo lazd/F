@@ -68,8 +68,8 @@
 <span class='line'> 61</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.options.events</span><span class="PUNC">)</span><span class="WHIT">
 <span class='line'> 62</span> </span><span class="WHIT">				</span><span class="NAME">this.delegateEvents</span><span class="PUNC">(</span><span class="NAME">this.options.events</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 63</span> 
-<span class='line'> 64</span> </span><span class="WHIT">			</span><span class="COMM">// Add change listeners to the model</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">			</span><span class="COMM">// Add change listeners to the model, but only if has an on method</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.model</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this.model.on</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 66</span> </span><span class="WHIT">				</span><span class="NAME">this.model.on</span><span class="PUNC">(</span><span class="STRN">'change'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 67</span> </span><span class="WHIT">				
 <span class='line'> 68</span> 				</span><span class="COMM">// TBD: Should we do these?</span><span class="WHIT">

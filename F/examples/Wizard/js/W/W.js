@@ -59,6 +59,6 @@ W.Templates['Step2_Part'] = Handlebars.compile([
 
 W.Templates['Step3'] = Handlebars.compile([
 	'<button class="prev">Previous</button>',
-	'<h2>Step 3: Implement</h1>',
-	'<p>Just do it!</p>'
+	'<h2>Step 3: Finish it up</h1>',
+	'<p>You\'re done!</p>'
 ].join(''));

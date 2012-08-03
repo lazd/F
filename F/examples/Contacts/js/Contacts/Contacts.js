@@ -23,8 +23,8 @@ var Contacts = {
 
 			// Start the app
 			Contacts.app = new Contacts.App({
-				el: '#contacts',
-				visible: true // show immediately
+				el: '#contacts',	// directly use the #contacts element as the container
+				visible: true 		// show immediately
 			});
 			
 			// Start watching history
@@ -42,11 +42,18 @@ var Contacts = {
 // Define your models
 Contacts.Models.Contact = Backbone.Model.extend({
 	urlRoot: 'api/contacts',
+
+	/*
+	Note: the following code is necessary to allow fake saves
+	*/
+	// Normally, you wouldn't need to store a dirty bit
 	change: function() {
 	    this.dirty = true;
 	},
+	// Normally, you would not do this at all
 	url: function() {
-		return this.urlRoot+ (!this.dirty ? '/'+this.id : 'dontActuallySaveOrThisDemoDoesntWork');
+		// Deliver the correct URL unless the model has been changed, in which case we force the save to fail
+		return this.urlRoot + (!this.dirty ? '/'+this.id : 'dontActuallySaveOrThisDemoDoesntWork');
 	}
 });
 
@@ -55,15 +62,19 @@ Contacts.Models.Contact = Backbone.Model.extend({
 Contacts.Collections.Contacts = Backbone.Collection.extend({
 	url: 'api/contacts.json',
 	model: Contacts.Models.Contact,
+	
+	/*
+	Note: the following code is only here to simulate server-side filtering
+	*/
+	// Normally, you wouldn't worry about storing the search query on the model level
 	fetch: function(options) {
+		// Store the search query so we can manually filter in parse
 		this.searchQuery = options.data.query;
 		Backbone.Collection.prototype.fetch.apply(this, arguments);
 	},
+	// Normally, you'll just take what the server gives according to the search query you passed
 	parse: function(response) {
-		/*
-		Note: this routine is only here to simulate server-side filtering
-		Normally, you'll just take what the server gives according to the search query you passed
-		*/
+		// Manually filter the collection as our fake API does not return subsets
 		return this.searchQuery ? _.filter(response, function(record, index) {
 			return ~record.name.toLowerCase().indexOf(this.searchQuery.toLowerCase());
 		}.bind(this)) : response;
