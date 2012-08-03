@@ -302,6 +302,8 @@
 	
 		/**
 		 * Hide all sub-components
+		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		hideComponents: function() {
 			for (var componentName in this.components) {
@@ -371,6 +373,11 @@
 		 * @returns {F.Component}	this, chainable
 		 */
 		setName: function(customName) {
+			/**
+			 * Get this component's name
+			 *
+			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
+			 */
 			this.toString = function() {
 				return customName;
 			};

@@ -58,6 +58,8 @@
 
 		/**
 		 * Clears the form by rendering it with a new, empty model
+		 *
+		 * @returns {F.Component}	this, chainable
 		 */
 		clear: function() {
 			// Create a new model instead of resetting the old one
