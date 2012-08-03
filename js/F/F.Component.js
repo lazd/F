@@ -168,7 +168,6 @@
 				if (component.view.el) {
 					if (component.visible === true) {
 						// Call show method so view is rendered
-						console.log('calling show with silent', component.toString());
 						component.show({ silent: true });
 					}
 					else {
