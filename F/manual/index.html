@@ -1,1 +1,191 @@
-<h1>T&#402;M will be available for reading soon.</h1>
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<title>The &#402; Manual</title>
+	<link rel="stylesheet" href="../../css/styles.css">
+	<link rel="stylesheet" href="../../css/pygment_trac.css">
+	<link rel="stylesheet" href="../../css/font-awesome.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="../../js/respond.js"></script>
+	
+	<link href="../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
+	<link href="../../google-code-prettify/sunburst.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="../../google-code-prettify/prettify.js"></script>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<!--[if lt IE 8]>
+	<link rel="stylesheet" href="css/ie.css">
+	<![endif]-->
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+</head>
+<body onload="prettyPrint()">
+	<div id="header">
+		<nav>
+			<li class="downloads"><a href="/"><i class="icon-home"></i> Home</a></li>
+
+			<li class="spacer"></li>
+			
+			<div class="logo">&#402;<span>.js</span></div>
+			
+			<!-- <li class="title">GET &#402;</li> -->
+		</nav>
+	</div><!-- end header -->
+
+	<div class="wrapper">
+
+		<section>
+			<div id="title">
+				<h1>The &#402; Manual</h1>
+				<hr>
+			</div>
+
+			<h2>Introduction</h2>
+			<ul>
+				<li><a href="#whatIsF">What is &#402;?</a></li>
+				<li><a href="#buzzwordSoup">Buzzword soup: Models, views, and what?</a></li>
+			</ul>
+
+
+			<h2>Common Tasks</h2>
+			<ul>
+				<li><a href="#addFToYourProject">Add &#402; to your project</a></li>
+				<li><a href="#modelComponent">Fetch and display a model</a></li>
+				<li><a href="#formComponent">Edit a model and save changes to the server</a></li>
+				<li><a href="#collectionComponent">Fetch and display a collection of models</a></li>
+			</ul>
+
+
+			<h2>Best Practices</h2>
+			<ul>
+				<li><a href="#applicationDesign">Breaking up your application into components</a></li>
+				<li><a href="#componentDesign">Enabling code-reuse with good component design</a></li>
+				<li><a href="#domEvents">DOM event delegation</a></li>
+			</ul>
+
+			<h2>Miscellaneous</h2>
+			<ul>
+				<li><a href="#howDoITypeF">How do I type ƒ?</a></li>
+			</ul>
+		</section>
+
+		<div class="manual">
+			<h1>Introduction</h1>
+			<hr>
+			<section>
+				<section id="whatIsF">
+					<h2>What is &#402;?</h2>
+					<p>&#402; is a component framework for JavaScript applications that promotes code-reuse and frees you from writing boilerplate code.</p>
+					<p>&#402; relies heavily on Backbone and jQuery, and is a perfect companion for your templating language of choice.</p>
+				</section>
+			
+				<section id="buzzwordSoup">
+					<h2>Buzzword soup: Models, views, and what?</h2>
+					<p>Let's avoid the buzzword game and explain we we're talking about.<p>
+			
+					<section>
+						<h3>Models</h3>
+						<p>Models are a local representation of an object or database entry. &#402; uses vanilla Backbone models.</p>
+						<h3>Templates</h3>
+						<p>Templates are HTML structure and template code. Templates control the presentation of your models on the page. &#402; uses vanilla Handlebars templates.</p>
+						<h3>Views</h3>
+						<p>Views render a model with a given template, putting your data into your HTML structure. Views can be shown or hidden. &#402; uses vanilla Backbone views.</p>
+						<h3>Components</h3>
+						<p>Components are logical units of application code. They have methods, models, views, and sub-components. A component consists of many sub-components that it connects together by listening to events from one component and calling methods on another.</p>
+					</section>
+				</section>
+			</section>
+		
+			<h1>Common Tasks</h1>
+			<hr>
+			<section>
+				<section id="addFToYourProject">
+					<h2>Adding &#402; to your project</h2>
+
+					<ol>
+						<li>
+							<strong>Get &#402;.</strong> Download a ZIP and extract it.<br>
+							<a class="button" href="https://github.com/lazd/F/zipball/master"><i class="icon-download-alt"></i> Download</a></p>
+						</li>
+						<li>
+							<strong>Add the files to your project.</strong> Just dump F.js into your js folder.
+						</li>
+						<li>
+							<strong>Add the script include.</strong> Preferably to the &lt;head&gt; tag.
+							<code class="prettyprint">&lt;script src="js/F.js"&gt;&lt;/script&gt;</code>
+						</li>
+						<li><strong>RT&#402;M</strong></li>
+					</ol>
+				</section>
+		
+				<section id="modelComponent">
+					<h2>Fetch and display a model</h2>
+			
+					<p>See the <a href="http://lazd.github.com/F/F/examples/ItemManager">ItemManager example</a> for a live demo.</p>
+				</section>
+		
+				<section id="formComponent">
+					<h2>Edit a model and save changes to the server</h2>
+			
+					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
+				</section>
+		
+				<section id="collectionComponent">
+					<h2>Fetch and display a collection of models</h2>
+			
+					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
+				</section>
+			</section>
+				
+			<h1>Best Practices</h1>
+			<hr>
+			<section>
+				<section id="applicationDesign">
+					<h2>Breaking up your application into components</h2>
+					<p>Coming soon.</p>
+
+					<h3>Why have nested components?</h3>
+					<p>Coming soon.</p>
+			
+					<h3>What should be a component and what shouldn't?</h3>
+					<p>Coming soon.</p>
+				</section>
+				
+				<section id="componentDesign">
+					<h2>Enabling code-reuse with good component design</h2>
+					<p>Coming soon.</p>
+				</section>
+				
+				<section id="domEvents">
+					<h2>DOM event delegation</h2>
+					<p>Coming soon.</p>
+				</section>
+				
+			</section>
+		
+			<h1>Miscellaneous</h1>
+			<hr>
+			<section>
+				<section id="howDoITypeF">
+					<h2>How do I type ƒ?</h2>
+					<p>Yes, ƒ is a valid JavaScript variable name, and you use it instead of F if you're super hip.</p>
+					<section>
+						<section>
+							<strong>Mac:</strong> Option + f<br>
+							<strong>Windows:</strong> alt + 1 5 9
+						</section>
+					</section>
+				</section>
+			</section>
+		</div>
+	</div>
+	<!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+
+	<span class="credits">Maintained by <a href="https://github.com/lazd">lazd</a></span>
+	<!-- <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span> -->
+</body>
+</html>
