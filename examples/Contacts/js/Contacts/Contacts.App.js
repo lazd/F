@@ -21,6 +21,7 @@ Contacts.App = new Class({
 		this.bind(this.showEditor);
 		this.bind(this.showDetails);
 		this.bind(this.newContact);
+		this.bind(this.deleteContact);
 		this.bind(this.handleSave);
 		
 		/*
@@ -31,6 +32,7 @@ Contacts.App = new Class({
 			el: this.view.$('.index')
 		}), 'index')
 		.on('itemSelected', this.showDetails)	// Handle clicks on list items
+		.on('deleteItem', this.deleteContact)	// Handle delete operations
 		.on('newContact', this.newContact);		// Handle clicks to "+" button
 		
 		/*
@@ -155,6 +157,16 @@ Contacts.App = new Class({
 		// Show the editor with a blank model
 		this.editor.clear();
 		this.editor.show();
+	},
+	
+	deleteContact: function(model) {
+		// Show a nide animation to remove the detail view
+		this.details.view.$el.fadeOut(function() {
+			Contacts.router.navigate('', { trigger: true });
+		});
+		
+		// Destroy the model
+		model.destroy();
 	},
 	
 	showEditor: function(model) {
