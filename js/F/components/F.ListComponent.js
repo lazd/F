@@ -48,6 +48,10 @@
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
 
+			_.defer(function() {
+				this.trigger('renderComplete');
+			}.bind(this));
+			
 			return this;
 		}
 	});
