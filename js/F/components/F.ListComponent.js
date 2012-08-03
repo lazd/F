@@ -16,9 +16,29 @@
 			this.collection = options.collection;
 			this.ItemView = options.ItemView || this.ItemView;
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
+			
+			// Views array for subviews
+			this.views = [];
+		},
+
+		remove: function() {
+			this.removeSubViews();
+			
+			F.View.prototype.remove.call(this, arguments);
+		},
+
+		removeSubViews: function() {
+			if (this.views.length) {
+				_.each(this.views, function(view) {
+					view.remove();
+				});
+				
+				this.views = [];
+			}
 		},
 
 		render: function() {
+			
 			if (F.options.debug) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
@@ -26,9 +46,9 @@
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
 
-			// Clear the list
-			this.$el.children().remove();
-
+			// Remove previous views from the DOM
+			this.removeSubViews();
+			
 			// Add and render each list item
 			this.collection.each(function(model) {
 				var view = new this.ItemView({
@@ -37,14 +57,17 @@
 					component: this.component
 				});
 				view.render();
-
+				
 				// Store model
 				view.$el.data('model', model);
-
+				
 				// Add the list item to the List
 				this.$el.append(view.el);
+				
+				// Store in views array for removal later
+				this.views.push(view);
 			}.bind(this));
-
+			
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
 
