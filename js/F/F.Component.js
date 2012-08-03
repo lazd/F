@@ -42,16 +42,6 @@
 			// They are used in event handlers, and we want to be able to remove them
 			this.bind(this._setCurrentComponent);
 			this.bind(this.render);
-			
-			if (this.visible) {
-				// Show the component once the call chain has returned
-				// TBD: this doesn't work as expected, overrides the router sometimes
-				_.defer(function() {
-					this.show({
-						silent: true
-					});
-				}.bind(this));
-			}
 		},
 		
 		/**
@@ -172,13 +162,21 @@
 			// Hide view by default
 			if (component.view) {
 				if (component.view.el) {
-					component.view.$el.hide();
+					if (component.visible === true) {
+						// Call show method so view is rendered
+						console.log('calling show with silent', component.toString());
+						component.show({ silent: true });
+					}
+					else {
+						// Just hide the el
+						component.view.$el.hide();
+					}
 				}
 				else {
 					console.warn('Component %s has a view without an element', componentName, component, component.view, component.view.options);
 				}
 			}
-		
+			
 			// Show a sub-component when it shows one of it's sub-components
 			component.on('component:shown', this._setCurrentComponent);
 			
@@ -234,7 +232,7 @@
 		 */
 		show: function(options) {
 			options = options || {};
-		
+			
 			// Debug output
 			if (F.options.debug) {
 				// Don't show if already shown
@@ -265,7 +263,9 @@
 		 *
 		 * @returns {F.Component}	this, chainable
 		 */
-		hide: function() {
+		hide: function(options) {
+			options = options || {};
+			
 			if (!this.visible)
 				return false;
 			
@@ -277,8 +277,10 @@
 			if (this.view)
 				this.view.hide();
 			
-			// Trigger event after we hide ourself so we're out of the way before the next action
-			this.trigger('component:hidden', this.toString(), this);
+			if (!options.silent) {
+				// Trigger event after we hide ourself so we're out of the way before the next action
+				this.trigger('component:hidden', this.toString(), this);
+			}
 		
 			this.visible = false;
 	
