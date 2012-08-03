@@ -29,6 +29,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	refresh: function(callback) {
 		this.model.fetch({
 			success: function() {
+				// Trigger model event
+				this.model.trigger('loaded');
+
+				// Trigger component event
 				this.trigger('modelLoaded');
 				
 				if (typeof callback === 'function')
@@ -47,9 +51,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
-		if (this.model) {
-			// Unsubscribe from old model's change event
-			this.model.off('change', this.render);
+		if (this.model && this.view) {
+			// Unsubscribe from old model's change and render event in case view.remove() was not called
+			this.model.off('change', this.view.render);
 		}
 		
 		this.model = model;
@@ -58,10 +62,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			// Tell the view to re-render the next time it loads
 			this.view.rendered = null;
 		}
-		
-		// Subscribe to new model's change event
-		this.model.on('change', this.render);
-		
+
 		return this;
 	},
 		
@@ -173,8 +174,8 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			
 			this.load(options.model);
 			this.show({
-					silent: options.silent
-				});
+				silent: options.silent
+			});
 		}
 		else
 			this.inherited(arguments);
