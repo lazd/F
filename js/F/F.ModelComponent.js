@@ -161,7 +161,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				if (F.options.debug) {
 					console.log('%s: fetch complete!', this.toString());
 				}
-				this.show(); // pass nothing to show and the view will re-render
+				this.show({
+					silent: options.silent
+				}); // pass nothing to show and the view will re-render
 			});
 		}
 		else if (options.model) {
@@ -170,7 +172,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			}
 			
 			this.load(options.model);
-			this.show();
+			this.show({
+					silent: options.silent
+				});
 		}
 		else
 			this.inherited(arguments);
