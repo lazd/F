@@ -1,8 +1,8 @@
 /*
-	First, declare a namespace for your app
-	
-	Using a namespace keeps your code out of the global scope.
-	A namespace also helps keep your large app organized.
+First, declare a namespace for your app
+
+Using a namespace keeps your code out of the global scope.
+A namespace also helps keep your large app organized.
 */
 var Contacts = {
 	// Models go in Contacts.Models
@@ -18,11 +18,19 @@ var Contacts = {
 	init: function() {
 		// Prevent multiple calls to init from creating new Apps
 		if (!Contacts.app) {
+			// Create a router
+			Contacts.router = new Contacts.Router();
+
+			// Start the app
 			Contacts.app = new Contacts.App({
-				parent: '#contacts',
+				el: '#contacts',
 				visible: true // show immediately
 			});
+			
+			// Start watching history
+			Backbone.history.start();
 		}
+		
 		return Contacts.app;
 	},
 	
@@ -33,14 +41,33 @@ var Contacts = {
 
 // Define your models
 Contacts.Models.Contact = Backbone.Model.extend({
-	urlRoot: 'api/contacts'
+	urlRoot: 'api/contacts',
+	change: function() {
+	    this.dirty = true;
+	},
+	url: function() {
+		return this.urlRoot+ (!this.dirty ? '/'+this.id : 'dontActuallySaveOrThisDemoDoesntWork');
+	}
 });
 
 
 // Define your collections
 Contacts.Collections.Contacts = Backbone.Collection.extend({
 	url: 'api/contacts.json',
-	model: Contacts.Models.Contact
+	model: Contacts.Models.Contact,
+	fetch: function(options) {
+		this.searchQuery = options.data.query;
+		Backbone.Collection.prototype.fetch.apply(this, arguments);
+	},
+	parse: function(response) {
+		/*
+		Note: this routine is only here to simulate server-side filtering
+		Normally, you'll just take what the server gives according to the search query you passed
+		*/
+		return this.searchQuery ? _.filter(response, function(record, index) {
+			return ~record.name.toLowerCase().indexOf(this.searchQuery.toLowerCase());
+		}.bind(this)) : response;
+	}
 });
 
 
@@ -57,33 +84,43 @@ Contacts.Templates['Index'] = Handlebars.compile([
 		'<h1>Contacts</h1>',
 		'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
 	'</div>',
-	'<form class="search" style="display: none;"><i class="icon-search"></i><input type="text" name="search" placeholder="Search"></form>',
-	'<ul class="list"></ul>'
+	'<div class="scrollContainer">',
+		'<form class="search" autocomplete="off">',
+			'<i class="icon-search"></i>',
+			'<input type="text" name="search" class="searchField" autocomplete="off" placeholder="Search">',
+			'<i style="display: none;" class="clearButton icon-remove-sign"></i>',
+		'</form>',
+		'<ul class="list"></ul>',
+	'</div>'
 ].join(''));
 
 Contacts.Templates['ContactEditor'] = Handlebars.compile([
 	'<div class="header">',
 		'<div><button class="back" type="button">Cancel</button></div>',
-		'<h1>{{# if name}}{{name}}{{else}}New Contact{{/if}}</h1>',
-		'<div><button class="save">Done</button></div>',
+		'<h1>{{# if name}}Edit Contact{{else}}New Contact{{/if}}</h1>',
+		'<div><button class="save" type="submit">Done</button></div>',
 	'</div>',
-	'<div class="fields">',
-		'<div class="field"><label>name</label><input type="text" name="name" value="{{name}}"></div>',
-		'<div class="field"><label>e-mail</label><input type="text" name="email" value="{{email}}"></div>',
-		'<div class="field"><label>phone</label><input type="text" name="phone" value="{{phone}}"></div>',
+	'<div class="scrollContainer">',
+		'<div class="fields">',
+			'<div class="field"><label>name</label><input type="text" name="name" value="{{name}}"></div>',
+			'<div class="field"><label>e-mail</label><input type="text" name="email" value="{{email}}"></div>',
+			'<div class="field"><label>phone</label><input type="text" name="phone" value="{{phone}}"></div>',
+		'</div>',
 	'</div>'
 ].join(''));
 
 Contacts.Templates['ContactDetails'] = Handlebars.compile([
 	'<div class="header">',
-		'<div><button class="back" type="button">Back</button></div>',
-		'<h1>{{name}}</h1>',
+		'<div><button class="back" type="button">All Contacts</button></div>',
+		'<h1>Info</h1>',
 		'<div><button class="edit" type="button">Edit</button></div>',
 	'</div>',
-	'<div class="contact">',
-		'<h2>{{name}}</h2>',
-		'{{#if phone}}<p>{{phone}}</p>{{/if}}',
-		'{{#if email}}<p><a href="mailto:{{email}}">{{email}}</a></p>{{/if}}',
+	'<div class="scrollContainer">',
+		'<div class="contact">',
+			'<h2>{{name}}</h2>',
+			'{{#if phone}}<p>{{phone}}</p>{{/if}}',
+			'{{#if email}}<p><a href="mailto:{{email}}">{{email}}</a></p>{{/if}}',
+		'</div>',
 	'</div>'
 ].join(''));
 

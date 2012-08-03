@@ -5,20 +5,25 @@
 @border-color: #aaa;
 
 div.Contacts {
-	position: absolute;
-	top: 0;
-	left: 0;
 	width: 100%;
 	height: 100%;
+	
+	overflow: hidden;
 	
 	& > * {
 		height: 100%;
 	}
 	
+	div.scrollContainer {
+		.box-flex(1);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	
 	div.header {
 		width: 100%;
 		
-		.box-horizontal();
+		position: relative;
 		
 		height: @header-height;
 		
@@ -26,32 +31,41 @@ div.Contacts {
 		
 		border-bottom: @px solid #2d3642;
 		
-		text-align: center;
-		
 		.gradient(#b0bbcc, #6d84a2);
 		
 		h1 {
+			width: 100%;	
 			margin: 0;
 			padding: 0;
 			
-			.box-flex(1);
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
 			
 			text-shadow: 0 -@px 0 rgba(0, 0, 0, 0.75);
 			color: white;
 			font-weight: bold;
+			text-align: center;
 			font-size: 1.25em;
 			line-height: 2.357em;
+			
+			text-overflow: ellipsis;
 		}
 
 		div {
-			width: 5em;
+			position: absolute;
+			top: 0;
+			z-index: 2;	
 			
 			&:first-child {
 				text-align: left;
+				left: 0;
 			}
 
 			&:last-child {
 				text-align: right;
+				right: 0;
 			}
 
 			button {
@@ -78,13 +92,13 @@ div.Contacts {
 	}
 	
 	div.index {
-		background: #ececec;
+		.box-vertical();
 	
 		form.search {
 			position: relative;
 			
 			padding: 0.357em 0.5em;
-			margin-bottom: 0.357em;
+			margin-bottom: 0.3em;
 			
 			.gradient(#e0e4e7, #b4bec6);
 
@@ -93,16 +107,34 @@ div.Contacts {
 			
 			i {
 				position: absolute;
-				left: 0.85em;
-				top: 0.7em;
-
 				font-size: 1.357em;
 				color: #969ba1;
 			}
 			
-			input {
-				width: 100%;
+			i.icon-search {
+				left: 0.85em;
+				top: 0.7em;
+			}
+			
+			i.clearButton {
 				.border-box();
+
+				display: block;
+				width: 1.5em;
+				height: 1.6em;
+				
+				line-height: 1.75em;
+				
+				cursor: pointer;
+				right: 0.5em;
+				top: 0.4em;
+				
+				text-align: center;
+			}
+			
+			input {
+				.border-box();
+				width: 100%;
 				display: block;
 				padding: 0.357em 0.75em 0.357em 2em;
 				
@@ -116,11 +148,17 @@ div.Contacts {
 				outline: none;
 			}
 		}
+		
+		div.scrollContainer {
+			padding-bottom: 5em;
+		}
 	
 		ul {
+			.box-flex(1);
+			
 			padding: 0;
 			margin: 0;
-				
+			
 			list-style: none;
 		
 			li {
@@ -134,22 +172,23 @@ div.Contacts {
 	}
 	
 	div.details {
-		background: #d0d4dc;
+		.box-vertical();
 		
+		background: #d0d4dc;
 		div.contact {
-			background: white;
-
 			margin: 1em;
 			padding: 1em;
-			
+		
+			background: white;
+		
 			border: @px solid #a1a7ad;
 			.border-radius(1em);
-			
+		
 			h2 {
 				margin: 0;
 				font-size: 1.5em;
 			}
-			
+		
 			p {
 				font-size: 1.25em;
 				margin: 1em 0 0 0;
@@ -159,11 +198,14 @@ div.Contacts {
 	
 	form.editor {
 		background: #d0d4dc;
+		.box-vertical();
 		
 		div.fields {
-			background: white;
-
+			.box-flex(1);
+			
 			margin: 1em;
+			
+			background: white;
 			
 			border: @px solid #a1a7ad;
 			.border-radius(1em);

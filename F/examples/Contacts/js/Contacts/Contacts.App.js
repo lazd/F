@@ -24,15 +24,14 @@ Contacts.App = new Class({
 		this.bind(this.handleSave);
 		
 		/*
-			Item list
-			This component will display the list of items
+			Item index
+			This component will display the list of items and the search box
 		*/  
 		this.addComponent(new this.IndexComponent({
-			el: this.view.$('.index'),
-			visible: true
+			el: this.view.$('.index')
 		}), 'index')
-		.on('itemSelected', this.showDetails)
-		.on('newContact', this.newContact);
+		.on('itemSelected', this.showDetails)	// Handle clicks on list items
+		.on('newContact', this.newContact);		// Handle clicks to "+" button
 		
 		/*
 			Item details
@@ -42,8 +41,8 @@ Contacts.App = new Class({
 			el: this.view.$('.details'),
 			Model: this.Model
 		}), 'details')
-		.on('navigateBack', this.navigateBack)
-		.on('showEditor', this.showEditor);
+		.on('navigateBack', this.navigateBack)	// Handle clicks to "All Contacts" button
+		.on('showEditor', this.showEditor);		// Handle clicks to "Edit" button
 		
 		/*
 			Item editor
@@ -53,16 +52,23 @@ Contacts.App = new Class({
 			el: this.view.$('.editor'),
 			Model: this.Model
 		}), 'editor')
-		.on('navigateBack', this.navigateBack)
-		.on('saved', this.handleSave)
-		.on('saveFailed', this.handleSave); // we need this one because we don't have a real API
+		.on('navigateBack', this.navigateBack)	// Handle clicks to "Cancel" button
+		//.on('saved', this.handleSave)			// Show the details view on successful save. This is needed for real APIs
+		.on('saveFailed', this.handleSave); 	// Show the details view on failed save. This is needed for our faked API
+												// We need this one because we don't have a real API; normally you'd show an error
 	},
 	
 	handleSave: function(model) {
+		console.log('[√] Contact save faked');
 		/*
-		Because we're not refreshing from a server, we need to
-		check if the model is not in the collection yet and add it
+		Because we're not refreshing from a server, we need to add newly created
+		contacts to our collection so they render in the list. In real situation,
+		you would simply do this.index.list.refresh() to fetch the models from the
+		server and re-render the list
+		
 		*/
+		
+		// Check if the model is new or old
 		var newModel = true;
 		this.index.list.collection.some(function(existingModel) {
 			if (existingModel == model)
@@ -71,14 +77,36 @@ Contacts.App = new Class({
 		});
 
 		// Add it to our collection if it's not there
-		if (newModel) {
+		if (newModel)
 			this.index.list.collection.add(model);
-		}
 		
-		// Show the details component for this model
+		// All saves will fail, so we have to manually trigger the change event
+		model.trigger('change'); // This will cause the list to re-render
+		
+		/*
+		Note: We want to operate on the same model as loaded by the editor because we don't have a real API.
+			
+		However, this approach won't cause the list to refresh if the editor is brought up from the hash
+		as the editor loaded the model from the server instead of having it passed to it from the list
+		
+		IN REAL WORLD SITUATIONS: use trigger: true on the router
+		*/
+		
+		// Pass the model directly to the details component
+		// This will cause a re-render, and will use the model we loaded in the editor if editor was brought up by router
 		this.details.show({
-			model: model
+			model: this.editor.model
 		});
+		
+		// Update the hash
+		Contacts.router.navigate('details/'+this.editor.model.id, { trigger: false });
+		
+		/*
+		//FOR REAL APIS:
+		
+		// Show details
+		Contacts.router.navigate('details/'+this.editor.model.id, { trigger: true });
+		*/
 	},
 	
 	// Components are referenced in the prototype so they can be overridden
@@ -96,13 +124,35 @@ Contacts.App = new Class({
 	}),
 	
 	navigateBack: function(component) {
-		if (component === this.editor && this.details.model)
-			this.details.show();
-		else
-			this.index.show();
+		if (component === this.editor && this.editor.model && this.editor.model.id) {
+			// Show the details view if we're coming back from the editor and we're not adding a new model
+		
+			/*
+			Note: We want to operate on the same model as loaded by the editor because we don't have a real API.
+			
+			However, this approach won't cause the list to refresh if the editor is brought up from the hash
+			as the editor loaded the model from the server instead of having it passed to it from the list
+			
+			IN REAL WORLD SITUATIONS: use trigger: true on the router
+			*/
+			Contacts.router.navigate('details/'+this.editor.model.id, { trigger: false });
+			
+			// Show the details view for the model from the editor
+			this.details.show({
+				model: this.editor.model
+			});
+		}
+		else {
+			// Just go to the list otherwise
+			Contacts.router.navigate('', { trigger: true });
+		}
 	},
 	
 	newContact: function() {
+		// Change the hash to reflect the app state
+		Contacts.router.navigate('new', { trigger: false });
+		
+		// Show the editor with a blank model
 		this.editor.clear();
 		this.editor.show();
 	},
@@ -110,8 +160,18 @@ Contacts.App = new Class({
 	showEditor: function(model) {
 		if (F.options.debug)
 			console.log('%s: showing editor for %s', this.toString());
-	
-		// Give the editor component the model to edit
+
+		/*
+		Set route, but don't navigate. Normally, you would use trigger: true,
+		which causes the component to fetch the model from the server. For this demo,
+		we'll just edit the model in place without going to the server
+		*/
+		Contacts.router.navigate('edit/'+model.id, { trigger: false });
+
+		/*
+		Since we have no API, instead of passing the ID for the editor to fetch it,
+		Pass the editor component the model we were viewing details for so it operates on it directly
+		*/
 		this.editor.show({
 			model: model
 		});
@@ -122,14 +182,17 @@ Contacts.App = new Class({
 		if (F.options.debug)
 			console.log('%s: showing details for %s', this.toString(), info.model.name);
 		
+		// Set route, but don't navigate. Normally, you would navigate and avoid the call below, but we're not fetching models from the server
+		Contacts.router.navigate('details/'+info.model.id, { trigger: false });
+
 		// Give the Details component the model of the selected item and it will use it as is
 		// Note: we don't generally do this because someone may have edited the contact on the server
 		this.details.show({
 			model: info.model
 		});
-			
-		// Normally, we give the Details component the id of the model and it will fetch it from the server
+		
 		/*
+		// Normally, we give the Details component the id of the model and it will fetch it from the server
 		this.details.show({
 			id: info.model.id
 		});

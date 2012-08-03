@@ -258,7 +258,8 @@ catch (err) {
 }
 
 F.options = {
-	debug: false
+	debug: false,			// True to display debug messages
+	wrapTemplates: false	// True if you need Handlebars.template() called on your templates
 };
 /**
  * Provides observer pattern for basic eventing
@@ -348,9 +349,14 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
-				this.template = this.template || this.options.template;
-				// For pre-compiled templates: this.template = Handlebars.template(this.template || this.options.template);
+				if (F.options.wrapTemplates)
+					this.template = Handlebars.template(this.template || this.options.template);
+				else // For pre-compiled templates
+					this.template = this.template || this.options.template;
 			}
+			
+			// Always call in our scope so parents can remove change listeners on models by referencing view.render
+			this.render = this.render.bind(this);
 			
 			if (this.options.el) {
 				// Make sure the element is of the right tag
@@ -377,6 +383,24 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// Add events
 			if (this.options.events)
 				this.delegateEvents(this.options.events);
+
+			// Add change listeners to the model
+			if (this.model) {
+				this.model.on('change', this.render);
+				
+				// TBD: Should we do these?
+				// this.model.on('reset', function() {
+				// 	console.log("View caught model reset!");
+				// 	console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
+				// 	this.render();
+				// }.bind(this));
+				
+				// TBD: Should we do these?
+				// this.model.on('loaded', function() {
+				// 	console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
+				// 	this.render();
+				// }.bind(this));
+			}
 			
 			this.rendered = null;
 		},
@@ -388,6 +412,17 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 */
 		age: function() {
 			return this.rendered !== null ? new Date().getTime() - this.rendered : -1;
+		},
+		
+		/**
+		 * Remove this view from the DOM and stop listening to model change events
+		 */
+		remove: function() {
+			this.$el.remove();
+		
+			// Remove change listener
+			if (this.model)
+				this.model.off('change', this.render);
 		},
 		
 		/**
@@ -460,6 +495,11 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
+			
+			// Notify render has completed
+			_.defer(function() {
+				this.trigger('renderComplete');
+			}.bind(this));
 			
 			return this;
 		},
@@ -570,22 +610,16 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// They are used in event handlers, and we want to be able to remove them
 			this.bind(this._setCurrentComponent);
 			this.bind(this.render);
-			
-			if (this.visible) {
-				// Show the component once the call chain has returned
-				// TBD: this doesn't work as expected, overrides the router sometimes
-				_.defer(function() {
-					this.show({
-						silent: true
-					});
-				}.bind(this));
-			}
 		},
 		
 		/**
 		 * Destroy this instance and free associated memory
 		 */
 		destruct: function() {
+			// If this module has a view in this.view, destroy it automatically
+			if (this.view)
+				this.view.remove();
+			
 			// Destroy sub-components
 			for (var component in this.components) {
 				this.components[component].destruct();
@@ -700,13 +734,21 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// Hide view by default
 			if (component.view) {
 				if (component.view.el) {
-					component.view.$el.hide();
+					if (component.visible === true) {
+						// Call show method so view is rendered
+						console.log('calling show with silent', component.toString());
+						component.show({ silent: true });
+					}
+					else {
+						// Just hide the el
+						component.view.$el.hide();
+					}
 				}
 				else {
 					console.warn('Component %s has a view without an element', componentName, component, component.view, component.view.options);
 				}
 			}
-		
+			
 			// Show a sub-component when it shows one of it's sub-components
 			component.on('component:shown', this._setCurrentComponent);
 			
@@ -762,7 +804,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 */
 		show: function(options) {
 			options = options || {};
-		
+			
 			// Debug output
 			if (F.options.debug) {
 				// Don't show if already shown
@@ -793,7 +835,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 *
 		 * @returns {F.Component}	this, chainable
 		 */
-		hide: function() {
+		hide: function(options) {
+			options = options || {};
+			
 			if (!this.visible)
 				return false;
 			
@@ -805,8 +849,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			if (this.view)
 				this.view.hide();
 			
-			// Trigger event after we hide ourself so we're out of the way before the next action
-			this.trigger('component:hidden', this.toString(), this);
+			if (!options.silent) {
+				// Trigger event after we hide ourself so we're out of the way before the next action
+				this.trigger('component:hidden', this.toString(), this);
+			}
 		
 			this.visible = false;
 	
@@ -972,6 +1018,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	refresh: function(callback) {
 		this.model.fetch({
 			success: function() {
+				// Trigger model event
+				this.model.trigger('loaded');
+
+				// Trigger component event
 				this.trigger('modelLoaded');
 				
 				if (typeof callback === 'function')
@@ -990,9 +1040,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
-		if (this.model) {
-			// Unsubscribe from old model's change event
-			this.model.off('change', this.render);
+		if (this.model && this.view) {
+			// Unsubscribe from old model's change and render event in case view.remove() was not called
+			this.model.off('change', this.view.render);
 		}
 		
 		this.model = model;
@@ -1001,10 +1051,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			// Tell the view to re-render the next time it loads
 			this.view.rendered = null;
 		}
-		
-		// Subscribe to new model's change event
-		this.model.on('change', this.render);
-		
+
 		return this;
 	},
 		
@@ -1104,7 +1151,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				if (F.options.debug) {
 					console.log('%s: fetch complete!', this.toString());
 				}
-				this.show(); // pass nothing to show and the view will re-render
+				this.show({
+					silent: options.silent
+				}); // pass nothing to show and the view will re-render
 			});
 		}
 		else if (options.model) {
@@ -1113,7 +1162,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			}
 			
 			this.load(options.model);
-			this.show();
+			this.show({
+				silent: options.silent
+			});
 		}
 		else
 			this.inherited(arguments);
@@ -1147,11 +1198,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
-		// Re-render when the collection changes
-		this.collection.on('reset', this.render);
-		this.collection.on('change', this.render);
+		// Re-render when the collection is fetched, items are added or removed
 		this.collection.on('add', this.render);
 		this.collection.on('remove', this.render);
+		this.collection.on('loaded', this.render); // custom event we call after fetches
+		// Don't re-render on change! let the sub-views do that
+		// this.collection.on('change', this.render);
 		
 		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
@@ -1189,6 +1241,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
+	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
+	 *
+	 * @returns {F.CollectionComponent}	this, chainable
+	 */
+	clearParams: function() {
+		this.params = {};
+		
+		return this;
+	},
+	
+	/**
 	 * Fetch the collection with optional 
 	 *
 	 * @param {Object} fetchParams	Optional parameters to pass when fetching
@@ -1200,11 +1263,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
 			this.params = _.extend({}, this.defaultParams, fetchParams);
+		else // Overwrite old params with defaults and send a request with only default params
+			this.params = _.extend({}, this.defaultParams);
 		
 		// Fetch collection contents
 		this.collection.fetch({
 			data: this.params,
 			success: function() {
+				// Collection event
+				this.collection.trigger('loaded');
+
+				// Component event
 				this.trigger('collectionLoaded');
 				this.collectionLoaded = true;
 				
@@ -1228,13 +1297,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		if (options.params) {
 			// Load the collection by itemId
 			this.load(options.params, function() {
-				this.show();
+				this.show({
+					silent: options.silent
+				});
 			});
 		}
 		else if (!this.collectionLoaded) {
 			// Perform initial load
 			this.refresh(function() {
-				this.show(); // show when we're fully loaded
+				this.show({
+					silent: options.silent
+				}); // show when we're fully loaded
 			});
 		}
 		else
@@ -1251,7 +1324,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
-			'submit': 'handleSubmit'
+			// 'submit': 'handleSubmit'	// Can't do it this way: submit event is fired twice!
 		}
 	});
 	
@@ -1292,6 +1365,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 			// Create a blank model
 			this.model = new this.Model();
+			
+			// Have to do it this way: with delegate, submit event is fired twice!
+			this.view.$el.on('submit', this.handleSubmit.bind(this));
 		},
 	
 		View: FormView,
@@ -1317,6 +1393,13 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @param {Event} evt	The jQuery event object
 		 */
 		handleSubmit: function(evt) {
+			// Blur focus to the submit button in order to hide keyboard on iOS
+			// This won't work for every situation, such as forms that don't have submit buttons
+			this.view.$el.find('[type="submit"]').first().focus();
+			
+			// Since this is a DOM event handler, prevent form submission
+			evt.preventDefault();
+			
 			// Get the data from the form fields
 			var fields = this.view.$el.serializeArray();
 		
@@ -1328,9 +1411,6 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 			// Perform the save, passing our modified as the second arg
 			this.save(data);
-
-			// Since this is a DOM event handler, prevent form submission
-			return false;
 		}
 	});
 
@@ -1352,9 +1432,29 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.collection = options.collection;
 			this.ItemView = options.ItemView || this.ItemView;
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
+			
+			// Views array for subviews
+			this.views = [];
+		},
+
+		remove: function() {
+			this.removeSubViews();
+			
+			F.View.prototype.remove.call(this, arguments);
+		},
+
+		removeSubViews: function() {
+			if (this.views.length) {
+				_.each(this.views, function(view) {
+					view.remove();
+				});
+				
+				this.views = [];
+			}
 		},
 
 		render: function() {
+			
 			if (F.options.debug) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
@@ -1362,9 +1462,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			if (this.parent && !$(this.el.parentNode).is(this.parent))
 				$(this.parent).append(this.el);
 
-			// Clear the list
-			this.$el.children().remove();
-
+			// Remove previous views from the DOM
+			this.removeSubViews();
+			
 			// Add and render each list item
 			this.collection.each(function(model) {
 				var view = new this.ItemView({
@@ -1373,17 +1473,24 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 					component: this.component
 				});
 				view.render();
-
+				
 				// Store model
 				view.$el.data('model', model);
-
+				
 				// Add the list item to the List
 				this.$el.append(view.el);
+				
+				// Store in views array for removal later
+				this.views.push(view);
 			}.bind(this));
-
+			
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
 
+			_.defer(function() {
+				this.trigger('renderComplete');
+			}.bind(this));
+			
 			return this;
 		}
 	});

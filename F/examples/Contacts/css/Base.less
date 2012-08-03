@@ -101,14 +101,19 @@
 }
 
 .border-box() {
-   -moz-box-sizing:    border-box;
-   -webkit-box-sizing: border-box;
-   -ms-box-sizing:     border-box;
-    box-sizing:        border-box;
+	-moz-box-sizing:    border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing:     border-box;
+	box-sizing:        border-box;
 }
 
 /* Layout
 /* --------------------------------- */
+html,
+body {
+	height: 100%;
+}
+
 body {
 	font-family: AdobeCleanRegular, Helvetica;
 	font-size: @base-size + 0px;
