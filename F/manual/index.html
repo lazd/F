@@ -130,6 +130,47 @@
 		
 				<section id="formComponent">
 					<h2>Edit a model and save changes to the server</h2>
+					
+					<p>&#402; provides F.FormComponent, which handles fetching objects to edit, rendering the corresponding edit form, and saving changes asynchronously.<p>
+						
+					<ol>
+						<li><strong>Define your model.</strong> Your model will need to know where to fetch and save itself.
+							<code class="prettyprint">App.Models.Item = Backbone.Model.extend({
+	urlRoot: 'api/items'
+});</code>
+						<li><strong>Create a template for your form.</strong> You'll need to create a template that has input fields for each one of the properties you want to expose for editing.
+							
+						<code class="prettyprint">App.Templates.ItemEditor = Handlebars.compile([
+	'&lt;label&gt;name&lt;/label&gt;',
+	'&lt;input type="text" name="name" value="{{name}}"&gt;',
+	'&lt;label&gt;e-mail&lt;/label&gt;',
+	'&lt;input type="text" name="email" value="{{email}}"&gt;',
+	'&lt;label&gt;phone&lt;/label&gt;',
+	'&lt;input type="text" name="phone" value="{{phone}}"&gt;'
+].join(''));</code>
+						</li>
+						<li><strong>Extend F.FormComponent.</strong> Provide Model and Template, and F.FormComponent will do the rest.
+							<code class="prettyprint">App.ItemEditor = new Class({
+	toString: 'ItemEditor',
+	
+	/*
+	Extending F.FormComponent gives us an augmented show() method
+	We'll pass options.id to show() from the router to fetch the
+	model and render the form for editing
+	*/
+	extend: F.FormComponent,
+
+	// Indicate the model you'll be loading and saving
+	Model: App.Models.Item,
+
+	/*
+	Your template should have input fields for each property
+	of the model that you want to expose for editing
+	*/
+	Template: App.Templates.ItemEditor
+});</code>
+						</li>
+					</ol>
 			
 					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
 				</section>

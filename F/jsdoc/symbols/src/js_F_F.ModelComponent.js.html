@@ -29,7 +29,7 @@
 <span class='line'> 22</span> 	</span><span class="COMM">/***
 <span class='line'> 23</span> 	 * Refresh the model
 <span class='line'> 24</span> 	 *
-<span class='line'> 25</span> 	 * @param {Function} Callback to call after successful refresh
+<span class='line'> 25</span> 	 * @param {Function} callback	Callback to call after successful refresh
 <span class='line'> 26</span> 	 *
 <span class='line'> 27</span> 	 * @returns {F.ModelComponent}	this, chainable
 <span class='line'> 28</span> 	 */</span><span class="WHIT">
@@ -152,42 +152,44 @@
 <span class='line'>145</span> 	</span><span class="COMM">/**
 <span class='line'>146</span> 	 * Show this component, optionally fetching an item by ID or assigning a new model before render
 <span class='line'>147</span> 	 *
-<span class='line'>148</span> 	 * @param {Object} options
-<span class='line'>149</span> 	 *
-<span class='line'>150</span> 	 * @returns {F.ModelComponent}	this, chainable
-<span class='line'>151</span> 	 */</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">	</span><span class="NAME">show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">		</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">		
-<span class='line'>155</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: fetching item with ID %s'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>158</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>159</span> </span><span class="WHIT">			
-<span class='line'>160</span> 			</span><span class="COMM">// Load the model by itemId, then show</span><span class="WHIT">
-<span class='line'>161</span> </span><span class="WHIT">			</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">options.id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>162</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>163</span> </span><span class="WHIT">					</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: fetch complete!'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>164</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// pass nothing to show and the view will re-render</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>169</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>171</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>172</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: showing with new model'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>173</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>174</span> </span><span class="WHIT">			
-<span class='line'>175</span> 			</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>176</span> </span><span class="WHIT">			</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>177</span> </span><span class="WHIT">				</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
-<span class='line'>178</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">			</span><span class="NAME">this.inherited</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>182</span> </span><span class="WHIT">			
-<span class='line'>183</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>184</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>185</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>186</span> </span></pre></body></html>
+<span class='line'>148</span> 	 * @param {Object} options			Show options
+<span class='line'>149</span> 	 * @param {String} options.id		ID of model to fetch from the server before showing
+<span class='line'>150</span> 	 * @param {Backbone.Model} options.model	Model to use directly (don't fetch)
+<span class='line'>151</span> 	 *
+<span class='line'>152</span> 	 * @returns {F.ModelComponent}	this, chainable
+<span class='line'>153</span> 	 */</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">	</span><span class="NAME">show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">		</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">		
+<span class='line'>157</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: fetching item with ID %s'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">			
+<span class='line'>162</span> 			</span><span class="COMM">// Load the model by itemId, then show</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">			</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">options.id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">					</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: fetch complete!'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// pass nothing to show and the view will re-render</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: showing with new model'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">			
+<span class='line'>177</span> 			</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">options.model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">			</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">				</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">			</span><span class="NAME">this.inherited</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">			
+<span class='line'>185</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> </span></pre></body></html>

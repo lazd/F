@@ -741,7 +741,6 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				if (component.view.el) {
 					if (component.visible === true) {
 						// Call show method so view is rendered
-						console.log('calling show with silent', component.toString());
 						component.show({ silent: true });
 					}
 					else {
@@ -1022,7 +1021,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	/***
 	 * Refresh the model
 	 *
-	 * @param {Function} Callback to call after successful refresh
+	 * @param {Function} callback	Callback to call after successful refresh
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
@@ -1145,7 +1144,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	/**
 	 * Show this component, optionally fetching an item by ID or assigning a new model before render
 	 *
-	 * @param {Object} options
+	 * @param {Object} options			Show options
+	 * @param {String} options.id		ID of model to fetch from the server before showing
+	 * @param {Backbone.Model} options.model	Model to use directly (don't fetch)
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
