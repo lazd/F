@@ -104,7 +104,7 @@
 			<hr>
 			<section>
 				<section id="addFToYourProject">
-					<h2>Adding &#402; to your project</h2>
+					<h2>Add &#402; to your project</h2>
 
 					<ol>
 						<li>
@@ -118,19 +118,91 @@
 							<strong>Add the script include.</strong> Preferably to the &lt;head&gt; tag.
 							<code class="prettyprint">&lt;script src="js/F.js"&gt;&lt;/script&gt;</code>
 						</li>
+						<li>
+							<strong>Get namespaced.</strong> If your app doesn't already have a namespace, create one.
+							<code class="prettyprint">var App = {};</code>
+						</li>
 					</ol>
 				</section>
 		
 				<section id="modelComponent">
 					<h2>Fetch and display a model</h2>
+					
+					<p>&#402; provides F.ModelComponent, which encapsulates some of the common boilerplate code you'd otherwise write when dealing with models.<p>
+	
+					<ol>
+						<li><strong>Define your model.</strong> Your model will need to know where to fetch and save itself.
+							<code class="prettyprint">App.Models.Item = Backbone.Model.extend({
+	urlRoot: 'api/items'
+});</code>
+						</li>
+						<li><strong>Create a template to display the model's details.</strong> Your template should print the markup and each of the fields
+						you want to display.
+							
+						<code class="prettyprint">App.Templates.ItemDetails = Handlebars.compile(
+	'&lt;h2&gt;{{name}}&lt;/h2&gt;'+
+	'&lt;p&gt;&lt;a href=&quot;mailto:{{email}}&quot;&gt;{{email}}&lt;/a&gt;&lt;/p&gt;'+
+	'{{#if phone}}&lt;p&gt;{{phone}}&lt;/p&gt;{{/if}}'
+);</code>
+						</li>
+						
+						<li><strong>Extend F.ModelComponent.</strong> Provide Model and F.ModelComponent will provide methods  you.
+							<code class="prettyprint">App.ItemDetails = new Class({
+	toString: 'ItemDetails',
+	
+	extend: F.ModelComponent,
+	
+	construct: function(options) {
+		// Let users specify options; extend defaults
+		// so users can specify a new template or model.
+		options = _.extend({
+			model: this.Model,
+			template: this.Template
+		}, options);
+		
+		// Create a view
+		this.view = new this.View(options);
+	},
+	
+	// The model we'll be fetching and displaying
+	Model: App.Models.Item,
+	
+	View: F.View.extend({
+		events: {
+			'click .sendMessage': 'doSend'
+		}
+	}),
+	
+	Template: App.Templates.ItemDetails
+});</code>
+						</li>
+						
+						<li><strong>Display a model.</strong> Give the show() method an ID and F.ModelComponent will fetch it from the server for you. You can also directly pass the model to show(), which is useful when editing a model you have already loaded (such as part of a list).
+							<code class="prettyprint">// Generally, you'll add the editor as a component
+// For this example, we'll just create an instance
+app.details = new App.ItemDetails();
+
+// Display the model with the ID=10, fetching it from the server first
+app.details.show({ id: 10 });
+
+// If you already have the model, call show and pass it directly
+var tempModel = new App.Models.Item({
+	name: 'Larry Davis',
+	email: 'lazd@fake.em.ail'
+});
+app.details.show({
+	model: tempModel
+});
+</code>
+					</ol>
 			
-					<p>See the <a href="http://lazd.github.com/F/F/examples/ItemManager">ItemManager example</a> for a live demo.</p>
+					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
 				</section>
 		
 				<section id="formComponent">
 					<h2>Edit a model and save changes to the server</h2>
 					
-					<p>&#402; provides F.FormComponent, which handles fetching objects to edit, rendering the corresponding edit form, and saving changes asynchronously.<p>
+					<p>&#402; provides F.FormComponent, which handles fetching models from the server, rendering the corresponding edit form, and asynchronously saving changes.<p>
 						
 					<ol>
 						<li><strong>Define your model.</strong> Your model will need to know where to fetch and save itself.
@@ -139,37 +211,55 @@
 });</code>
 						<li><strong>Create a template for your form.</strong> You'll need to create a template that has input fields for each one of the properties you want to expose for editing.
 							
-						<code class="prettyprint">App.Templates.ItemEditor = Handlebars.compile([
-	'&lt;label&gt;Name&lt;/label&gt;',
-	'&lt;input type="text" name="name" value="{{name}}"&gt;',
-	'&lt;label&gt;E-mail&lt;/label&gt;',
-	'&lt;input type="text" name="email" value="{{email}}"&gt;',
-	'&lt;label&gt;Phone&lt;/label&gt;',
-	'&lt;input type="text" name="phone" value="{{phone}}"&gt;',
+						<code class="prettyprint">App.Templates.ItemEditor = Handlebars.compile(
+	'&lt;label&gt;Name&lt;/label&gt;'+
+	'&lt;input type="text" name="name" value="{{name}}"&gt;'+
+	'&lt;label&gt;E-mail&lt;/label&gt;'+
+	'&lt;input type="text" name="email" value="{{email}}"&gt;'+
+	'&lt;label&gt;Phone&lt;/label&gt;'+
+	'&lt;input type="text" name="phone" value="{{phone}}"&gt;'+
 	'&lt;button type="submit"&gt;Save&lt;/button&gt;'
-].join(''));</code>
+);</code>
 						</li>
 						<li><strong>Extend F.FormComponent.</strong> Provide Model and Template, and F.FormComponent will do the rest.
 							<code class="prettyprint">App.ItemEditor = new Class({
 	toString: 'ItemEditor',
 	
-	/*
-	Extending F.FormComponent gives us an augmented show() method
-	We'll pass options.id to show() from the router to fetch the
-	model and render the form for editing
-	*/
 	extend: F.FormComponent,
 
 	// Indicate the model you'll be loading and saving
 	Model: App.Models.Item,
-
-	/*
-	Your template should have input fields for each property
-	of the model that you want to expose for editing
-	*/
+	
 	Template: App.Templates.ItemEditor
 });</code>
 						</li>
+						<li><strong>Load a model for editing.</strong> Give the show() method an ID and F.ModelComponent will fetch it from the server for you. You can also directly pass the model to show(), which is useful when editing a model you have already loaded (such as if a user clicked an Edit button from the details view).
+							<code class="prettyprint">// Generally, you'll add the editor as a component
+// For this example, we'll just create an instance
+app.editor = new App.ItemEditor();
+
+// Do something on a successful save
+app.editor.on('saved', function() {
+	alert('Changes saved!');
+});
+
+// Do something when the save fails
+app.editor.on('saveFailed', function() {
+	alert('ERROR: Failed to save changes!');
+});
+
+// Edit the model with the ID=10, fetching it from the server first
+app.editor.show({ id: 10 });
+
+// If you already have the model, call show and pass it directly
+var tempModel = new App.Models.Item({
+	name: 'Larry Davis',
+	email: 'lazd@fake.em.ail'
+});
+app.editor.show({
+	model: tempModel
+});</code>
+						</li> 
 					</ol>
 			
 					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
@@ -198,12 +288,77 @@
 				
 				<section id="componentDesign">
 					<h2>Enabling code-reuse with good component design</h2>
-					<p>Coming soon.</p>
+					<p>Designing for one use case and moving on is easy the first time, but when you're writing the same boilerplate code for every part of your project, it's time to go back to the drawing board.</p>
+
+					<h3>Look for opportunities to abstract</h3>
+					<p>That block of code you keep pasting into every component should really be part of a parent class from which you inherit.<p>
+						<code class="prettyprint">App.Hustler = new Class({
+	toString: 'Hustler',
+
+	extend: F.Component,
+
+	construct: function(options) {
+		this.hustle();
+	},
+
+	hustle: function() {
+		// This line of code is boilerplate;
+		// that is, we have it in all related components
+		alert("I'm a "+this.toString());
+	}
+});
+
+App.HustlerBaby = new Class({
+	toString: 'HustlerBaby',
+
+	// Inherit from Hustler so we get hustle()
+	extend: App.Hustler,
+
+	hustle: function() {
+		// Instead of re-writing the boilerplate code,
+		// call the parent class' hustle method
+		this.inherited(arguments);
+		
+		// Do additional stuff
+		alert('I just want you to know');
+	}
+});
+</code>
+
+					<h3>Put it in the prototype</h3>
+					<p>Declare your models, views, and templates in the prototype of the components you create. This lets child classes easily override them.<p>
 				</section>
 				
 				<section id="domEvents">
 					<h2>DOM event delegation</h2>
-					<p>Coming soon.</p>
+					<p>When you have many items that all need to handle the same event, instead of adding one listener for each item, add a listener to the parent container. This helps performance when your list has thousands of items.</p>
+					<p><strong>But how do I know which item got the click?</strong> Use evt.target to determine the DOM node that got the click. If that node is associated with some data (a model, for instance), then use $(node).data('model', theModel) to store and retrieve the model. F.ListComponent will store the model in the node's data for you.
+					<code class="prettyprint">App.PhotoGrid = new Class({
+	toString: 'PhotoGrid',
+
+	extend: F.ListComponent,
+	
+	Collection: Backbone.Collection.extend(),
+	
+	ItemTemplate: Handlebars.compile(
+		'&lt;img src=&quot;{{url}}&quot;&gt;'
+	),
+	
+	// Extend ListComponent, override its events
+	View: F.ListComponent.prototype.ListView.extend({
+		tag: 'ul',
+		className: 'photoGrid',
+		events: {
+			'mouseover li': 'handleMouseover'
+		}
+	}),
+	
+	handleMouseover: function(evt) {
+		var target = $(evt.target);
+		var model = target.data('model');
+		console.log(model.name+' has the mouse over it!');
+	}
+});</code>
 				</section>
 				
 			</section>
