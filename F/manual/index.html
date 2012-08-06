@@ -24,17 +24,6 @@
 
 </head>
 <body onload="prettyPrint()">
-	<div id="header">
-		<nav>
-			<li class="downloads"><a href="/"><i class="icon-home"></i> Home</a></li>
-
-			<li class="spacer"></li>
-			
-			<div class="logo">&#402;<span>.js</span></div>
-			
-			<!-- <li class="title">GET &#402;</li> -->
-		</nav>
-	</div><!-- end header -->
 
 	<div class="wrapper">
 
@@ -44,14 +33,24 @@
 				<hr>
 			</div>
 
-			<h2>Introduction</h2>
+			<h2><a href="#introduction">Introduction</a></h2>
 			<ul>
 				<li><a href="#whatIsF">What is &#402;?</a></li>
 				<li><a href="#buzzwordSoup">Buzzword soup: Models, views, and what?</a></li>
 			</ul>
 
+			<h2><a href="#inheritance">Inheritance</a></h2>
+			<ul>
+				
+				<li><a href="#stayClassy">How does &#402; help you stay classy?</a></li>
+				<li><a href="#defineClass">Defining a class</a></li>
+				<li><a href="#extendingAClass">Extending a class</a></li>
+				<li><a href="#superclassMethods">Calling superclass methods</a></li>
+				<li><a href="#instantiateInstance">Instantiating an instance</a></li>
+				<li><a href="#extendingViews">Extending a Backbone view</a></li>
+			</ul>
 
-			<h2>Common Tasks</h2>
+			<h2><a href="#commonTasks">Common Tasks</a></h2>
 			<ul>
 				<li><a href="#addFToYourProject">Add &#402; to your project</a></li>
 				<li><a href="#modelComponent">Fetch and display a model</a></li>
@@ -60,21 +59,21 @@
 			</ul>
 
 
-			<h2>Best Practices</h2>
+			<h2><a href="#bestPractices">Best Practices</a></h2>
 			<ul>
 				<li><a href="#applicationDesign">Breaking up your application into components</a></li>
 				<li><a href="#componentDesign">Enabling code-reuse with good component design</a></li>
 				<li><a href="#domEvents">DOM event delegation</a></li>
 			</ul>
 
-			<h2>Miscellaneous</h2>
+			<h2><a href="#miscellaneous">Miscellaneous</a></h2>
 			<ul>
 				<li><a href="#howDoITypeF">How do I type ƒ?</a></li>
 			</ul>
 		</section>
 
 		<div class="manual">
-			<h1>Introduction</h1>
+			<h1 id="introduction">Introduction</h1>
 			<hr>
 			<section>
 				<section id="whatIsF">
@@ -100,7 +99,78 @@
 				</section>
 			</section>
 		
-			<h1>Common Tasks</h1>
+	
+			<h1 id="inheritance">Inheritance</h1>
+			<hr>
+			<section>
+				<section id="stayClassy">
+					<h2>How does &#402; help you stay classy?</h2>
+					<p>&#402; provides an inheritance model, called Class, based on Douglas Crockford's new_constructor pattern (<a href="http://www.yuiblog.com/blog/2010/02/24/video-crockonjs-3/">Video</a>, <a href="http://www.crockford.com/javascript/inheritance.html">Slides</a>)</a>.</p>
+
+					<p>You can use <span class="code prettyprint">new Class(descriptor)</span> to create a class based on the descriptor object you pass to it. The new keyword can be omitted, but is included because the language makes sense.</p>
+					
+					<h2>Properties of the descriptor object</h2>
+					<ul>
+						<li><span class="code">toString</span> A string literal or a function that returns a string. &#402; uses this to refer to sub-components.</li>
+						<li><span class="code">extend</span> The object from which your new class should inherit. Your new class will inherit methods and properties from the class you extend.</li>
+						<li><span class="code">construct</span> optional function that sets up the object for use. construct is called automatically when an instance of your class is instantiated. The parent class' construct function is always called before the child class.</li>
+						<li><span class="code">destruct</span> optional teardown function that should remove your object from the DOM and free memory. The parent class' destruct function is automatically called after the child class'.</li>
+						<li><span class="code">*</span> Any other properties of the descriptor are added to the prototype of the new class. Methods, properties, and constants should be defined here.</li>
+					</ul>
+				</section>
+				
+				<section id="defineClass">	
+					<h2>Defining a class</h2>
+					<p>Just call <span class="code prettyprint">new Class(descriptor)</span> with a descriptor that describes your class.</p>
+					<code class="prettyprint">var Widget = new Class({
+	toString: 'Widget',
+	construct: function() {
+		this.$el = $(document.createElement(this.tag));
+	},
+	destruct: function() {
+		this.$el.remove();
+	},
+	tag: 'div',
+	show: function() {
+		this.$el.show();
+	},
+	hide: function() {
+		this.$el.hide();
+	}
+});</code>
+				</section>
+				
+				<section id="extendingAClass">
+					<h2>Extending a class</h2>
+					<p>Set <span class="code">descriptor.extend</span> to the class you would like to inherit from.</p>
+					<p>To override a method, simply define the method in the prototype of the child class.</p>
+					<code class="prettyprint">var Panel = new Class({
+	toString: 'Panel',
+	extend: Widget,
+	show: function() {
+		this.$el.fadeIn();
+	}
+});</code>
+				</section>
+				
+				<section id="superclassMethods">
+					<h2>Calling superclass methods</h2>
+					<p>Call <span class="code prettyprint">this.inherited(arguments)</span> in the child class' method. That's it.</p>
+					<code class="prettyprint">var Widget = new Class({
+	toString: 'Button',
+	extend: Widget,
+	tag: 'button',
+	hide: function() {
+		this.inherited(arguments);
+		this.$el.attr('disabled', true);
+	}
+});</code>
+					<p>For more information, <a href="../jsdoc/symbols/_global_.html">view the JSDoc for Class.</a></p>
+					
+				</section>
+			</section>
+		
+			<h1 id="commonTasks">Common Tasks</h1>
 			<hr>
 			<section>
 				<section id="addFToYourProject">
@@ -267,12 +337,71 @@ app.editor.show({
 		
 				<section id="collectionComponent">
 					<h2>Fetch and display a collection of models</h2>
+					<p>&#402; provides F.ListComponent, which handles fetching a collection of models from the server and rendering the corresponding list.<p>
+						
+					<ol>
+						<li><strong>Define your model and collection.</strong> Your collection needs to know where to fetch itself from and what models it consists of.
+							<code class="prettyprint">App.Models.Item = Backbone.Model.extend({
+	urlRoot: 'api/items'
+});
+
+App.Collections.Items = Backbone.Model.extend({
+	url: 'api/items',
+	model: App.Models.Item
+});</code>
+						<li><strong>Create a template for your list item.</strong> You'll need to create a template that prints minimal information about your model.
+							
+						<code class="prettyprint">App.Templates.ListItem = Handlebars.compile(
+	'&lt;strong&gt;{{name}}&lt;/strong&gt;'
+);</code>
+						</li>
+						<li><strong>Extend F.ListComponent.</strong> Provide Collection and ItemTemplate, and F.ListComponent will do the rest.
+							<code class="prettyprint">App.ItemList = new Class({
+	toString: 'ItemList',
+	
+	extend: F.ListComponent,
+
+	// Indicate the collection you'll be loading and rendering
+	Collection: App.Models.Item,
+	
+	ItemTemplate: App.Templates.ListItem
+});</code>
+						</li>
+						<li><strong>Load the collection.</strong> Just call <span class="code prettyprint">show()</span>.
+							<code class="prettyprint">// Generally, you'll add the editor as a component
+// For this example, we'll just create an instance
+app.list = new App.ItemList();
+
+// Do something when an item is clicked
+app.list.on('itemSelected', function() {
+	alert('Changes saved!');
+});
+
+// Show the list. show() will call load() if necessary
+app.list.show();</code>
+						</li>
+						<li><strong>Filter the collection server-side.</strong> Just call <span class="code prettyprint">load(params)</span>, where <span class="code">params</span> is an object representing the GET parameters your server takes to perform filtering.
+							<code class="prettyprint">// Generally, you'll add the editor as a component
+// For this example, we'll just create an instance
+app.list = new App.ItemList();
+
+// Do something when an item is clicked
+app.list.on('itemSelected', function() {
+	alert('Changes saved!');
+});
+
+// Load the list with custom parameters
+app.list.load({
+	query: 'shoes'
+});</code>
+						</li>
+					</ol>
 			
 					<p>See the <a href="http://lazd.github.com/F/F/examples/Contacts">Contacts example</a> for a live demo.</p>
 				</section>
 			</section>
 				
-			<h1>Best Practices</h1>
+			<h1 id="bestPractices">Best Practices</h1>
 			<hr>
 			<section>
 				<section id="applicationDesign">
@@ -363,7 +492,7 @@ App.HustlerBaby = new Class({
 				
 			</section>
 		
-			<h1>Miscellaneous</h1>
+			<h1 id="miscellaneous">Miscellaneous</h1>
 			<hr>
 			<section>
 				<section id="howDoITypeF">
