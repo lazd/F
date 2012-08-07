@@ -70,7 +70,14 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		return this;
 	},
 	
+	/**
+	 * Callback called when model is added to collection
+	 */
 	addModel: function(model) {},
+	
+	/**
+	 * Callback called when model is removed from collection
+	 */
 	removeModel: function(model) {},
 	
 	/**
