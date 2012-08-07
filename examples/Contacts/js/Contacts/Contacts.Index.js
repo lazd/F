@@ -58,7 +58,8 @@ Contacts.Index = new Class({
 			'submit .search': 'handleSearch',		// Search when the user hits enter
 			'keyup .searchField': 'handleSearch',	// Filter as the user types
 			'click .clearButton': 'clearSearch',	// Clear the search when X is clicked
-			'click .new': 'newContact'				// Create a new contact when + is clicked
+			'click .new': 'newContact',				// Create a new contact when + is clicked
+			'click .edit': 'handleDeleteMode'		// Create a new contact when + is clicked
 		}
 	}),
 	
@@ -68,6 +69,25 @@ Contacts.Index = new Class({
 	newContact: function() {
 		// Tell our parent to switch to the contact editor component with a blank contact
 		this.trigger('newContact');
+	},
+	
+	handleDeleteMode: function() {
+		if (this.deleteMode)
+			this.endDeleteMode();
+		else
+			this.startDeleteMode();
+	},
+	
+	endDeleteMode: function() {
+		this.view.$('.edit').html('Edit').removeClass('default');
+		this.list.endDeleteMode();
+		this.deleteMode = false;
+	},
+	
+	startDeleteMode: function() {
+		this.view.$('.edit').html('Done').addClass('default');
+		this.list.startDeleteMode();
+		this.deleteMode = true;
 	},
 	
 	hideSearch: function() {
