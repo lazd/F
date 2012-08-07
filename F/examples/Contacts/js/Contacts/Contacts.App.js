@@ -160,11 +160,6 @@ Contacts.App = new Class({
 	},
 	
 	deleteContact: function(model) {
-		// Show a nide animation to remove the detail view
-		this.details.view.$el.fadeOut(function() {
-			Contacts.router.navigate('', { trigger: true });
-		});
-		
 		// Destroy the model
 		model.destroy();
 	},

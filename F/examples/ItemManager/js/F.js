@@ -260,8 +260,8 @@ catch (err) {
 }
 
 F.options = {
-	debug: false,			// True to display debug messages
-	wrapTemplates: false	// True if you need Handlebars.template() called on your templates
+	debug: false,				// True to display debug messages
+	precompiledTemplates: true	// False if you need Handlebars.template() called on your templates
 };
 /**
  * Provides observer pattern for basic eventing
@@ -351,10 +351,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
-				if (F.options.wrapTemplates)
-					this.template = Handlebars.template(this.template || this.options.template);
-				else // For pre-compiled templates
+				if (F.options.precompiledTemplates)
 					this.template = this.template || this.options.template;
+				else // For pre-compiled templates
+					this.template = Handlebars.template(this.template || this.options.template);
 			}
 			
 			// Always call in our scope so parents can remove change listeners on models by referencing view.render
@@ -499,9 +499,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			this.rendered = new Date().getTime();
 			
 			// Notify render has completed
-			_.defer(function() {
-				this.trigger('renderComplete');
-			}.bind(this));
+			this.trigger('renderComplete');
 			
 			return this;
 		},
@@ -1210,9 +1208,13 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
+		// Bind for use as listeners
+		this.bind(this.addModel);
+		this.bind(this.removeModel);
+		
 		// Re-render when the collection is fetched, items are added or removed
-		this.collection.on('add', this.render);
-		this.collection.on('remove', this.render);
+		this.collection.on('add', this.addModel);
+		this.collection.on('remove', this.removeModel);
 		this.collection.on('loaded', this.render); // custom event we call after fetches
 		// Don't re-render on change! let the sub-views do that
 		// this.collection.on('change', this.render);
@@ -1251,6 +1253,16 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 		return this;
 	},
+	
+	/**
+	 * Callback called when model is added to collection
+	 */
+	addModel: function(model) {},
+	
+	/**
+	 * Callback called when model is removed from collection
+	 */
+	removeModel: function(model) {},
 	
 	/**
 	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
@@ -1448,22 +1460,65 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
 			
 			// Views array for subviews
-			this.views = [];
+			this.subViews = [];
+			
+			// Clumsy backbone way of permabinding
+			this.addSubView = this.addSubView.bind(this);
 		},
 
+		addSubView: function(model) {
+			// Create view
+			var view = new this.ItemView({
+				model: model,
+				template: this.ItemTemplate,
+				component: this.component
+			});
+			view.render();
+			
+			// Add the list item to the List
+			this.$el.append(view.el);
+			
+			// Store the position in the views array
+			// Don't store the actual view to prevent circular references
+			view.$el.data('viewIndex', this.subViews.length);
+			
+			// Store in views array for removal later
+			this.subViews.push(view);
+		},
+		
 		remove: function() {
 			this.removeSubViews();
 			
 			F.View.prototype.remove.call(this, arguments);
 		},
 
+		removeSubView: function(modelOrViewIndex) {
+			var view = null;
+			var viewIndex = -1;
+			if (typeof viewIndex != 'Number') {
+				_.some(this.subViews, function(tmpView, index) {
+					if (tmpView && tmpView.model === modelOrViewIndex) {
+						view = tmpView;
+						viewIndex = index;
+					}
+				}.bind(this));
+			}
+			else // get from view index
+				view = this.subViews[viewIndex];
+				
+			if (view) {
+				view.remove();
+				this.subViews[viewIndex] = undefined;
+			}
+		},
+		
 		removeSubViews: function() {
-			if (this.views.length) {
-				_.each(this.views, function(view) {
+			if (this.subViews.length) {
+				_.each(this.subViews, function(view) {
 					view.remove();
 				});
 				
-				this.views = [];
+				this.subViews = [];
 			}
 		},
 
@@ -1479,30 +1534,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.removeSubViews();
 			
 			// Add and render each list item
-			this.collection.each(function(model) {
-				var view = new this.ItemView({
-					model: model,
-					template: this.ItemTemplate,
-					component: this.component
-				});
-				view.render();
-				
-				// Store model
-				view.$el.data('model', model);
-				
-				// Add the list item to the List
-				this.$el.append(view.el);
-				
-				// Store in views array for removal later
-				this.views.push(view);
-			}.bind(this));
+			this.collection.each(this.addSubView);
 			
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
 
-			_.defer(function() {
-				this.trigger('renderComplete');
-			}.bind(this));
+			this.trigger('renderComplete');
 			
 			return this;
 		}
@@ -1570,6 +1607,16 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		ItemTemplate: null,
 		ItemView: ItemView,
 	
+		addModel: function(model) {
+			// Add a subview for this model
+			this.view.addSubView(model);
+		},
+		
+		removeModel: function(model) {
+			// Add a subview for this model
+			this.view.removeSubView(model);			
+		},
+	
 		/**
 		 * Get the model associated with a list item
 		 *
@@ -1578,9 +1625,20 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
 		 */
 		getModelFromLi: function(listItem) {
-			return $(listItem).data('model');
+			return this.view.subViews[$(listItem).data('viewIndex')].model;
 		},
 	
+		/**
+		 * Get the view associated with a list item
+		 *
+		 * @param {Node}	Node or jQuery Object to get model from
+		 *
+		 * @returns {Backbone.View}	The view associated with the passed DOM element
+		 */
+		getViewFromLi: function(listItem) {
+			return this.view.subViews[$(listItem).data('viewIndex')];
+		},
+		
 		/**
 		 * Handles item selection events
 		 *

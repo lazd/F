@@ -20,36 +20,64 @@ Contacts.List = new Class({
 	// Our custom template
 	ItemTemplate: Contacts.Templates.ContactListItem,
 	
-	ListView: F.ListComponent.prototype.ListView.extend({
-		// Remove the click event from ListView, we'll target tap since we have Hammer.js
-		events: {}
-	}),
-	
-	// Extend the default list item's view
-	// We want to target tap and swipe events on our list
-	ItemView: F.ListComponent.prototype.ItemView.extend({
-		events: {
-			'swipe': 'handleSwipe',
-			'tap': 'handleTap'
-		}
-	}),
-	
-	handleTap: function(evt) {
+	handleSelect: function(evt) {
 		// Delegating events using Backbone's events property doesn't work with Hammer.js taps, so delegate manually
-		if ($(evt.originalEvent.target).hasClass('delete')) // if the delete button was tapped
-			this.handleDelete(evt.currentTarget);
-		else // if anything else was tapped
-			this.handleSelect(evt);
-	},
-	
-	handleDelete: function(listItem) {
-		this.trigger('deleteItem', this.getModelFromLi(listItem));
-	},
-	
-	handleSwipe: function(evt) {
-		if (evt.direction == 'right') {
-			$(evt.currentTarget).find('.delete').show();
+		if ($(evt.srcElement).hasClass('unlockDelete')) {  // if the delete button was tapped
+			this.handleLockUnlock(evt.currentTarget);
+			evt.stopPropagation();
 		}
+		else if ($(evt.srcElement).hasClass('doDelete')) { // if the delete button was tapped
+			this.doDelete(evt.currentTarget);
+			evt.stopPropagation();
+		}
+		else if (!this.deleteMode) // if anything else was tapped, do standard behavior
+			this.inherited(arguments);
+	},
+	
+	endDeleteMode: function() {
+		this.view.$('.unlockDelete,.doDelete').hide();
+		this.view.$('.doView').show();
+		this.view.$('.unlockDelete').removeClass('unlocked');
+		this.deleteMode = false;
+	},
+	
+	startDeleteMode: function() {
+		// Reset state of unlocker
+		this.view.$('.unlockDelete').removeClass('unlocked');
+		
+		// Hide the do view button
+		this.view.$('.doView').hide();
+		
+		// Show delete buttons
+		this.view.$('.unlockDelete').show();
+		
+		// Set flat
+		this.deleteMode = true;
+	},
+	
+	handleLockUnlock: function(listItem) {
+		// Toggle locked/unlocked state
+		if ($(listItem).find('.unlockDelete').hasClass('unlocked'))
+			this.lockDelete(listItem);
+		else
+			this.unlockDelete(listItem);
+	},
+	
+	lockDelete: function(listItem) {
+		// Hide delete button
+		$(listItem).find('.doDelete').fadeOut(75);
+		$(listItem).find('.unlockDelete').removeClass('unlocked');
+	},
+	
+	unlockDelete: function(listItem) {
+		// Show delete button
+		$(listItem).find('.doDelete').fadeIn(75);
+		$(listItem).find('.unlockDelete').addClass('unlocked');
+	},
+	
+	doDelete: function(listItem) {
+		// Perform actual delete
+		this.trigger('deleteItem', this.getModelFromLi(listItem));
 	},
 	
 	show: function() {

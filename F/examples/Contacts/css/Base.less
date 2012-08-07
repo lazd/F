@@ -101,12 +101,26 @@
 }
 
 .border-box() {
-	-moz-box-sizing:    border-box;
+	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	-ms-box-sizing:     border-box;
-	box-sizing:        border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
+.rotate(@by) {
+	-ms-transform: rotate(@by); /* IE 9 */
+	-webkit-transform: rotate(@by); /* Safari and Chrome */
+	-o-transform: rotate(@by); /* Opera */
+	-moz-transform: rotate(@by); /* Firefox */
+	transform: rotate(@by);
+}
+
+.transition(@time) {
+	-moz-transition: all @time ease-in;
+	-webkit-transition: all @time ease-in;
+	transition: all @time ease-in;
+}
+				
 /* Layout
 /* --------------------------------- */
 html,

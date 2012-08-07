@@ -91,7 +91,7 @@ Contacts.Templates['App'] = Handlebars.compile([
 
 Contacts.Templates['Index'] = Handlebars.compile([
 	'<div class="header">',
-		'<div></div>',
+		'<div><button class="edit" type="button">Edit</button></div>',
 		'<h1>Contacts</h1>',
 		'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
 	'</div>',
@@ -109,7 +109,7 @@ Contacts.Templates['ContactEditor'] = Handlebars.compile([
 	'<div class="header">',
 		'<div><button class="back" type="button">Cancel</button></div>',
 		'<h1>{{# if name}}Edit Contact{{else}}New Contact{{/if}}</h1>',
-		'<div><button class="save" type="submit">Done</button></div>',
+		'<div><button class="default" type="submit">Done</button></div>',
 	'</div>',
 	'<div class="scrollContainer">',
 		'<div class="fields">',
@@ -136,5 +136,5 @@ Contacts.Templates['ContactDetails'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactListItem'] = Handlebars.compile([
-	'<button class="delete red" style="display: none;">Delete</button><strong>{{name}}</strong>'
+	'<i class="roundButton red unlockDelete icon-minus" style="display: none;"></i><button class="doDelete red" style="display: none;">Delete</button><i class="roundButton blue doView icon-chevron-right"></i><strong>{{name}}</strong>'
 ].join(''));
