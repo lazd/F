@@ -24,9 +24,13 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		// Create a collection
 		this.collection = new this.Collection();
 		
+		// Bind for use as listeners
+		this.bind(this.addModel);
+		this.bind(this.removeModel);
+		
 		// Re-render when the collection is fetched, items are added or removed
-		this.collection.on('add', this.render);
-		this.collection.on('remove', this.render);
+		this.collection.on('add', this.addModel);
+		this.collection.on('remove', this.removeModel);
 		this.collection.on('loaded', this.render); // custom event we call after fetches
 		// Don't re-render on change! let the sub-views do that
 		// this.collection.on('change', this.render);
@@ -65,6 +69,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 		return this;
 	},
+	
+	addModel: function(model) {},
+	removeModel: function(model) {},
 	
 	/**
 	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
