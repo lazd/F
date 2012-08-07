@@ -66,6 +66,11 @@ Contacts.Index = new Class({
 	// Put the component we'll use in our prototype so it can be overridden
 	ListComponent: Contacts.List,
 	
+	show: function() {
+		this.endDeleteMode();
+		this.inherited(arguments);
+	},
+	
 	newContact: function() {
 		// Tell our parent to switch to the contact editor component with a blank contact
 		this.trigger('newContact');
@@ -80,12 +85,16 @@ Contacts.Index = new Class({
 	
 	endDeleteMode: function() {
 		this.view.$('.edit').html('Edit').removeClass('default');
+		this.view.$('.new').show();
+		this.view.$('.search').show();
 		this.list.endDeleteMode();
 		this.deleteMode = false;
 	},
 	
 	startDeleteMode: function() {
 		this.view.$('.edit').html('Done').addClass('default');
+		this.view.$('.new').hide();
+		this.view.$('.search').hide();
 		this.list.startDeleteMode();
 		this.deleteMode = true;
 	},
