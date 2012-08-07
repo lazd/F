@@ -29,9 +29,9 @@ div.Contacts {
 		
 		box-shadow: 0 2*@px 4*@px rgba(0, 0, 0, 0.1);
 		
-		border-bottom: @px solid #2d3642;
+		border-bottom: @px solid rgb(56, 85, 112);
 		
-		.gradient(#b0bbcc, #6d84a2);
+		.gradient(rgb(177, 191, 211), rgb(91, 116, 151));
 		
 		h1 {
 			width: 100%;	
@@ -71,14 +71,39 @@ div.Contacts {
 			button {
 				margin: 0.357em 0.5em;
 				
-				.gradient(#89a0be, #4a6c9b);
+				.gradient(rgb(154, 170, 194), rgb(69, 98, 141));
 				
 				font-size: 1em;
 			}
 			
-			button.save {
-				.gradient(#7699e8, #2663de);
+			button.default {
+				.gradient(rgb(143, 174, 237), rgb(59, 105, 220));
 			}
+		}
+	}
+	
+	.roundButton {
+		margin: 0.8em 0 0 0.8em;
+		width: 1.475em;
+		height: 1.475em;
+	
+		.border-box();
+		border: 0.175em solid white;
+		.border-radius(1em);
+		
+		color: #fff;
+		font-size: 0.89em;
+		line-height: 1.30em;
+		text-align: center;
+		
+		box-shadow: 0 0 0.4em rgba(0,0,0,0.5);
+		
+		&.blue {
+			.gradient(rgb(126, 168, 231), rgb(55, 113, 215));
+		}
+		
+		&.red {
+			.gradient(rgb(227, 121, 128), rgb(190, 25, 34));
 		}
 	}
 	
@@ -162,14 +187,34 @@ div.Contacts {
 					display: inline-block;
 					padding: 0.75em;
 				}
+				
+				i.unlockDelete {
+					float: left;
+
+					.transition(0.075s);
+					
+					&.unlocked {
+						.rotate(-90deg);
+					}
+				}
 			
-				button.delete {
-					margin: 0.357em 0.5em;
+				i.doView {
+					margin-right: 0.75em;
+					
+					padding-left: 0.1em;
+					
+					float: right;
+				}
+				
+				button.doDelete {
+					font-size: 0.85em;
+					margin: 0.65em;
 					float: right;
 				}
 			}
 		}
 	}
+	
 	
 	div.details {
 		.box-vertical();
