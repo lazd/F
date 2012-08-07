@@ -26,10 +26,10 @@
 		 */
 		initialize: function() {
 			if (this.template || this.options.template) {
-				if (F.options.wrapTemplates)
-					this.template = Handlebars.template(this.template || this.options.template);
-				else // For pre-compiled templates
+				if (F.options.precompiledTemplates)
 					this.template = this.template || this.options.template;
+				else // For pre-compiled templates
+					this.template = Handlebars.template(this.template || this.options.template);
 			}
 			
 			// Always call in our scope so parents can remove change listeners on models by referencing view.render
@@ -174,9 +174,7 @@
 			this.rendered = new Date().getTime();
 			
 			// Notify render has completed
-			_.defer(function() {
-				this.trigger('renderComplete');
-			}.bind(this));
+			this.trigger('renderComplete');
 			
 			return this;
 		},
