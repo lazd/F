@@ -30,8 +30,10 @@ Contacts.List = new Class({
 			this.doDelete(evt.currentTarget);
 			evt.stopPropagation();
 		}
-		else if (!this.deleteMode) // if anything else was tapped, do standard behavior
+		else if (!this.deleteMode) { // if anything else was tapped, do standard behavior
+			this.endDeleteMode();
 			this.inherited(arguments);
+		}
 	},
 	
 	endDeleteMode: function() {
