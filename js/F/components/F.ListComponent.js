@@ -18,22 +18,65 @@
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
 			
 			// Views array for subviews
-			this.views = [];
+			this.subViews = [];
+			
+			// Clumsy backbone way of permabinding
+			this.addSubView = this.addSubView.bind(this);
 		},
 
+		addSubView: function(model) {
+			// Create view
+			var view = new this.ItemView({
+				model: model,
+				template: this.ItemTemplate,
+				component: this.component
+			});
+			view.render();
+			
+			// Add the list item to the List
+			this.$el.append(view.el);
+			
+			// Store the position in the views array
+			// Don't store the actual view to prevent circular references
+			view.$el.data('viewIndex', this.subViews.length);
+			
+			// Store in views array for removal later
+			this.subViews.push(view);
+		},
+		
 		remove: function() {
 			this.removeSubViews();
 			
 			F.View.prototype.remove.call(this, arguments);
 		},
 
+		removeSubView: function(modelOrViewIndex) {
+			var view = null;
+			var viewIndex = -1;
+			if (typeof viewIndex != 'Number') {
+				_.some(this.subViews, function(tmpView, index) {
+					if (tmpView && tmpView.model === modelOrViewIndex) {
+						view = tmpView;
+						viewIndex = index;
+					}
+				}.bind(this));
+			}
+			else // get from view index
+				view = this.subViews[viewIndex];
+				
+			if (view) {
+				view.remove();
+				this.subViews[viewIndex] = undefined;
+			}
+		},
+		
 		removeSubViews: function() {
-			if (this.views.length) {
-				_.each(this.views, function(view) {
+			if (this.subViews.length) {
+				_.each(this.subViews, function(view) {
 					view.remove();
 				});
 				
-				this.views = [];
+				this.subViews = [];
 			}
 		},
 
@@ -49,30 +92,12 @@
 			this.removeSubViews();
 			
 			// Add and render each list item
-			this.collection.each(function(model) {
-				var view = new this.ItemView({
-					model: model,
-					template: this.ItemTemplate,
-					component: this.component
-				});
-				view.render();
-				
-				// Store model
-				view.$el.data('model', model);
-				
-				// Add the list item to the List
-				this.$el.append(view.el);
-				
-				// Store in views array for removal later
-				this.views.push(view);
-			}.bind(this));
+			this.collection.each(this.addSubView);
 			
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
 
-			_.defer(function() {
-				this.trigger('renderComplete');
-			}.bind(this));
+			this.trigger('renderComplete');
 			
 			return this;
 		}
@@ -140,6 +165,16 @@
 		ItemTemplate: null,
 		ItemView: ItemView,
 	
+		addModel: function(model) {
+			// Add a subview for this model
+			this.view.addSubView(model);
+		},
+		
+		removeModel: function(model) {
+			// Add a subview for this model
+			this.view.removeSubView(model);			
+		},
+	
 		/**
 		 * Get the model associated with a list item
 		 *
@@ -148,9 +183,20 @@
 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
 		 */
 		getModelFromLi: function(listItem) {
-			return $(listItem).data('model');
+			return this.view.subViews[$(listItem).data('viewIndex')].model;
 		},
 	
+		/**
+		 * Get the view associated with a list item
+		 *
+		 * @param {Node}	Node or jQuery Object to get model from
+		 *
+		 * @returns {Backbone.View}	The view associated with the passed DOM element
+		 */
+		getViewFromLi: function(listItem) {
+			return this.view.subViews[$(listItem).data('viewIndex')];
+		},
+		
 		/**
 		 * Handles item selection events
 		 *
