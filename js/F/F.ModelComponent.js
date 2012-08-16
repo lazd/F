@@ -51,7 +51,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
-		if (this.model && this.view) {
+		if (this.model && this.model.off && this.view) {
 			// Unsubscribe from old model's change and render event in case view.remove() was not called
 			this.model.off('change', this.view.render);
 		}
