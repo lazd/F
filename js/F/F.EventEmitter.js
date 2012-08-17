@@ -36,7 +36,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	off: function(evt, func) {
-		var listeners = this._events[evt]
+		var listeners = this._events[evt];
 		if (listeners !== undefined);
 			listeners.splice(listeners.indexOf(func), 1);
 		
@@ -52,7 +52,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	trigger: function(evt) {
-		var listeners = this._events[evt]
+		var listeners = this._events[evt];
 		if (listeners !== undefined) {
 			for (var i = 0, n = listeners.length; i < n; i++) {
 				listeners[i].apply(this, Array.prototype.slice.call(arguments, 1));
