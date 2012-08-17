@@ -40,7 +40,7 @@
 				var actualNodeName = this.$el[0].nodeName.toUpperCase();
 				var requiredNodeName =  this.tagName.toUpperCase();
 				
-				if (actualNodeName != requiredNodeName) {
+				if (actualNodeName !== requiredNodeName) {
 					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
 				}
 			
@@ -65,18 +65,20 @@
 			if (this.model && this.model.on) {
 				this.model.on('change', this.render);
 				
+				/*
 				// TBD: Should we do these?
-				// this.model.on('reset', function() {
-				// 	console.log("View caught model reset!");
-				// 	console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
-				// 	this.render();
-				// }.bind(this));
+				this.model.on('reset', function() {
+					console.log("View caught model reset!");
+					console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
+					this.render();
+				}.bind(this));
 				
 				// TBD: Should we do these?
-				// this.model.on('loaded', function() {
-				// 	console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
-				// 	this.render();
-				// }.bind(this));
+				this.model.on('loaded', function() {
+					console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
+					this.render();
+				}.bind(this));
+				*/
 			}
 			
 			this.rendered = null;

@@ -53,7 +53,7 @@
 		removeSubView: function(modelOrViewIndex) {
 			var view = null;
 			var viewIndex = -1;
-			if (typeof viewIndex != 'Number') {
+			if (typeof viewIndex !== 'Number') {
 				_.some(this.subViews, function(tmpView, index) {
 					if (tmpView && tmpView.model === modelOrViewIndex) {
 						view = tmpView;
