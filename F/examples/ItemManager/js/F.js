@@ -226,20 +226,17 @@ if (!Function.prototype.bind) {
 			throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
 		}
 
-		var aArgs = Array.prototype.slice.call(arguments, 1), 
-			fToBind = this, 
-			/** @ignore */
-			fNOP = function() {},
-			/** @ignore */
-			fBound = function() {
-				return fToBind.apply(this instanceof fNOP
-									 ? this
-									 : scope,
-									 aArgs.concat(Array.prototype.slice.call(arguments)));
-			};
+		var aArgs = Array.prototype.slice.call(arguments, 1);
+		var fToBind = this;
+		/** @ignore */
+		var NoOp = function() {};
+		/** @ignore */
+		var fBound = function() {
+			return fToBind.apply(this instanceof NoOp ? this : scope, aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
 
-		fNOP.prototype = this.prototype;
-		fBound.prototype = new fNOP();
+		NoOp.prototype = this.prototype;
+		fBound.prototype = new NoOp();
 
 		return fBound;
 	};
@@ -269,6 +266,10 @@ F.options = {
  * @class
  */
 F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
+	construct: function() {
+		this._events = {};
+	},
+	
 	destruct: function() {
 		delete this._events;
 	},
@@ -282,9 +283,8 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	on: function(evt, func) {
-		this._events = this._events || {};
-		this._events[evt] = this._events[evt] || [];
-		this._events[evt].push(func);
+		var listeners = this._events[evt] = this._events[evt] || [];
+		listeners.push(func);
 		
 		return this;
 	},
@@ -298,9 +298,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	off: function(evt, func) {
-		this._events = this._events || {};
-		if (evt in this._events === false) return;
-		this._events[evt].splice(this._events[evt].indexOf(func), 1);
+		var listeners = this._events[evt]
+		if (listeners !== undefined);
+			listeners.splice(listeners.indexOf(func), 1);
 		
 		return this;
 	},
@@ -314,10 +314,11 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	trigger: function(evt) {
-		this._events = this._events || {};
-		if (evt in this._events === false) return;
-		for (var i = 0; i < this._events[evt].length; i++) {
-			this._events[evt][i].apply(this, Array.prototype.slice.call(arguments, 1));
+		var listeners = this._events[evt]
+		if (listeners !== undefined) {
+			for (var i = 0, n = listeners.length; i < n; i++) {
+				listeners[i].apply(this, Array.prototype.slice.call(arguments, 1));
+			}
 		}
 		
 		return this;
@@ -365,7 +366,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				var actualNodeName = this.$el[0].nodeName.toUpperCase();
 				var requiredNodeName =  this.tagName.toUpperCase();
 				
-				if (actualNodeName != requiredNodeName) {
+				if (actualNodeName !== requiredNodeName) {
 					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
 				}
 			
@@ -390,18 +391,20 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			if (this.model && this.model.on) {
 				this.model.on('change', this.render);
 				
+				/*
 				// TBD: Should we do these?
-				// this.model.on('reset', function() {
-				// 	console.log("View caught model reset!");
-				// 	console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
-				// 	this.render();
-				// }.bind(this));
+				this.model.on('reset', function() {
+					console.log("View caught model reset!");
+					console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
+					this.render();
+				}.bind(this));
 				
 				// TBD: Should we do these?
-				// this.model.on('loaded', function() {
-				// 	console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
-				// 	this.render();
-				// }.bind(this));
+				this.model.on('loaded', function() {
+					console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
+					this.render();
+				}.bind(this));
+				*/
 			}
 			
 			this.rendered = null;
@@ -1048,7 +1051,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
-		if (this.model && this.view) {
+		if (this.model && this.model.off && this.view) {
 			// Unsubscribe from old model's change and render event in case view.remove() was not called
 			this.model.off('change', this.view.render);
 		}
@@ -1495,7 +1498,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		removeSubView: function(modelOrViewIndex) {
 			var view = null;
 			var viewIndex = -1;
-			if (typeof viewIndex != 'Number') {
+			if (typeof viewIndex !== 'Number') {
 				_.some(this.subViews, function(tmpView, index) {
 					if (tmpView && tmpView.model === modelOrViewIndex) {
 						view = tmpView;
