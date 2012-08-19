@@ -95,7 +95,7 @@ Contacts.Templates['Index'] = Handlebars.compile([
 		'<h1>Contacts</h1>',
 		'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
 	'</div>',
-	'<div class="scrollContainer">',
+	'<div class="scroller">',
 		'<form class="search" autocomplete="off">',
 			'<i class="icon-search"></i>',
 			'<input type="text" name="search" class="searchField" autocomplete="off" placeholder="Search">',
@@ -106,35 +106,39 @@ Contacts.Templates['Index'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactEditor'] = Handlebars.compile([
-	'<div class="header">',
-		'<div><button class="back" type="button">Cancel</button></div>',
-		'<h1>{{# if name}}Edit Contact{{else}}New Contact{{/if}}</h1>',
-		'<div><button class="default" type="submit">Done</button></div>',
-	'</div>',
-	'<div class="scrollContainer">',
-		'<div class="fields">',
-			'<div class="field"><label>name</label><input type="text" name="name" value="{{name}}"></div>',
-			'<div class="field"><label>e-mail</label><input type="text" name="email" value="{{email}}"></div>',
-			'<div class="field"><label>phone</label><input type="text" name="phone" value="{{phone}}"></div>',
-		'</div>',
+	'<div class="frame">',
+	'	<div class="header">',
+	 	   '<div><button class="back" type="button">Cancel</button></div>',
+	 	   '<h1>{{# if name}}Edit Contact{{else}}New Contact{{/if}}</h1>',
+	 	   '<div><button class="default" type="submit">Done</button></div>',
+	'	</div>',
+	'	<div class="scroller">',
+	 	   '<div class="well fields">',
+	 	   	'<div class="field"><label>name</label><input type="text" name="name" value="{{name}}"></div>',
+	 	   	'<div class="field"><label>e-mail</label><input type="text" name="email" value="{{email}}"></div>',
+	 	   	'<div class="field"><label>phone</label><input type="text" name="phone" value="{{phone}}"></div>',
+	 	   '</div>',
+	'	</div>',
 	'</div>'
 ].join(''));
 
 Contacts.Templates['ContactDetails'] = Handlebars.compile([
-	'<div class="header">',
-		'<div><button class="back" type="button">All Contacts</button></div>',
-		'<h1>Info</h1>',
-		'<div><button class="edit" type="button">Edit</button></div>',
-	'</div>',
-	'<div class="scrollContainer">',
-		'<div class="contact">',
-			'<h2>{{name}}</h2>',
-			'{{#if phone}}<p>{{phone}}</p>{{/if}}',
-			'{{#if email}}<p><a href="mailto:{{email}}">{{email}}</a></p>{{/if}}',
-		'</div>',
+	'<div class="frame">',
+	'	<div class="header">',
+	 	   '<div><button class="back" type="button">All Contacts</button></div>',
+	 	   '<h1>Info</h1>',
+	 	   '<div><button class="edit" type="button">Edit</button></div>',
+	'	</div>',
+	'	<div class="scroller">',
+	 	   '<div class="well">',
+	 	   	'<h2>{{name}}</h2>',
+	 	   	'{{#if phone}}<p>{{phone}}</p>{{/if}}',
+	 	   	'{{#if email}}<p><a href="mailto:{{email}}">{{email}}</a></p>{{/if}}',
+	 	   '</div>',
+	'	</div>',
 	'</div>'
 ].join(''));
 
 Contacts.Templates['ContactListItem'] = Handlebars.compile([
-	'<i class="roundButton red unlockDelete icon-minus" style="display: none;"></i><button class="doDelete red" style="display: none;">Delete</button><i class="roundButton blue doView icon-chevron-right"></i><strong>{{name}}</strong>'
+	'<button class="round red unlockDelete" style="display: none;"><i class="icon-minus"></i></button><strong>{{name}}</strong><div><button class="round blue view"><i class="icon-chevron-right"></i></button><button class="doDelete red" style="display: none;">Delete</button></div>'
 ].join(''));

@@ -22,7 +22,7 @@ Contacts.List = new Class({
 	
 	handleSelect: function(evt) {
 		// Delegating events using Backbone's events property doesn't work with Hammer.js taps, so delegate manually
-		if ($(evt.srcElement).hasClass('unlockDelete')) {  // if the delete button was tapped
+		if ($(evt.srcElement).hasClass('unlockDelete') || $(evt.srcElement).hasClass('icon-minus')) {  // if the delete button was tapped
 			this.handleLockUnlock(evt.currentTarget);
 			evt.stopPropagation();
 		}
@@ -38,7 +38,7 @@ Contacts.List = new Class({
 	
 	endDeleteMode: function() {
 		this.view.$('.unlockDelete,.doDelete').hide();
-		this.view.$('.doView').show();
+		this.view.$('.view').show();
 		this.view.$('.unlockDelete').removeClass('unlocked');
 		this.deleteMode = false;
 	},
@@ -48,7 +48,7 @@ Contacts.List = new Class({
 		this.view.$('.unlockDelete').removeClass('unlocked');
 		
 		// Hide the do view button
-		this.view.$('.doView').hide();
+		this.view.$('.view').hide();
 		
 		// Show delete buttons
 		this.view.$('.unlockDelete').show();
