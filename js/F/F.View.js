@@ -41,7 +41,7 @@
 				var requiredNodeName =  this.tagName.toUpperCase();
 				
 				// TBD: Revisit this check later; must be a better way to allow any node
-				if (this.tagName != 'div' && actualNodeName !== requiredNodeName) {
+				if (this.tagName !== 'div' && actualNodeName !== requiredNodeName) {
 					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
 				}
 			
