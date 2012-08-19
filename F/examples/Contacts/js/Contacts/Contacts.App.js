@@ -121,7 +121,6 @@ Contacts.App = new Class({
 	
 	// View is defined in the prototype so it can be overridden
 	View: F.View.extend({
-		tag: 'div',
 		className: 'Contacts'
 	}),
 	

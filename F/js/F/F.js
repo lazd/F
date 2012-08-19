@@ -1,3 +1,7 @@
+/*! F - v0.1.0 - 2012-08-19
+* http://lazd.github.com/F/
+* Copyright (c) 2012 Lawrence Davis; Licensed BSD */
+
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
  *
@@ -241,6 +245,7 @@ if (!Function.prototype.bind) {
 		return fBound;
 	};
 }
+
 /** 
  * The main F namespace.
  *	
@@ -260,6 +265,7 @@ F.options = {
 	debug: false,				// True to display debug messages
 	precompiledTemplates: true	// False if you need Handlebars.template() called on your templates
 };
+
 /**
  * Provides observer pattern for basic eventing
  *
@@ -298,7 +304,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	off: function(evt, func) {
-		var listeners = this._events[evt]
+		var listeners = this._events[evt];
 		if (listeners !== undefined);
 			listeners.splice(listeners.indexOf(func), 1);
 		
@@ -314,7 +320,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	 * @returns {F.EventEmitter}	this, chainable
 	 */
 	trigger: function(evt) {
-		var listeners = this._events[evt]
+		var listeners = this._events[evt];
 		if (listeners !== undefined) {
 			for (var i = 0, n = listeners.length; i < n; i++) {
 				listeners[i].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -324,6 +330,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		return this;
 	}
 });
+
 (function() {
 	// A couple functions required to override delegateEvents
 	var delegateEventSplitter = /^(\S+)\s*(.*)$/;
@@ -366,7 +373,8 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				var actualNodeName = this.$el[0].nodeName.toUpperCase();
 				var requiredNodeName =  this.tagName.toUpperCase();
 				
-				if (actualNodeName !== requiredNodeName) {
+				// TBD: Revisit this check later; must be a better way to allow any node
+				if (this.tagName !== 'div' && actualNodeName !== requiredNodeName) {
 					throw new Error('View: cannot create view, incorrect tag provided. Expected '+requiredNodeName+', but got '+actualNodeName);
 				}
 			
@@ -572,6 +580,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		}
 	});
 }());
+
 (function() {
 	function decapitalize(str) {
 		return str.slice(0, 1).toLowerCase()+str.slice(1);	
@@ -998,6 +1007,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		}
 	});
 }());
+
 F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
@@ -1185,6 +1195,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		return this;
 	}
 });
+
 F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
@@ -1343,6 +1354,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		return this;
 	}
 });
+
 (function() {
 	
 	/* Views
@@ -1443,7 +1455,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		}
 	});
 
-}());(function() {
+}());
+(function() {
 	
 	/* Views
 	*******************/
