@@ -4,13 +4,6 @@ W.Step = new Class({
 	extend: F.Component,
 	
 	construct: function(options) {
-		// Let implementors specify the following properties as options
-		// This allows implementors to override Template and View without extending this class
-		this.setPropsFromOptions(options, [
-			'Template',
-			'View'
-		]);
-		
 		this.view = new this.View({
 			parent: options.parent,
 			template: this.Template,
