@@ -6,11 +6,6 @@ IM.Components.Details = new Class({
 	extend: F.ModelComponent,
 	
 	construct: function(options) {
-		// Let implementors specify the following properties as options
-		this.setPropsFromOptions(options, [
-			'ItemTemplate'
-		]);
-		
 		// Just create a view here and we're done; F.ModelComponent takes care of loading and rendering
 		this.view = new this.View(_.extend({
 			template: this.ItemTemplate,

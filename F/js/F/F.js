@@ -1,4 +1,4 @@
-/*! F - v0.1.0 - 2012-08-19
+/*! F - v0.1.0 - 2012-08-20
 * http://lazd.github.com/F/
 * Copyright (c) 2012 Lawrence Davis; Licensed BSD */
 
@@ -1119,6 +1119,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	/**
 	 * Save a model to the server
 	 *
+	 * @param {Object} data			Data to apply to model before performing save
 	 * @param {Function} callback	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
