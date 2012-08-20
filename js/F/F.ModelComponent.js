@@ -109,6 +109,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	/**
 	 * Save a model to the server
 	 *
+	 * @param {Object} data			Data to apply to model before performing save
 	 * @param {Function} callback	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
