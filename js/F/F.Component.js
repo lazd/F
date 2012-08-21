@@ -40,7 +40,7 @@
 			
 			// Make sure the following functions are always called in scope
 			// They are used in event handlers, and we want to be able to remove them
-			this.bind(this._setCurrentComponent);
+			this.bind(this._handleSubComponentShown);
 			this.bind(this.render);
 		},
 		
@@ -181,7 +181,7 @@
 			}
 			
 			// Show a sub-component when it shows one of it's sub-components
-			component.on('component:shown', this._setCurrentComponent);
+			component.on('component:shown', this._handleSubComponentShown);
 			
 			return component;
 		},
@@ -197,7 +197,7 @@
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._setCurrentComponent);
+				component.off('component:shown', this._handleSubComponentShown);
 		
 				delete this[componentName];
 				delete this.components[componentName];
@@ -210,15 +210,15 @@
 		/**
 		 * Handles showing/hiding components in singly mode
 		 *
-		 * @param {Function} componentName	Component name
+		 * @param {Function} evt	Event object from component:shown
 		 */
-		_setCurrentComponent: function(componentName) {
-			var newComponent = this.components[componentName];
+		_handleSubComponentShown: function(evt) {
+			var newComponent = this.components[evt.name];
 		
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
 				if (this.singly && !newComponent.overlay) {
-					this.hideComponents();
+					this.hideAllSubComponents([evt.name]);
 				}
 			
 				// Show self
@@ -248,7 +248,10 @@
 		
 			if (!options.silent) {
 				// Always trigger event before we show ourself so others can hide/show
-				this.trigger('component:shown', this.toString(), this);	
+				this.trigger('component:shown', {
+					name: this.toString(),
+					component: this
+				});
 			}
 		
 			// Always call show on the view so it has a chance to re-render
@@ -282,7 +285,10 @@
 			
 			if (!options.silent) {
 				// Trigger event after we hide ourself so we're out of the way before the next action
-				this.trigger('component:hidden', this.toString(), this);
+				this.trigger('component:hidden', {
+					name: this.toString(),
+					component: this
+				});
 			}
 		
 			this.visible = false;
@@ -298,67 +304,38 @@
 		isVisible: function() {
 			return this.visible;
 		},
-	
+
+		/**
+		 * Show all sub-components
+		 *
+		 * @param {String[]} [except]	List of component names not to show. These components will not be hidden if they are already shown
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		showAllSubComponents: function(except) {
+			except = !_.isArray(except) ? [] : except;
+			for (var componentName in this.components) {
+				if (~except.indexOf(componentName))
+					continue;
+				this.components[componentName].show();
+			}
+
+			return this;
+		},
+		
 		/**
 		 * Hide all sub-components
 		 *
+		 * @param {String[]} [except]	List of component names not to hide. These components will not be shown if they are already hidden
+		 *
 		 * @returns {F.Component}	this, chainable
 		 */
-		hideComponents: function() {
+		hideAllSubComponents: function(except) {
+			except = !_.isArray(except) ? [] : except;
 			for (var componentName in this.components) {
-				this.hideComponent(componentName);
-			}
-		
-			return this;
-		},
-		
-		/**
-		 * Hide a sub-component of this component by name. Only useful if options.singly is false
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		hideComponent: function(componentName) {
-			var component = this.components[componentName];
-			if (component !== undefined) {
-				if (component.isVisible()) {
-					// hide the component's element
-					component.hide();
-				}
-			}
-			else {
-				console.warn(this.toString()+': cannot hide component %s, component not found', componentName);
-			}
-		
-			return this;
-		},
-	
-		/**
-		 * Show a sub-component of this component by name.
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		showComponent: function(componentName) {
-			// Show the sub section, if not already showing
-			var newComponent = this.components[componentName];
-		
-			if (newComponent !== undefined) {
-				if (!newComponent.isVisible()) {
-					// Hide the old component and show ourselves
-					this._setCurrentComponent(componentName);
-			
-					// Show new component
-					newComponent.show();
-				}
-				else {
-					console.log(this.toString()+': not showing component %s, already visible', componentName);
-				}
-			}
-			else {
-				console.warn(this.toString()+': Cannot show component "'+componentName+'", not found');
+				if (~except.indexOf(componentName))
+					continue;
+				this.components[componentName].hide();
 			}
 		
 			return this;
@@ -387,8 +364,8 @@
 		/**
 		 * Set properties of this instance from an options object, then remove the properties from the options object
 		 *
-		 * @param {Object} options	Options object with many properties
-		 * @param {Array} props		Properties to copy from options object
+		 * @param {Object} options		Options object with many properties
+		 * @param {String[]} props		Properties to copy from options object
 		 *
 		 * @returns {F.Component}	this, chainable
 		 */
@@ -422,5 +399,28 @@
 			
 			return options;
 		}
+		
+		
+		/**
+		 * Triggered when this component is shown
+		 *
+		 * @name F.Component#component:shown
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {String}	evt.name			This component's name
+		 * @param {F.Component}	evt.component	This component
+		 */
+
+		/**
+		 * Triggered when this component is hidden
+		 *
+		 * @name F.Component#component:hidden
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {String}	evt.name			This component's name
+		 * @param {F.Component}	evt.component	This component
+		 */
 	});
 }());

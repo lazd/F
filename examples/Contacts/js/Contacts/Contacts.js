@@ -53,7 +53,7 @@ Contacts.Models.Contact = Backbone.Model.extend({
 	// Normally, you would not do this at all
 	url: function() {
 		// Deliver the correct URL unless the model has been changed, in which case we force the save to fail
-		return this.urlRoot + (!this.dirty ? '/'+this.id : 'dontActuallySaveOrThisDemoDoesntWork');
+		return this.urlRoot + (!this.dirty ? '/'+this.id : '_dontActuallySaveOrThisDemoDoesntWork');
 	}
 });
 

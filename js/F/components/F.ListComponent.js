@@ -209,10 +209,22 @@
 			// Store ID of selected item
 			this.selectedItem = model.id;
 		
-			this.trigger('itemSelected', {
+			this.trigger('list:itemSelected', {
 				listItem: $(evt.currentTarget),
 				model: model
 			});
 		}
+		
+		
+		/**
+		 * Triggered when and item in the list is selected by tapping or clicking
+		 *
+		 * @name F.ListComponent#list:itemSelected
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {jQuery}	evt.listItem		The list item that was touched
+		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
+		 */
 	});
 }());

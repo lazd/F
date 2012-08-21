@@ -6,7 +6,7 @@ Contacts.List = new Class({
 	F.CollectionComponent (which F.List inherits from) can send params when it fetches the collection.
 	Provide default params as options.params in the prototype of the component.
 	
-	Params passed to subsequent calls to this.load(params) will be merged with default params below
+	Params passed to subsequent calls to this.fetch(params) will be merged with default params below
 	*/
 	options: {
 		params: {
