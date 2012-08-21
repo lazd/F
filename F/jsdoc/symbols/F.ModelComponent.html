@@ -313,9 +313,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#load">load</a></b>(itemIdOrModel, callback)
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#fetch">fetch</a></b>(itemId, callback)
 								</div>
-								<div class="description">Load an item's model by ID or by model</div>
+								<div class="description">Fetch a model with the given ID</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#load">load</a></b>(modelOrData)
+								</div>
+								<div class="description">Load a Backbone.Model directly or create a model from data</div>
 							</td>
 						</tr>
 					
@@ -331,7 +340,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#save">save</a></b>(callback, callback)
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#save">save</a></b>(data, callback)
 								</div>
 								<div class="description">Save a model to the server</div>
 							</td>
@@ -352,11 +361,60 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class F.ModelComponent.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:loaded">model:loaded</a></b>(evt)
+								</div>
+								<div class="description">Triggered when the model is loaded from the server or passed to load()</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:saved">model:saved</a></b>(evt)
+								</div>
+								<div class="description">Triggered after a successful save</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></b>(evt)
+								</div>
+								<div class="description">Triggered when save is unsuccessful</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Events borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a>, <a href="../symbols/F.Component.html#event:component:shown">component:shown</a></dd>
+				</dl>
+				
 			
 
 <!-- ============================== constructor details ==================== -->		
@@ -442,15 +500,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="load"> </a>
+					<a name="fetch"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>load</b>(itemIdOrModel, callback)
+					<b>fetch</b>(itemId, callback)
 					
 					</div>
 					<div class="description">
-						Load an item's model by ID or by model
+						Fetch a model with the given ID
 						
 						
 					</div>
@@ -462,16 +520,59 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>itemIdOrModel</b>
+									<span class="light fixedFont">{String}</span> <b>itemId</b>
 									
 								</dt>
-								<dd>ID of the item to fetch or already fetched model</dd>
+								<dd>ID of the item to fetch</dd>
 							
 								<dt>
 									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Callback to execute on successful fetch</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="load"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
+					<b>load</b>(modelOrData)
+					
+					</div>
+					<div class="description">
+						Load a Backbone.Model directly or create a model from data
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{mixed}</span> <b>modelOrData</b>
+									
+								</dt>
+								<dd>Backbone.Model to load or Object with data to create model from</dd>
 							
 							</dl>
 						
@@ -538,7 +639,7 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span>
-					<b>save</b>(callback, callback)
+					<b>save</b>(data, callback)
 					
 					</div>
 					<div class="description">
@@ -554,16 +655,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>data</b>
+									
+								</dt>
+								<dd>Data to apply to model before performing save</dd>
+							
+								<dt>
 									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
 									
 								</dt>
 								<dd>Callback to execute on successful fetch</dd>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd></dd>
 							
 							</dl>
 						
@@ -642,6 +743,137 @@ ul.inheritsList
 			
 <!-- ============================== event details ========================= -->		
 			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:model:loaded"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:loaded</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when the model is loaded from the server or passed to load()
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that was loaded</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:model:saved"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:saved</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered after a successful save
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that was saved</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:model:saveFailed"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:saveFailed</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when save is unsuccessful
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that failed to save</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
 			
 			<hr />
 		</div>
@@ -650,7 +882,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Aug 19 2012 01:46:33 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Aug 21 2012 13:26:48 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

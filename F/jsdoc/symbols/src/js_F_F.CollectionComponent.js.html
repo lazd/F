@@ -28,139 +28,178 @@
 <span class='line'> 21</span> </span><span class="WHIT">			</span><span class="STRN">'Collection'</span><span class="WHIT">
 <span class='line'> 22</span> </span><span class="WHIT">		</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 23</span> </span><span class="WHIT">		
-<span class='line'> 24</span> 		</span><span class="COMM">// Create a collection</span><span class="WHIT">
-<span class='line'> 25</span> </span><span class="WHIT">		</span><span class="NAME">this.collection</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.Collection</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 26</span> </span><span class="WHIT">		
-<span class='line'> 27</span> 		</span><span class="COMM">// Bind for use as listeners</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">		</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.addModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">		</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.removeModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 24</span> 		</span><span class="COMM">// Bind for use as listeners</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">		</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.addModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">		</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.removeModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">		</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">		
+<span class='line'> 29</span> 		</span><span class="NAME">this._useCollection</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.Collection</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 30</span> </span><span class="WHIT">		
-<span class='line'> 31</span> 		</span><span class="COMM">// Re-render when the collection is fetched, items are added or removed</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'add'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.addModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'remove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.removeModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'loaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// custom event we call after fetches</span><span class="WHIT">
-<span class='line'> 35</span> </span><span class="WHIT">		</span><span class="COMM">// Don't re-render on change! let the sub-views do that</span><span class="WHIT">
-<span class='line'> 36</span> </span><span class="WHIT">		</span><span class="COMM">// this.collection.on('change', this.render);</span><span class="WHIT">
-<span class='line'> 37</span> </span><span class="WHIT">		
-<span class='line'> 38</span> 		</span><span class="COMM">// Default parameters are the prototype params + options params</span><span class="WHIT">
-<span class='line'> 39</span> </span><span class="WHIT">		</span><span class="NAME">this.defaultParams</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 40</span> </span><span class="WHIT">		
-<span class='line'> 41</span> 		</span><span class="COMM">// Parameters to send with the request: just copy the default params</span><span class="WHIT">
-<span class='line'> 42</span> </span><span class="WHIT">		</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">	
-<span class='line'> 44</span> 		</span><span class="COMM">// Store if this collection has ever been loaded</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">		</span><span class="NAME">this.collectionLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="WHIT">	
-<span class='line'> 48</span> 	</span><span class="NAME">Collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Backbone.Collection</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">	
-<span class='line'> 50</span> 	</span><span class="COMM">/**
-<span class='line'> 51</span> 	 * Get the collection associated with this component
-<span class='line'> 52</span> 	 *
-<span class='line'> 53</span> 	 * @returns {Backbone.Collection}	The collection associated with this component
-<span class='line'> 54</span> 	 */</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">	</span><span class="NAME">getCollection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 56</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">	
-<span class='line'> 59</span> 	</span><span class="COMM">/**
-<span class='line'> 60</span> 	 * Refresh this collection with the last parameters used
-<span class='line'> 61</span> 	 *
-<span class='line'> 62</span> 	 * @param {Function} callback	Optional callback to execute on successful fetch
-<span class='line'> 63</span> 	 *
-<span class='line'> 64</span> 	 * @returns {F.CollectionComponent}	this, chainable
-<span class='line'> 65</span> 	 */</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">	</span><span class="NAME">refresh</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 67</span> </span><span class="WHIT">		</span><span class="COMM">// Just load the collection with the current params</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">		</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">this.params</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">		
-<span class='line'> 70</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">	
-<span class='line'> 73</span> 	</span><span class="COMM">/**
-<span class='line'> 74</span> 	 * Callback called when model is added to collection
-<span class='line'> 75</span> 	 */</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">	</span><span class="NAME">addModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="WHIT">	
-<span class='line'> 78</span> 	</span><span class="COMM">/**
-<span class='line'> 79</span> 	 * Callback called when model is removed from collection
-<span class='line'> 80</span> 	 */</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">	</span><span class="NAME">removeModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 82</span> </span><span class="WHIT">	
-<span class='line'> 83</span> 	</span><span class="COMM">/**
-<span class='line'> 84</span> 	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
-<span class='line'> 85</span> 	 *
-<span class='line'> 86</span> 	 * @returns {F.CollectionComponent}	this, chainable
-<span class='line'> 87</span> 	 */</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">	</span><span class="NAME">clearParams</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">		</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">		
-<span class='line'> 91</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">	
-<span class='line'> 94</span> 	</span><span class="COMM">/**
-<span class='line'> 95</span> 	 * Fetch the collection with optional 
-<span class='line'> 96</span> 	 *
-<span class='line'> 97</span> 	 * @param {Object} fetchParams	Optional parameters to pass when fetching
-<span class='line'> 98</span> 	 * @param {Function} callback	Optional callback to execute on successful fetch
-<span class='line'> 99</span> 	 *
-<span class='line'>100</span> 	 * @returns {F.CollectionComponent}	this, chainable
-<span class='line'>101</span> 	 */</span><span class="WHIT">
-<span class='line'>102</span> </span><span class="WHIT">	</span><span class="NAME">load</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">fetchParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="WHIT">		</span><span class="COMM">// Combine new params, if any, with defaults and store, overwriting previous params</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fetchParams</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>105</span> </span><span class="WHIT">			</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fetchParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>106</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="COMM">// Overwrite old params with defaults and send a request with only default params</span><span class="WHIT">
-<span class='line'>107</span> </span><span class="WHIT">			</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>108</span> </span><span class="WHIT">		
-<span class='line'>109</span> 		</span><span class="COMM">// Fetch collection contents</span><span class="WHIT">
-<span class='line'>110</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.fetch</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>111</span> </span><span class="WHIT">			</span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.params</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>112</span> </span><span class="WHIT">			</span><span class="NAME">success</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">				</span><span class="COMM">// Collection event</span><span class="WHIT">
-<span class='line'>114</span> </span><span class="WHIT">				</span><span class="NAME">this.collection.trigger</span><span class="PUNC">(</span><span class="STRN">'loaded'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>115</span> 
-<span class='line'>116</span> </span><span class="WHIT">				</span><span class="COMM">// Component event</span><span class="WHIT">
-<span class='line'>117</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'collectionLoaded'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>118</span> </span><span class="WHIT">				</span><span class="NAME">this.collectionLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>119</span> </span><span class="WHIT">				
-<span class='line'>120</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>121</span> </span><span class="WHIT">					</span><span class="NAME">callback.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>122</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">.</span><span class="NAME">bind</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>123</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>124</span> </span><span class="WHIT">		
-<span class='line'>125</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>126</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>127</span> </span><span class="WHIT">	
-<span class='line'>128</span> 	</span><span class="COMM">/**
-<span class='line'>129</span> 	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
-<span class='line'>130</span> 	 *
-<span class='line'>131</span> 	 * @param {Object} options	Pass fetch parameters with options.params
-<span class='line'>132</span> 	 *
-<span class='line'>133</span> 	 * @returns {F.CollectionComponent}	this, chainable
-<span class='line'>134</span> 	 */</span><span class="WHIT">
-<span class='line'>135</span> </span><span class="WHIT">	</span><span class="NAME">show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>136</span> </span><span class="WHIT">		</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>137</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>138</span> </span><span class="WHIT">			</span><span class="COMM">// Load the collection by itemId</span><span class="WHIT">
-<span class='line'>139</span> </span><span class="WHIT">			</span><span class="NAME">this.load</span><span class="PUNC">(</span><span class="NAME">options.params</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>140</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.collectionLoaded</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>146</span> </span><span class="WHIT">			</span><span class="COMM">// Perform initial load</span><span class="WHIT">
-<span class='line'>147</span> </span><span class="WHIT">			</span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>148</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// show when we're fully loaded</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">			</span><span class="NAME">this.inherited</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">			
-<span class='line'>156</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>158</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>159</span> </span></pre></body></html>
+<span class='line'> 31</span> 		</span><span class="COMM">// Default parameters are the prototype params + options params</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">		</span><span class="NAME">this.defaultParams</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">		
+<span class='line'> 34</span> 		</span><span class="COMM">// Parameters to send with the request: just copy the default params</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">		</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">	
+<span class='line'> 37</span> 		</span><span class="COMM">// Store if this collection has ever been loaded</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">		</span><span class="NAME">this.collectionLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">	
+<span class='line'> 41</span> 	</span><span class="NAME">destruct</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">		</span><span class="NAME">this._releaseCollection</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">	
+<span class='line'> 45</span> 	</span><span class="NAME">Collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Backbone.Collection</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">	
+<span class='line'> 47</span> 	</span><span class="NAME">_useCollection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">collection</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">		</span><span class="COMM">// Store collection</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">		</span><span class="NAME">this.collection</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">collection</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">		
+<span class='line'> 51</span> 		</span><span class="COMM">// Re-render when the collection is fetched, items are added or removed</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'add'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.addModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'remove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.removeModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.on</span><span class="PUNC">(</span><span class="STRN">'loaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// custom event we call after fetches</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">		</span><span class="COMM">// this.collection.on('change', this.render); // Don't re-render on change! let the sub-views do that</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">	
+<span class='line'> 58</span> 	</span><span class="NAME">_releaseCollection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">		</span><span class="COMM">// Unbind events</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.off</span><span class="PUNC">(</span><span class="STRN">'add'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.addModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.off</span><span class="PUNC">(</span><span class="STRN">'remove'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.removeModel</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.off</span><span class="PUNC">(</span><span class="STRN">'loaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// custom event we call after fetches</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">		
+<span class='line'> 64</span> 		</span><span class="COMM">// Remove reference to collection</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">		</span><span class="NAME">this.collection</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">	
+<span class='line'> 68</span> 	</span><span class="COMM">/**
+<span class='line'> 69</span> 	 * Refresh this collection with the last parameters used
+<span class='line'> 70</span> 	 *
+<span class='line'> 71</span> 	 * @param {Function} callback	Optional callback to execute on successful fetch
+<span class='line'> 72</span> 	 *
+<span class='line'> 73</span> 	 * @returns {F.CollectionComponent}	this, chainable
+<span class='line'> 74</span> 	 */</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">	</span><span class="NAME">refresh</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">		</span><span class="COMM">// Just fetch the collection with the current params</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">		</span><span class="NAME">this.fetch</span><span class="PUNC">(</span><span class="NAME">this.params</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">		
+<span class='line'> 79</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">	
+<span class='line'> 82</span> 	</span><span class="COMM">/**
+<span class='line'> 83</span> 	 * Callback called when model is added to collection
+<span class='line'> 84</span> 	 */</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">	</span><span class="NAME">addModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">	
+<span class='line'> 87</span> 	</span><span class="COMM">/**
+<span class='line'> 88</span> 	 * Callback called when model is removed from collection
+<span class='line'> 89</span> 	 */</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">	</span><span class="NAME">removeModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">	
+<span class='line'> 92</span> 	</span><span class="COMM">/**
+<span class='line'> 93</span> 	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
+<span class='line'> 94</span> 	 *
+<span class='line'> 95</span> 	 * @returns {F.CollectionComponent}	this, chainable
+<span class='line'> 96</span> 	 */</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">	</span><span class="NAME">clearParams</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">		</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">		
+<span class='line'>100</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">	
+<span class='line'>103</span> 	</span><span class="COMM">/**
+<span class='line'>104</span> 	 * Fetch the collection by fetching it from the server
+<span class='line'>105</span> 	 *
+<span class='line'>106</span> 	 * @param {Object} [fetchParams]	Parameters to pass when fetching
+<span class='line'>107</span> 	 * @param {Function} [callback]		Callback to execute on successful fetch
+<span class='line'>108</span> 	 *
+<span class='line'>109</span> 	 * @returns {F.CollectionComponent}	this, chainable
+<span class='line'>110</span> 	 */</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">	</span><span class="NAME">fetch</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">fetchParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">		</span><span class="COMM">// Combine new params, if any, with defaults and store, overwriting previous params</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fetchParams</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">			</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fetchParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="COMM">// Overwrite old params with defaults and send a request with only default params</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">			</span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.defaultParams</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">		
+<span class='line'>118</span> 		</span><span class="COMM">// Fetch collection contents</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">		</span><span class="NAME">this.collection.fetch</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">			</span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.params</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">			</span><span class="NAME">success</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">				</span><span class="COMM">// Collection event</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">				</span><span class="NAME">this.collection.trigger</span><span class="PUNC">(</span><span class="STRN">'loaded'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> 
+<span class='line'>125</span> </span><span class="WHIT">				</span><span class="COMM">// Component event</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'collection:loaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">				</span><span class="NAME">this.collectionLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">				
+<span class='line'>129</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">					</span><span class="NAME">callback.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">.</span><span class="NAME">bind</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">		
+<span class='line'>134</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">	
+<span class='line'>137</span> 	
+<span class='line'>138</span> 	</span><span class="COMM">/**
+<span class='line'>139</span> 	 * Load a Backbone.Collection directly or create a collection from an array of data
+<span class='line'>140</span> 	 *
+<span class='line'>141</span> 	 * @param {mixed} collectionOrData	Backbone.Collection to load or Array of Objects with data to create the collection from
+<span class='line'>142</span> 	 *
+<span class='line'>143</span> 	 * @returns {F.CollectionComponent}	this, chainable
+<span class='line'>144</span> 	 */</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">	</span><span class="NAME">load</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">collectionOrData</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">		</span><span class="NAME">this._releaseCollection</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> 
+<span class='line'>148</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">collectionOrData</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Backbone.Collection</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">			</span><span class="NAME">this._useCollection</span><span class="PUNC">(</span><span class="NAME">collectionOrData</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">			</span><span class="NAME">this._useCollection</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.Collection</span><span class="PUNC">(</span><span class="NAME">collectionOrData</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">		
+<span class='line'>153</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">	
+<span class='line'>156</span> 	
+<span class='line'>157</span> 	</span><span class="COMM">/**
+<span class='line'>158</span> 	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
+<span class='line'>159</span> 	 *
+<span class='line'>160</span> 	 * @param {Object} options	Pass fetch parameters with options.params
+<span class='line'>161</span> 	 *
+<span class='line'>162</span> 	 * @returns {F.CollectionComponent}	this, chainable
+<span class='line'>163</span> 	 */</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">	</span><span class="NAME">show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">		</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options.params</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">			</span><span class="COMM">// Fetch the collection from the server</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">			</span><span class="NAME">this.fetch</span><span class="PUNC">(</span><span class="NAME">options.params</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.collectionLoaded</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">			</span><span class="COMM">// Perform initial load</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">			</span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">				</span><span class="NAME">this.show</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">					</span><span class="NAME">silent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">options.silent</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// show when we're fully loaded</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">		</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">			</span><span class="NAME">this.inherited</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">		
+<span class='line'>185</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">	
+<span class='line'>188</span> 	
+<span class='line'>189</span> 	</span><span class="COMM">/**
+<span class='line'>190</span> 	 * Triggered when the collection is loaded from the server
+<span class='line'>191</span> 	 *
+<span class='line'>192</span> 	 * @name F.CollectionComponent#collection:loaded
+<span class='line'>193</span> 	 * @event
+<span class='line'>194</span> 	 *
+<span class='line'>195</span> 	 * @param {Backbone.Collection}	collection	The collection that was loaded
+<span class='line'>196</span> 	 */</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span></pre></body></html>

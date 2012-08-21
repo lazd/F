@@ -1,4 +1,4 @@
-/*! F - v0.1.0 - 2012-08-19
+/*! F - v0.1.0 - 2012-08-21
 * http://lazd.github.com/F/
 * Copyright (c) 2012 Lawrence Davis; Licensed BSD */
 
@@ -623,7 +623,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			
 			// Make sure the following functions are always called in scope
 			// They are used in event handlers, and we want to be able to remove them
-			this.bind(this._setCurrentComponent);
+			this.bind(this._handleSubComponentShown);
 			this.bind(this.render);
 		},
 		
@@ -764,7 +764,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			}
 			
 			// Show a sub-component when it shows one of it's sub-components
-			component.on('component:shown', this._setCurrentComponent);
+			component.on('component:shown', this._handleSubComponentShown);
 			
 			return component;
 		},
@@ -780,7 +780,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._setCurrentComponent);
+				component.off('component:shown', this._handleSubComponentShown);
 		
 				delete this[componentName];
 				delete this.components[componentName];
@@ -793,15 +793,15 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		/**
 		 * Handles showing/hiding components in singly mode
 		 *
-		 * @param {Function} componentName	Component name
+		 * @param {Function} evt	Event object from component:shown
 		 */
-		_setCurrentComponent: function(componentName) {
-			var newComponent = this.components[componentName];
+		_handleSubComponentShown: function(evt) {
+			var newComponent = this.components[evt.name];
 		
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
 				if (this.singly && !newComponent.overlay) {
-					this.hideComponents();
+					this.hideAllSubComponents([evt.name]);
 				}
 			
 				// Show self
@@ -831,7 +831,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		
 			if (!options.silent) {
 				// Always trigger event before we show ourself so others can hide/show
-				this.trigger('component:shown', this.toString(), this);	
+				this.trigger('component:shown', {
+					name: this.toString(),
+					component: this
+				});
 			}
 		
 			// Always call show on the view so it has a chance to re-render
@@ -865,7 +868,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			
 			if (!options.silent) {
 				// Trigger event after we hide ourself so we're out of the way before the next action
-				this.trigger('component:hidden', this.toString(), this);
+				this.trigger('component:hidden', {
+					name: this.toString(),
+					component: this
+				});
 			}
 		
 			this.visible = false;
@@ -881,67 +887,38 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		isVisible: function() {
 			return this.visible;
 		},
-	
+
+		/**
+		 * Show all sub-components
+		 *
+		 * @param {String[]} [except]	List of component names not to show. These components will not be hidden if they are already shown
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		showAllSubComponents: function(except) {
+			except = !_.isArray(except) ? [] : except;
+			for (var componentName in this.components) {
+				if (~except.indexOf(componentName))
+					continue;
+				this.components[componentName].show();
+			}
+
+			return this;
+		},
+		
 		/**
 		 * Hide all sub-components
 		 *
+		 * @param {String[]} [except]	List of component names not to hide. These components will not be shown if they are already hidden
+		 *
 		 * @returns {F.Component}	this, chainable
 		 */
-		hideComponents: function() {
+		hideAllSubComponents: function(except) {
+			except = !_.isArray(except) ? [] : except;
 			for (var componentName in this.components) {
-				this.hideComponent(componentName);
-			}
-		
-			return this;
-		},
-		
-		/**
-		 * Hide a sub-component of this component by name. Only useful if options.singly is false
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		hideComponent: function(componentName) {
-			var component = this.components[componentName];
-			if (component !== undefined) {
-				if (component.isVisible()) {
-					// hide the component's element
-					component.hide();
-				}
-			}
-			else {
-				console.warn(this.toString()+': cannot hide component %s, component not found', componentName);
-			}
-		
-			return this;
-		},
-	
-		/**
-		 * Show a sub-component of this component by name.
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
-		showComponent: function(componentName) {
-			// Show the sub section, if not already showing
-			var newComponent = this.components[componentName];
-		
-			if (newComponent !== undefined) {
-				if (!newComponent.isVisible()) {
-					// Hide the old component and show ourselves
-					this._setCurrentComponent(componentName);
-			
-					// Show new component
-					newComponent.show();
-				}
-				else {
-					console.log(this.toString()+': not showing component %s, already visible', componentName);
-				}
-			}
-			else {
-				console.warn(this.toString()+': Cannot show component "'+componentName+'", not found');
+				if (~except.indexOf(componentName))
+					continue;
+				this.components[componentName].hide();
 			}
 		
 			return this;
@@ -970,8 +947,8 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		/**
 		 * Set properties of this instance from an options object, then remove the properties from the options object
 		 *
-		 * @param {Object} options	Options object with many properties
-		 * @param {Array} props		Properties to copy from options object
+		 * @param {Object} options		Options object with many properties
+		 * @param {String[]} props		Properties to copy from options object
 		 *
 		 * @returns {F.Component}	this, chainable
 		 */
@@ -1005,13 +982,35 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			
 			return options;
 		}
+		
+		
+		/**
+		 * Triggered when this component is shown
+		 *
+		 * @name F.Component#component:shown
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {String}	evt.name			This component's name
+		 * @param {F.Component}	evt.component	This component
+		 */
+
+		/**
+		 * Triggered when this component is hidden
+		 *
+		 * @name F.Component#component:hidden
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {String}	evt.name			This component's name
+		 * @param {F.Component}	evt.component	This component
+		 */
 	});
 }());
 
 F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
-
 	/**
 	 * A component that can load and render a model
 	 *
@@ -1041,9 +1040,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			success: function() {
 				// Trigger model event
 				this.model.trigger('loaded');
-
+				
 				// Trigger component event
-				this.trigger('modelLoaded');
+				this.trigger('model:loaded', this.model);
 				
 				if (typeof callback === 'function')
 					callback.call(this, this.model);
@@ -1077,41 +1076,56 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 		
 	/**
-	 * Load an item's model by ID or by model
+	 * Fetch a model with the given ID
 	 *
-	 * @param {Function} itemIdOrModel	ID of the item to fetch or already fetched model
-	 * @param {Function} callback	Callback to execute on successful fetch
+	 * @param {String} itemId		ID of the item to fetch
+	 * @param {Function} [callback]	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	load: function(itemIdOrModel, callback) {
-		// Load models 
-		if (typeof itemIdOrModel === 'string' || typeof itemIdOrModel === 'number') {
-			// Create a blank model
-			var data = {};
-			data[this.Model.prototype.idAttribute] = itemIdOrModel;
-			var model = new this.Model(data);
+	fetch: function(itemId, callback) {
+		var data = {};
+		if (itemId !== undefined) { // add the ID passed to the model data
+			data[this.Model.prototype.idAttribute] = itemId;
+		}
 		
-			// Fetch model contents
-			model.fetch({
-				// TBD: add fetch options
-				success: function() {
-					// Assign the model to the view
-					this._setModel(model);
-					
-					// Notify
-					this.trigger('modelLoaded');
-					
-					// Call callback
-					if (typeof callback === 'function')
-						callback.call(this, model);
-				}.bind(this)
-			});
-		}
-		else {
-			// It must be an object
-			this._setModel(itemIdOrModel);
-		}
+		// Create a blank model
+		var model = new this.Model(data);
+	
+		// Fetch model contents
+		model.fetch({
+			// TBD: add fetch options?
+			success: function() {
+				// Assign the model to the view
+				this._setModel(model);
+				
+				// Notify
+				this.trigger('model:loaded', this.model);
+				
+				// Call callback
+				if (typeof callback === 'function')
+					callback.call(this, model);
+			}.bind(this)
+		});
+		
+		return this;
+	},
+	
+	/**
+	 * Load a Backbone.Model directly or create a model from data
+	 *
+	 * @param {mixed} modelOrData	Backbone.Model to load or Object with data to create model from
+	 *
+	 * @returns {F.ModelComponent}	this, chainable
+	 */
+	load: function(modelOrData) {
+		if (modelOrData instanceof Backbone.Model)
+			this._setModel(modelOrData);
+		else
+			this._setModel(new this.Model(modelOrData));
+		
+		// Notify
+		this.trigger('model:loaded', this.model);
 		
 		return this;
 	},
@@ -1119,6 +1133,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	/**
 	 * Save a model to the server
 	 *
+	 * @param {Object} data			Data to apply to model before performing save
 	 * @param {Function} callback	Callback to execute on successful fetch
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
@@ -1136,13 +1151,15 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					if (typeof callback === 'function')
 						callback.call(this, this.model);
 						
-					this.trigger('saved', this.model);
+					this.trigger('model:saved', this.model);
 				}.bind(this),
-				error: function() {
-					// TBD: add meaningful data to event properties
+				error: function(model, error) {
 					console.warn('%s: Error saving model', this.toString());
 					
-					this.trigger('saveFailed', this.model);
+					this.trigger('model:saveFailed', {
+						model: this.model,
+						error: error
+					});
 				}.bind(this)
 			});
 		}
@@ -1170,7 +1187,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			}
 			
 			// Load the model by itemId, then show
-			this.load(options.id, function(model) {
+			this.fetch(options.id, function(model) {
 				if (F.options.debug) {
 					console.log('%s: fetch complete!', this.toString());
 				}
@@ -1194,6 +1211,36 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			
 		return this;
 	}
+	
+	/**
+	 * Triggered after a successful save
+	 *
+	 * @name F.ModelComponent#model:saved
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was saved
+	 */
+	
+	/**
+	 * Triggered when save is unsuccessful
+	 *
+	 * @name F.ModelComponent#model:saveFailed
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that failed to save
+	 */
+	
+	/**
+	 * Triggered when the model is loaded from the server or passed to load()
+	 *
+	 * @name F.ModelComponent#model:loaded
+	 * @event
+	 *	
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was loaded
+	 */
 });
 
 F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
@@ -1219,19 +1266,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			'Collection'
 		]);
 		
-		// Create a collection
-		this.collection = new this.Collection();
-		
 		// Bind for use as listeners
 		this.bind(this.addModel);
 		this.bind(this.removeModel);
+		this.bind(this.render);
 		
-		// Re-render when the collection is fetched, items are added or removed
-		this.collection.on('add', this.addModel);
-		this.collection.on('remove', this.removeModel);
-		this.collection.on('loaded', this.render); // custom event we call after fetches
-		// Don't re-render on change! let the sub-views do that
-		// this.collection.on('change', this.render);
+		this._useCollection(new this.Collection());
 		
 		// Default parameters are the prototype params + options params
 		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
@@ -1243,15 +1283,31 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collectionLoaded = false;
 	},
 	
+	destruct: function() {
+		this._releaseCollection();
+	},
+	
 	Collection: Backbone.Collection,
 	
-	/**
-	 * Get the collection associated with this component
-	 *
-	 * @returns {Backbone.Collection}	The collection associated with this component
-	 */
-	getCollection: function() {
-		return this.collection;
+	_useCollection: function(collection) {
+		// Store collection
+		this.collection = collection;
+		
+		// Re-render when the collection is fetched, items are added or removed
+		this.collection.on('add', this.addModel);
+		this.collection.on('remove', this.removeModel);
+		this.collection.on('loaded', this.render); // custom event we call after fetches
+		// this.collection.on('change', this.render); // Don't re-render on change! let the sub-views do that
+	},
+	
+	_releaseCollection: function() {
+		// Unbind events
+		this.collection.off('add', this.addModel);
+		this.collection.off('remove', this.removeModel);
+		this.collection.off('loaded', this.render); // custom event we call after fetches
+		
+		// Remove reference to collection
+		this.collection = null;
 	},
 	
 	/**
@@ -1262,8 +1318,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
 	refresh: function(callback) {
-		// Just load the collection with the current params
-		this.load(this.params, callback);
+		// Just fetch the collection with the current params
+		this.fetch(this.params, callback);
 		
 		return this;
 	},
@@ -1290,14 +1346,14 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Fetch the collection with optional 
+	 * Fetch the collection by fetching it from the server
 	 *
-	 * @param {Object} fetchParams	Optional parameters to pass when fetching
-	 * @param {Function} callback	Optional callback to execute on successful fetch
+	 * @param {Object} [fetchParams]	Parameters to pass when fetching
+	 * @param {Function} [callback]		Callback to execute on successful fetch
 	 *
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
-	load: function(fetchParams, callback) {
+	fetch: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
 			this.params = _.extend({}, this.defaultParams, fetchParams);
@@ -1312,7 +1368,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 				this.collection.trigger('loaded');
 
 				// Component event
-				this.trigger('collectionLoaded');
+				this.trigger('collection:loaded', this.collection);
 				this.collectionLoaded = true;
 				
 				if (typeof callback === 'function')
@@ -1322,6 +1378,26 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 		return this;
 	},
+	
+	
+	/**
+	 * Load a Backbone.Collection directly or create a collection from an array of data
+	 *
+	 * @param {mixed} collectionOrData	Backbone.Collection to load or Array of Objects with data to create the collection from
+	 *
+	 * @returns {F.CollectionComponent}	this, chainable
+	 */
+	load: function(collectionOrData) {
+		this._releaseCollection();
+
+		if (collectionOrData instanceof Backbone.Collection)
+			this._useCollection(collectionOrData);
+		else
+			this._useCollection(new this.Collection(collectionOrData));
+		
+		return this;
+	},
+	
 	
 	/**
 	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
@@ -1333,8 +1409,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	show: function(options) {
 		options = options || {};
 		if (options.params) {
-			// Load the collection by itemId
-			this.load(options.params, function() {
+			// Fetch the collection from the server
+			this.fetch(options.params, function() {
 				this.show({
 					silent: options.silent
 				});
@@ -1350,9 +1426,19 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		}
 		else
 			this.inherited(arguments);
-			
+		
 		return this;
 	}
+	
+	
+	/**
+	 * Triggered when the collection is loaded from the server
+	 *
+	 * @name F.CollectionComponent#collection:loaded
+	 * @event
+	 *
+	 * @param {Backbone.Collection}	collection	The collection that was loaded
+	 */
 });
 
 (function() {
@@ -1667,10 +1753,22 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			// Store ID of selected item
 			this.selectedItem = model.id;
 		
-			this.trigger('itemSelected', {
+			this.trigger('list:itemSelected', {
 				listItem: $(evt.currentTarget),
 				model: model
 			});
 		}
+		
+		
+		/**
+		 * Triggered when and item in the list is selected by tapping or clicking
+		 *
+		 * @name F.ListComponent#list:itemSelected
+		 * @event
+		 *
+		 * @param {Object}	evt					Event object
+		 * @param {jQuery}	evt.listItem		The list item that was touched
+		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
+		 */
 	});
 }());

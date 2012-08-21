@@ -341,18 +341,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#getCollection">getCollection</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#destruct">destruct</a></b>()
 								</div>
-								<div class="description">Get the collection associated with this component</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#load">load</a></b>(fetchParams, callback)
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#fetch">fetch</a></b>(fetchParams, callback)
 								</div>
-								<div class="description">Fetch the collection with optional</div>
+								<div class="description">Fetch the collection by fetching it from the server</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#load">load</a></b>(collectionOrData)
+								</div>
+								<div class="description">Load a Backbone.Collection directly or create a collection from an array of data</div>
 							</td>
 						</tr>
 					
@@ -389,11 +398,42 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class F.CollectionComponent.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></b>(collection)
+								</div>
+								<div class="description">Triggered when the collection is loaded from the server</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Events borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a>, <a href="../symbols/F.Component.html#event:component:shown">component:shown</a></dd>
+				</dl>
+				
 			
 
 <!-- ============================== constructor details ==================== -->		
@@ -575,15 +615,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="getCollection"> </a>
+					<a name="destruct"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Backbone.Collection}</span>
-					<b>getCollection</b>()
+					
+					<b>destruct</b>()
 					
 					</div>
 					<div class="description">
-						Get the collection associated with this component
+						
 						
 						
 					</div>
@@ -594,28 +634,21 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Backbone.Collection}</span> The collection associated with this component</dd>
-							
-							</dl>
 						
 						
 						
 
 					<hr />
 				
-					<a name="load"> </a>
+					<a name="fetch"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
-					<b>load</b>(fetchParams, callback)
+					<b>fetch</b>(fetchParams, callback)
 					
 					</div>
 					<div class="description">
-						Fetch the collection with optional
+						Fetch the collection by fetching it from the server
 						
 						
 					</div>
@@ -628,15 +661,58 @@ ul.inheritsList
 							
 								<dt>
 									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>fetchParams</b>
-									
+									<i>Optional</i>
 								</dt>
-								<dd>Optional parameters to pass when fetching</dd>
+								<dd>Parameters to pass when fetching</dd>
 							
 								<dt>
 									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Callback to execute on successful fetch</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="load"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>}</span>
+					<b>load</b>(collectionOrData)
+					
+					</div>
+					<div class="description">
+						Load a Backbone.Collection directly or create a collection from an array of data
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{mixed}</span> <b>collectionOrData</b>
 									
 								</dt>
-								<dd>Optional callback to execute on successful fetch</dd>
+								<dd>Backbone.Collection to load or Array of Objects with data to create the collection from</dd>
 							
 							</dl>
 						
@@ -782,6 +858,47 @@ ul.inheritsList
 			
 <!-- ============================== event details ========================= -->		
 			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:collection:loaded"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>collection:loaded</b>(collection)
+					
+					</div>
+					<div class="description">
+						Triggered when the collection is loaded from the server
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Collection}</span> <b>collection</b>
+									
+								</dt>
+								<dd>The collection that was loaded</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
 			
 			<hr />
 		</div>
@@ -790,7 +907,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Aug 19 2012 01:46:33 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Aug 21 2012 13:26:47 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

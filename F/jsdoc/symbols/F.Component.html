@@ -349,16 +349,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.Component.html#hideComponent">hideComponent</a></b>(componentName)
-								</div>
-								<div class="description">Hide a sub-component of this component by name.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.Component.html#hideComponents">hideComponents</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a></b>(except)
 								</div>
 								<div class="description">Hide all sub-components</div>
 							</td>
@@ -433,9 +424,9 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.Component.html#showComponent">showComponent</a></b>(componentName)
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a></b>(except)
 								</div>
-								<div class="description">Show a sub-component of this component by name.</div>
+								<div class="description">Show all sub-components</div>
 							</td>
 						</tr>
 					
@@ -468,6 +459,46 @@ ul.inheritsList
 				
 			
 <!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class F.Component.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a></b>(evt)
+								</div>
+								<div class="description">Triggered when this component is hidden</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#event:component:shown">component:shown</a></b>(evt)
+								</div>
+								<div class="description">Triggered when this component is shown</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				
+				</dl>
+				
 			
 
 <!-- ============================== constructor details ==================== -->		
@@ -733,15 +764,15 @@ You can give a component an optional custom name as the second argument, then re
 
 					<hr />
 				
-					<a name="hideComponent"> </a>
+					<a name="hideAllSubComponents"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
-					<b>hideComponent</b>(componentName)
+					<b>hideAllSubComponents</b>(except)
 					
 					</div>
 					<div class="description">
-						Hide a sub-component of this component by name. Only useful if options.singly is false
+						Hide all sub-components
 						
 						
 					</div>
@@ -753,44 +784,12 @@ You can give a component an optional custom name as the second argument, then re
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>componentName</b>
-									
+									<span class="light fixedFont">{String[]}</span> <b>except</b>
+									<i>Optional</i>
 								</dt>
-								<dd>Component name</dd>
+								<dd>List of component names not to hide. These components will not be shown if they are already hidden</dd>
 							
 							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> this, chainable</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="hideComponents"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
-					<b>hideComponents</b>()
-					
-					</div>
-					<div class="description">
-						Hide all sub-components
-						
-						
-					</div>
-					
-					
-					
 						
 						
 						
@@ -1036,7 +1035,7 @@ You can give a component an optional custom name as the second argument, then re
 								<dd>Options object with many properties</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Array}</span> <b>props</b>
+									<span class="light fixedFont">{String[]}</span> <b>props</b>
 									
 								</dt>
 								<dd>Properties to copy from options object</dd>
@@ -1102,15 +1101,15 @@ You can give a component an optional custom name as the second argument, then re
 
 					<hr />
 				
-					<a name="showComponent"> </a>
+					<a name="showAllSubComponents"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
-					<b>showComponent</b>(componentName)
+					<b>showAllSubComponents</b>(except)
 					
 					</div>
 					<div class="description">
-						Show a sub-component of this component by name.
+						Show all sub-components
 						
 						
 					</div>
@@ -1122,10 +1121,10 @@ You can give a component an optional custom name as the second argument, then re
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>componentName</b>
-									
+									<span class="light fixedFont">{String[]}</span> <b>except</b>
+									<i>Optional</i>
 								</dt>
-								<dd>Component name</dd>
+								<dd>List of component names not to show. These components will not be hidden if they are already shown</dd>
 							
 							</dl>
 						
@@ -1230,6 +1229,107 @@ You can give a component an optional custom name as the second argument, then re
 			
 <!-- ============================== event details ========================= -->		
 			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:component:hidden"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>component:hidden</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when this component is hidden
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>evt.name</b>
+									
+								</dt>
+								<dd>This component's name</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> <b>evt.component</b>
+									
+								</dt>
+								<dd>This component</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:component:shown"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>component:shown</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when this component is shown
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>evt.name</b>
+									
+								</dt>
+								<dd>This component's name</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> <b>evt.component</b>
+									
+								</dt>
+								<dd>This component</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
 			
 			<hr />
 		</div>
@@ -1238,7 +1338,7 @@ You can give a component an optional custom name as the second argument, then re
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Aug 19 2012 01:46:33 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Aug 21 2012 13:26:47 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

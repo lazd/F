@@ -401,11 +401,42 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>: </dt><dd><a href="../symbols/F.CollectionComponent.html#clearParams">clearParams</a>, <a href="../symbols/F.CollectionComponent.html#getCollection">getCollection</a>, <a href="../symbols/F.CollectionComponent.html#load">load</a>, <a href="../symbols/F.CollectionComponent.html#refresh">refresh</a>, <a href="../symbols/F.CollectionComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideComponent">hideComponent</a>, <a href="../symbols/F.Component.html#hideComponents">hideComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showComponent">showComponent</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>: </dt><dd><a href="../symbols/F.CollectionComponent.html#clearParams">clearParams</a>, <a href="../symbols/F.CollectionComponent.html#destruct">destruct</a>, <a href="../symbols/F.CollectionComponent.html#fetch">fetch</a>, <a href="../symbols/F.CollectionComponent.html#load">load</a>, <a href="../symbols/F.CollectionComponent.html#refresh">refresh</a>, <a href="../symbols/F.CollectionComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class F.ListComponent.">
+					<caption>Event Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Event Attributes</th>
+							<th scope="col">Event Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ListComponent.html#event:list:itemSelected">list:itemSelected</a></b>(evt)
+								</div>
+								<div class="description">Triggered when and item in the list is selected by tapping or clicking</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				<dt>Events borrowed from class <a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a>: </dt><dd><a href="../symbols/F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></dd><dt>Events borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a>, <a href="../symbols/F.Component.html#event:component:shown">component:shown</a></dd>
+				</dl>
+				
 			
 
 <!-- ============================== constructor details ==================== -->		
@@ -801,6 +832,59 @@ ul.inheritsList
 			
 <!-- ============================== event details ========================= -->		
 			
+				<div class="sectionTitle">
+					Event Detail
+				</div>
+				
+					<a name="event:list:itemSelected"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>list:itemSelected</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when and item in the list is selected by tapping or clicking
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{jQuery}</span> <b>evt.listItem</b>
+									
+								</dt>
+								<dd>The list item that was touched</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model representing the item in the list</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
 			
 			<hr />
 		</div>
@@ -809,7 +893,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Aug 19 2012 01:46:33 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Aug 21 2012 13:26:48 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

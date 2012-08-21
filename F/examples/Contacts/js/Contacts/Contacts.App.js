@@ -31,7 +31,7 @@ Contacts.App = new Class({
 		this.addComponent(new this.IndexComponent({
 			el: this.view.$('.index')
 		}), 'index')
-		.on('itemSelected', this.showDetails)	// Handle clicks on list items
+		.on('list:itemSelected', this.showDetails)	// Handle clicks on list items
 		.on('deleteItem', this.deleteContact)	// Handle delete operations
 		.on('newContact', this.newContact);		// Handle clicks to "+" button
 		
@@ -56,11 +56,11 @@ Contacts.App = new Class({
 		}), 'editor')
 		.on('navigateBack', this.navigateBack)	// Handle clicks to "Cancel" button
 		//.on('saved', this.handleSave)			// Show the details view on successful save. This is needed for real APIs
-		.on('saveFailed', this.handleSave); 	// Show the details view on failed save. This is needed for our faked API
+		.on('model:saveFailed', this.handleSave); 	// Show the details view on failed save. This is needed for our faked API
 												// We need this one because we don't have a real API; normally you'd show an error
 	},
 	
-	handleSave: function(model) {
+	handleSave: function(evt) {
 		console.log('[√] Contact save faked');
 		/*
 		Because we're not refreshing from a server, we need to add newly created
@@ -73,17 +73,17 @@ Contacts.App = new Class({
 		// Check if the model is new or old
 		var newModel = true;
 		this.index.list.collection.some(function(existingModel) {
-			if (existingModel == model)
+			if (existingModel == evt.model)
 				newModel = false;
 			return true;
 		});
 
 		// Add it to our collection if it's not there
 		if (newModel)
-			this.index.list.collection.add(model);
+			this.index.list.collection.add(evt.model);
 		
 		// All saves will fail, so we have to manually trigger the change event
-		model.trigger('change'); // This will cause the list to re-render
+		evt.model.trigger('change'); // This will cause the list to re-render
 		
 		/*
 		Note: We want to operate on the same model as loaded by the editor because we don't have a real API.
@@ -97,11 +97,11 @@ Contacts.App = new Class({
 		// Pass the model directly to the details component
 		// This will cause a re-render, and will use the model we loaded in the editor if editor was brought up by router
 		this.details.show({
-			model: this.editor.model
+			model: evt.model
 		});
 		
 		// Update the hash
-		Contacts.router.navigate('details/'+this.editor.model.id, { trigger: false });
+		Contacts.router.navigate('details/'+evt.model.id, { trigger: false });
 		
 		/*
 		//FOR REAL APIS:

@@ -47,7 +47,7 @@
 <span class='line'> 40</span> </span><span class="WHIT">			
 <span class='line'> 41</span> 			</span><span class="COMM">// Make sure the following functions are always called in scope</span><span class="WHIT">
 <span class='line'> 42</span> </span><span class="WHIT">			</span><span class="COMM">// They are used in event handlers, and we want to be able to remove them</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">			</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this._setCurrentComponent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">			</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this._handleSubComponentShown</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 44</span> </span><span class="WHIT">			</span><span class="NAME">this.bind</span><span class="PUNC">(</span><span class="NAME">this.render</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 45</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 46</span> </span><span class="WHIT">		
@@ -188,7 +188,7 @@
 <span class='line'>181</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>182</span> </span><span class="WHIT">			
 <span class='line'>183</span> 			</span><span class="COMM">// Show a sub-component when it shows one of it's sub-components</span><span class="WHIT">
-<span class='line'>184</span> </span><span class="WHIT">			</span><span class="NAME">component.on</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._setCurrentComponent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">			</span><span class="NAME">component.on</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._handleSubComponentShown</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>185</span> </span><span class="WHIT">			
 <span class='line'>186</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>187</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
@@ -204,7 +204,7 @@
 <span class='line'>197</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>198</span> </span><span class="WHIT">		
 <span class='line'>199</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">				</span><span class="NAME">component.off</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._setCurrentComponent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">				</span><span class="NAME">component.off</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._handleSubComponentShown</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>201</span> </span><span class="WHIT">		
 <span class='line'>202</span> 				</span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>203</span> </span><span class="WHIT">				</span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
@@ -217,15 +217,15 @@
 <span class='line'>210</span> 		</span><span class="COMM">/**
 <span class='line'>211</span> 		 * Handles showing/hiding components in singly mode
 <span class='line'>212</span> 		 *
-<span class='line'>213</span> 		 * @param {Function} componentName	Component name
+<span class='line'>213</span> 		 * @param {Function} evt	Event object from component:shown
 <span class='line'>214</span> 		 */</span><span class="WHIT">
-<span class='line'>215</span> </span><span class="WHIT">		</span><span class="NAME">_setCurrentComponent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>216</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newComponent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">		</span><span class="NAME">_handleSubComponentShown</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newComponent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">evt.name</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>217</span> </span><span class="WHIT">		
 <span class='line'>218</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">newComponent</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>219</span> </span><span class="WHIT">				</span><span class="COMM">// hide current component(s) for non-overlays</span><span class="WHIT">
 <span class='line'>220</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.singly</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">newComponent.overlay</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>221</span> </span><span class="WHIT">					</span><span class="NAME">this.hideComponents</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">					</span><span class="NAME">this.hideAllSubComponents</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NAME">evt.name</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>222</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>223</span> </span><span class="WHIT">			
 <span class='line'>224</span> 				</span><span class="COMM">// Show self</span><span class="WHIT">
@@ -255,180 +255,180 @@
 <span class='line'>248</span> </span><span class="WHIT">		
 <span class='line'>249</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">options.silent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>250</span> </span><span class="WHIT">				</span><span class="COMM">// Always trigger event before we show ourself so others can hide/show</span><span class="WHIT">
-<span class='line'>251</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">	
-<span class='line'>252</span> 			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>253</span> </span><span class="WHIT">		
-<span class='line'>254</span> 			</span><span class="COMM">// Always call show on the view so it has a chance to re-render</span><span class="WHIT">
-<span class='line'>255</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.view</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>256</span> </span><span class="WHIT">				</span><span class="NAME">this.view.show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>257</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>258</span> </span><span class="WHIT">		
-<span class='line'>259</span> 			</span><span class="NAME">this.visible</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>260</span> </span><span class="WHIT">	
-<span class='line'>261</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>262</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'component:shown'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">					</span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">					</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="WHIT">		
+<span class='line'>257</span> 			</span><span class="COMM">// Always call show on the view so it has a chance to re-render</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.view</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">				</span><span class="NAME">this.view.show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">		
+<span class='line'>262</span> 			</span><span class="NAME">this.visible</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>263</span> </span><span class="WHIT">	
-<span class='line'>264</span> 		</span><span class="COMM">/**
-<span class='line'>265</span> 		 * Hide this component
-<span class='line'>266</span> 		 *
-<span class='line'>267</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>268</span> 		 */</span><span class="WHIT">
-<span class='line'>269</span> </span><span class="WHIT">		</span><span class="NAME">hide</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>270</span> </span><span class="WHIT">			</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>271</span> </span><span class="WHIT">			
-<span class='line'>272</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.visible</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>273</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>264</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">	
+<span class='line'>267</span> 		</span><span class="COMM">/**
+<span class='line'>268</span> 		 * Hide this component
+<span class='line'>269</span> 		 *
+<span class='line'>270</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'>271</span> 		 */</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">		</span><span class="NAME">hide</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">			</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>274</span> </span><span class="WHIT">			
-<span class='line'>275</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>276</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: hiding self'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>277</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>278</span> </span><span class="WHIT">			
-<span class='line'>279</span> 			</span><span class="COMM">// Hide the view</span><span class="WHIT">
-<span class='line'>280</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.view</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>281</span> </span><span class="WHIT">				</span><span class="NAME">this.view.hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>282</span> </span><span class="WHIT">			
-<span class='line'>283</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">options.silent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>284</span> </span><span class="WHIT">				</span><span class="COMM">// Trigger event after we hide ourself so we're out of the way before the next action</span><span class="WHIT">
-<span class='line'>285</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'component:hidden'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>286</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>287</span> </span><span class="WHIT">		
-<span class='line'>288</span> 			</span><span class="NAME">this.visible</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>289</span> </span><span class="WHIT">	
-<span class='line'>290</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>292</span> </span><span class="WHIT">	
-<span class='line'>293</span> 		</span><span class="COMM">/**
-<span class='line'>294</span> 		 * Check if this component is currently visible
-<span class='line'>295</span> 		 *
-<span class='line'>296</span> 		 * @returns {Boolean} Component is visible
-<span class='line'>297</span> 		 */</span><span class="WHIT">
-<span class='line'>298</span> </span><span class="WHIT">		</span><span class="NAME">isVisible</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>299</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.visible</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>300</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>301</span> </span><span class="WHIT">	
-<span class='line'>302</span> 		</span><span class="COMM">/**
-<span class='line'>303</span> 		 * Hide all sub-components
-<span class='line'>304</span> 		 *
-<span class='line'>305</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>306</span> 		 */</span><span class="WHIT">
-<span class='line'>307</span> </span><span class="WHIT">		</span><span class="NAME">hideComponents</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>308</span> </span><span class="WHIT">			</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">componentName</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>309</span> </span><span class="WHIT">				</span><span class="NAME">this.hideComponent</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>310</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>311</span> </span><span class="WHIT">		
-<span class='line'>312</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>313</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>314</span> </span><span class="WHIT">		
-<span class='line'>315</span> 		</span><span class="COMM">/**
-<span class='line'>316</span> 		 * Hide a sub-component of this component by name. Only useful if options.singly is false
-<span class='line'>317</span> 		 *
-<span class='line'>318</span> 		 * @param {Function} componentName	Component name
-<span class='line'>319</span> 		 *
-<span class='line'>320</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>321</span> 		 */</span><span class="WHIT">
-<span class='line'>322</span> </span><span class="WHIT">		</span><span class="NAME">hideComponent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>323</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>324</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">component</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>325</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">component.isVisible</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>326</span> </span><span class="WHIT">					</span><span class="COMM">// hide the component's element</span><span class="WHIT">
-<span class='line'>327</span> </span><span class="WHIT">					</span><span class="NAME">component.hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>328</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>329</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>330</span> </span><span class="WHIT">			</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>331</span> </span><span class="WHIT">				</span><span class="NAME">console.warn</span><span class="PUNC">(</span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="STRN">': cannot hide component %s, component not found'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>332</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>333</span> </span><span class="WHIT">		
-<span class='line'>334</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>335</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>336</span> </span><span class="WHIT">	
-<span class='line'>337</span> 		</span><span class="COMM">/**
-<span class='line'>338</span> 		 * Show a sub-component of this component by name.
-<span class='line'>339</span> 		 *
-<span class='line'>340</span> 		 * @param {Function} componentName	Component name
-<span class='line'>341</span> 		 *
-<span class='line'>342</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>343</span> 		 */</span><span class="WHIT">
-<span class='line'>344</span> </span><span class="WHIT">		</span><span class="NAME">showComponent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>345</span> </span><span class="WHIT">			</span><span class="COMM">// Show the sub section, if not already showing</span><span class="WHIT">
-<span class='line'>346</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newComponent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>347</span> </span><span class="WHIT">		
-<span class='line'>348</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">newComponent</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>349</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">newComponent.isVisible</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>350</span> </span><span class="WHIT">					</span><span class="COMM">// Hide the old component and show ourselves</span><span class="WHIT">
-<span class='line'>351</span> </span><span class="WHIT">					</span><span class="NAME">this._setCurrentComponent</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>352</span> </span><span class="WHIT">			
-<span class='line'>353</span> 					</span><span class="COMM">// Show new component</span><span class="WHIT">
-<span class='line'>354</span> </span><span class="WHIT">					</span><span class="NAME">newComponent.show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>355</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>356</span> </span><span class="WHIT">				</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>357</span> </span><span class="WHIT">					</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="STRN">': not showing component %s, already visible'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>358</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>359</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>360</span> </span><span class="WHIT">			</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>361</span> </span><span class="WHIT">				</span><span class="NAME">console.warn</span><span class="PUNC">(</span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="STRN">': Cannot show component "'</span><span class="PUNC">+</span><span class="NAME">componentName</span><span class="PUNC">+</span><span class="STRN">'", not found'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>362</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>275</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.visible</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">			
+<span class='line'>278</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: hiding self'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">			
+<span class='line'>282</span> 			</span><span class="COMM">// Hide the view</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.view</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">				</span><span class="NAME">this.view.hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">			
+<span class='line'>286</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">options.silent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">				</span><span class="COMM">// Trigger event after we hide ourself so we're out of the way before the next action</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">				</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'component:hidden'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">					</span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">					</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">		
+<span class='line'>294</span> 			</span><span class="NAME">this.visible</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">	
+<span class='line'>296</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">	
+<span class='line'>299</span> 		</span><span class="COMM">/**
+<span class='line'>300</span> 		 * Check if this component is currently visible
+<span class='line'>301</span> 		 *
+<span class='line'>302</span> 		 * @returns {Boolean} Component is visible
+<span class='line'>303</span> 		 */</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">		</span><span class="NAME">isVisible</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.visible</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>307</span> 
+<span class='line'>308</span> </span><span class="WHIT">		</span><span class="COMM">/**
+<span class='line'>309</span> 		 * Show all sub-components
+<span class='line'>310</span> 		 *
+<span class='line'>311</span> 		 * @param {String[]} [except]	List of component names not to show. These components will not be hidden if they are already shown
+<span class='line'>312</span> 		 *
+<span class='line'>313</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'>314</span> 		 */</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">		</span><span class="NAME">showAllSubComponents</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">except</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">			</span><span class="NAME">except</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">_.isArray</span><span class="PUNC">(</span><span class="NAME">except</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">except</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">			</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">componentName</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">~</span><span class="NAME">except.indexOf</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">					</span><span class="KEYW">continue</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">				</span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>322</span> 
+<span class='line'>323</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">		
+<span class='line'>326</span> 		</span><span class="COMM">/**
+<span class='line'>327</span> 		 * Hide all sub-components
+<span class='line'>328</span> 		 *
+<span class='line'>329</span> 		 * @param {String[]} [except]	List of component names not to hide. These components will not be shown if they are already hidden
+<span class='line'>330</span> 		 *
+<span class='line'>331</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'>332</span> 		 */</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">		</span><span class="NAME">hideAllSubComponents</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">except</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">			</span><span class="NAME">except</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">_.isArray</span><span class="PUNC">(</span><span class="NAME">except</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">except</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">			</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">componentName</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">this.components</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">~</span><span class="NAME">except.indexOf</span><span class="PUNC">(</span><span class="NAME">componentName</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">					</span><span class="KEYW">continue</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">				</span><span class="NAME">this.components</span><span class="PUNC">[</span><span class="NAME">componentName</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">		
+<span class='line'>341</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">		
+<span class='line'>344</span> 		</span><span class="COMM">/**
+<span class='line'>345</span> 		 * Set a custom name for this component. Only useful before passing to addComponent
+<span class='line'>346</span> 		 *
+<span class='line'>347</span> 		 * @param {Function} componentName	Component name
+<span class='line'>348</span> 		 *
+<span class='line'>349</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'>350</span> 		 */</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">		</span><span class="NAME">setName</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">customName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'>353</span> 			 * Get this component's name
+<span class='line'>354</span> 			 *
+<span class='line'>355</span> 			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
+<span class='line'>356</span> 			 */</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">			</span><span class="NAME">this.toString</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">customName</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>359</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">			
+<span class='line'>361</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>363</span> </span><span class="WHIT">		
-<span class='line'>364</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>365</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>366</span> </span><span class="WHIT">		
-<span class='line'>367</span> 		</span><span class="COMM">/**
-<span class='line'>368</span> 		 * Set a custom name for this component. Only useful before passing to addComponent
+<span class='line'>364</span> 		</span><span class="COMM">/**
+<span class='line'>365</span> 		 * Set properties of this instance from an options object, then remove the properties from the options object
+<span class='line'>366</span> 		 *
+<span class='line'>367</span> 		 * @param {Object} options		Options object with many properties
+<span class='line'>368</span> 		 * @param {String[]} props		Properties to copy from options object
 <span class='line'>369</span> 		 *
-<span class='line'>370</span> 		 * @param {Function} componentName	Component name
-<span class='line'>371</span> 		 *
-<span class='line'>372</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>373</span> 		 */</span><span class="WHIT">
-<span class='line'>374</span> </span><span class="WHIT">		</span><span class="NAME">setName</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">customName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>375</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'>376</span> 			 * Get this component's name
-<span class='line'>377</span> 			 *
-<span class='line'>378</span> 			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
-<span class='line'>379</span> 			 */</span><span class="WHIT">
-<span class='line'>380</span> </span><span class="WHIT">			</span><span class="NAME">this.toString</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>381</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">customName</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>382</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>383</span> </span><span class="WHIT">			
-<span class='line'>384</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>385</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>386</span> </span><span class="WHIT">		
-<span class='line'>387</span> 		</span><span class="COMM">/**
-<span class='line'>388</span> 		 * Set properties of this instance from an options object, then remove the properties from the options object
-<span class='line'>389</span> 		 *
-<span class='line'>390</span> 		 * @param {Object} options	Options object with many properties
-<span class='line'>391</span> 		 * @param {Array} props		Properties to copy from options object
-<span class='line'>392</span> 		 *
-<span class='line'>393</span> 		 * @returns {F.Component}	this, chainable
-<span class='line'>394</span> 		 */</span><span class="WHIT">
-<span class='line'>395</span> </span><span class="WHIT">		</span><span class="NAME">setPropsFromOptions</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">props</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>396</span> </span><span class="WHIT">			</span><span class="NAME">_.each</span><span class="PUNC">(</span><span class="NAME">props</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">prop</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>397</span> </span><span class="WHIT">				</span><span class="COMM">// Add the property to this instance, or use existing property if it's already there</span><span class="WHIT">
-<span class='line'>398</span> </span><span class="WHIT">				</span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>399</span> </span><span class="WHIT">				</span><span class="COMM">// Delete the property from the options object</span><span class="WHIT">
-<span class='line'>400</span> </span><span class="WHIT">				</span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>401</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">.</span><span class="NAME">bind</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>402</span> </span><span class="WHIT">			
-<span class='line'>403</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>404</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>405</span> </span><span class="WHIT">		
-<span class='line'>406</span> 		</span><span class="COMM">/**
-<span class='line'>407</span> 		 * Merges options in the following order:
-<span class='line'>408</span> 		 *   Instance Options
-<span class='line'>409</span> 		 *   Class options
-<span class='line'>410</span> 		 *   Class defaults
-<span class='line'>411</span> 		 *
-<span class='line'>412</span> 		 * @param {Object} defaults	Default options object
-<span class='line'>413</span> 		 * @param {Object} options	Instance options object (argument to constructor)
-<span class='line'>414</span> 		 *
-<span class='line'>415</span> 		 * @returns {Object}	Merged options object
-<span class='line'>416</span> 		 */</span><span class="WHIT">
-<span class='line'>417</span> </span><span class="WHIT">		</span><span class="NAME">mergeOptions</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">defaults</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>418</span> </span><span class="WHIT">			</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'>419</span> </span><span class="WHIT">				</span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> 
-<span class='line'>420</span> 				</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">defaults</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>421</span> </span><span class="WHIT">			</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>422</span> </span><span class="WHIT">			
-<span class='line'>423</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>424</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>370</span> 		 * @returns {F.Component}	this, chainable
+<span class='line'>371</span> 		 */</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="WHIT">		</span><span class="NAME">setPropsFromOptions</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">props</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="WHIT">			</span><span class="NAME">_.each</span><span class="PUNC">(</span><span class="NAME">props</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">prop</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">				</span><span class="COMM">// Add the property to this instance, or use existing property if it's already there</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">				</span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">				</span><span class="COMM">// Delete the property from the options object</span><span class="WHIT">
+<span class='line'>377</span> </span><span class="WHIT">				</span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">[</span><span class="NAME">prop</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">.</span><span class="NAME">bind</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">			
+<span class='line'>380</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">		
+<span class='line'>383</span> 		</span><span class="COMM">/**
+<span class='line'>384</span> 		 * Merges options in the following order:
+<span class='line'>385</span> 		 *   Instance Options
+<span class='line'>386</span> 		 *   Class options
+<span class='line'>387</span> 		 *   Class defaults
+<span class='line'>388</span> 		 *
+<span class='line'>389</span> 		 * @param {Object} defaults	Default options object
+<span class='line'>390</span> 		 * @param {Object} options	Instance options object (argument to constructor)
+<span class='line'>391</span> 		 *
+<span class='line'>392</span> 		 * @returns {Object}	Merged options object
+<span class='line'>393</span> 		 */</span><span class="WHIT">
+<span class='line'>394</span> </span><span class="WHIT">		</span><span class="NAME">mergeOptions</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">defaults</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">			</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">				</span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>397</span> 				</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">defaults</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">			</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">			
+<span class='line'>400</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">		
+<span class='line'>403</span> 		
+<span class='line'>404</span> 		</span><span class="COMM">/**
+<span class='line'>405</span> 		 * Triggered when this component is shown
+<span class='line'>406</span> 		 *
+<span class='line'>407</span> 		 * @name F.Component#component:shown
+<span class='line'>408</span> 		 * @event
+<span class='line'>409</span> 		 *
+<span class='line'>410</span> 		 * @param {Object}	evt					Event object
+<span class='line'>411</span> 		 * @param {String}	evt.name			This component's name
+<span class='line'>412</span> 		 * @param {F.Component}	evt.component	This component
+<span class='line'>413</span> 		 */</span><span class="WHIT">
+<span class='line'>414</span> 
+<span class='line'>415</span> </span><span class="WHIT">		</span><span class="COMM">/**
+<span class='line'>416</span> 		 * Triggered when this component is hidden
+<span class='line'>417</span> 		 *
+<span class='line'>418</span> 		 * @name F.Component#component:hidden
+<span class='line'>419</span> 		 * @event
+<span class='line'>420</span> 		 *
+<span class='line'>421</span> 		 * @param {Object}	evt					Event object
+<span class='line'>422</span> 		 * @param {String}	evt.name			This component's name
+<span class='line'>423</span> 		 * @param {F.Component}	evt.component	This component
+<span class='line'>424</span> 		 */</span><span class="WHIT">
 <span class='line'>425</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>426</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>427</span> </span></pre></body></html>

@@ -216,11 +216,23 @@
 <span class='line'>209</span> 			</span><span class="COMM">// Store ID of selected item</span><span class="WHIT">
 <span class='line'>210</span> </span><span class="WHIT">			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.id</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>211</span> </span><span class="WHIT">		
-<span class='line'>212</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'list:itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>213</span> </span><span class="WHIT">				</span><span class="NAME">listItem</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>214</span> </span><span class="WHIT">				</span><span class="NAME">model</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT">
 <span class='line'>215</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>216</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>217</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>218</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>219</span> </span></pre></body></html>
+<span class='line'>217</span> </span><span class="WHIT">		
+<span class='line'>218</span> 		
+<span class='line'>219</span> 		</span><span class="COMM">/**
+<span class='line'>220</span> 		 * Triggered when and item in the list is selected by tapping or clicking
+<span class='line'>221</span> 		 *
+<span class='line'>222</span> 		 * @name F.ListComponent#list:itemSelected
+<span class='line'>223</span> 		 * @event
+<span class='line'>224</span> 		 *
+<span class='line'>225</span> 		 * @param {Object}	evt					Event object
+<span class='line'>226</span> 		 * @param {jQuery}	evt.listItem		The list item that was touched
+<span class='line'>227</span> 		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
+<span class='line'>228</span> 		 */</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>231</span> </span></pre></body></html>
