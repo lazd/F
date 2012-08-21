@@ -46,7 +46,7 @@ Contacts.Index = new Class({
 		});
 		
 		// Bubble specific events of our list upward to the app
-		this.bubble('list', 'itemSelected');
+		this.bubble('list', 'list:itemSelected');
 		this.bubble('list', 'deleteItem');
 	},
 	
@@ -119,7 +119,7 @@ Contacts.Index = new Class({
 		this.view.$('.clearButton').show();
 		
 		// Send the query to the server
-		this.list.load({
+		this.list.fetch({
 			query: query
 		});
 	},
@@ -132,7 +132,7 @@ Contacts.Index = new Class({
 		Contacts.router.navigate('', { trigger: true });
 			
 		// Clears fetch parameters before fetching
-		this.list.load();
+		this.list.fetch();
 		
 		// Remove the clear button
 		this.view.$('.clearButton').hide();	
