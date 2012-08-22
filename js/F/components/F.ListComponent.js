@@ -10,7 +10,7 @@
 		initialize: function(options) {
 			options = options || {};
 
-			// Clumsy backbone way of calling parent class' constructor
+			// Clumsy standard way of calling parent class' initialize method
 			F.View.prototype.initialize.apply(this, arguments);
 
 			this.collection = options.collection;
@@ -20,7 +20,7 @@
 			// Views array for subviews
 			this.subViews = [];
 			
-			// Clumsy backbone way of permabinding
+			// Bind addSuView permanently
 			this.addSubView = this.addSubView.bind(this);
 		},
 
