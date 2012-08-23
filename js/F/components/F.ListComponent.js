@@ -73,7 +73,8 @@
 		removeSubViews: function() {
 			if (this.subViews.length) {
 				_.each(this.subViews, function(view) {
-					view.remove();
+					if (view)
+						view.remove();
 				});
 				
 				this.subViews = [];
