@@ -1,4 +1,4 @@
-/*! F - v0.1.0 - 2012-08-21
+/*! F - v0.1.0 - 2012-08-22
 * http://lazd.github.com/F/
 * Copyright (c) 2012 Lawrence Davis; Licensed BSD */
 
@@ -1554,7 +1554,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		initialize: function(options) {
 			options = options || {};
 
-			// Clumsy backbone way of calling parent class' constructor
+			// Clumsy standard way of calling parent class' initialize method
 			F.View.prototype.initialize.apply(this, arguments);
 
 			this.collection = options.collection;
@@ -1564,7 +1564,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			// Views array for subviews
 			this.subViews = [];
 			
-			// Clumsy backbone way of permabinding
+			// Bind addSuView permanently
 			this.addSubView = this.addSubView.bind(this);
 		},
 
@@ -1617,7 +1617,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		removeSubViews: function() {
 			if (this.subViews.length) {
 				_.each(this.subViews, function(view) {
-					view.remove();
+					if (view)
+						view.remove();
 				});
 				
 				this.subViews = [];
