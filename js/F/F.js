@@ -1,8 +1,11 @@
 /** 
  * The main F namespace.
  *	
- * @property {Object} options	Options for all F components. Set F.options.debug=true to see debug messages.
- *@namespace 
+ * @namespace
+ *
+ * @property {Object} options						Options for all F components.
+ * @param {Boolean} options.debug					If true, show debug messages for all components.
+ * @param {Boolean} options.precompiledTemplates	Set to false if you need Handlebars.template() called on your templates
 */
 var F = F || {};
 
@@ -14,6 +17,6 @@ catch (err) {
 }
 
 F.options = {
-	debug: false,				// True to display debug messages
-	precompiledTemplates: true	// False if you need Handlebars.template() called on your templates
+	debug: false,
+	precompiledTemplates: true
 };
