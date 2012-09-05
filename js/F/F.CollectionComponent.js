@@ -1,6 +1,9 @@
 F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
+	options: {
+		defaultParams: {}
+	},
 	
 	/**
 	 * A component that can load and render a collection
@@ -9,18 +12,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @extends F.Component
 	 *
 	 * @param {Object} options							Options for this component
-	 * @param {Backbone.Collection} options.Collection	The collection class this component should operate on. Sets this.Collection
-	 * @param {Object} [options.defaultParams ]			Default parameters to use when fetching this collection
+	 * @param {Object} [options.defaultParams]			Default parameters to use when fetching this collection
 	 *
 	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
 	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
 	 */
 	construct: function(options) {
-		// Store the collection class
-		this.setPropsFromOptions(options, [
-			'Collection'
-		]);
-		
 		// Bind for use as listeners
 		this.bind(this.addModel);
 		this.bind(this.removeModel);
@@ -29,10 +26,10 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this._useCollection(new this.Collection());
 		
 		// Default parameters are the prototype params + options params
-		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
+		this.options.defaultParams = _.extend({}, this.options.defaultParams, options.defaultParams);
 		
 		// Parameters to send with the request: just copy the default params
-		this.params = _.extend({}, this.defaultParams);
+		this.params = _.extend({}, this.options.defaultParams);
 	
 		// Store if this collection has ever been loaded
 		this.collectionLoaded = false;
@@ -111,9 +108,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	fetch: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
-			this.params = _.extend({}, this.defaultParams, fetchParams);
+			this.params = _.extend({}, this.options.defaultParams, fetchParams);
 		else // Overwrite old params with defaults and send a request with only default params
-			this.params = _.extend({}, this.defaultParams);
+			this.params = _.extend({}, this.options.defaultParams);
 		
 		// Fetch collection contents
 		this.collection.fetch({
