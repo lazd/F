@@ -6,6 +6,13 @@
 	F.Component = new Class(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
+		
+		options: {
+			singly: false, // Show only one subcomponent at a time
+			visible: false, // Visible immediately or not
+			debug: false
+		},
+		
 		/**
 		 * Generic component class
 		 *
@@ -15,22 +22,17 @@
 		 * @param {Object} options	Component options
 		 * @param {Boolean} options.singly		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
 		 * @param {Boolean} options.visible		If true, this component will be visible immediately.
+		 * @param {Boolean} options.debug		If true, show debug messages for this component.
 		 *
-		 * @property {Object} options	Default options for this component. These will be merged with options passed to the constructor.
+		 * @property {Object} options			Default options for this component. These will be merged with options passed to the constructor.
 		 */
 		construct: function(options) {
-			// Looks funny, but it modifies options with defaults and makes them available to other constructors
-			this.mergeOptions({
-				singly: false, // Show only one subcomponent at a time
-				visible: false // Visible immediately or not
-			}, options);
+			// Merge options up the prototype chain
+			this.mergeOptions();
 			
-			// Store options into object
-			// TBD: figure out what to do with these props if set on the object already
-			this.setPropsFromOptions(options, [
-				'singly', 
-				'visible'
-			]);
+			// Add defaults to options arg and make available to other constructors
+			// Modify this.options to reflect any modifications the options arg may have made
+			this.applyOptions(options);
 			
 			// Sub components
 			this.components = {};
@@ -166,7 +168,7 @@
 			// Hide view by default
 			if (component.view) {
 				if (component.view.el) {
-					if (component.visible === true) {
+					if (component.options.visible === true) {
 						// Call show method so view is rendered
 						component.show({ silent: true });
 					}
@@ -217,7 +219,7 @@
 		
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
-				if (this.singly && !newComponent.overlay) {
+				if (this.options.singly && !newComponent.overlay) {
 					this.hideAllSubComponents([evt.name]);
 				}
 			
@@ -237,11 +239,10 @@
 			options = options || {};
 			
 			// Debug output
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				// Don't show if already shown
-				if (this.visible) {		
+				if (this.isVisible())
 					console.log('%s: not showing self; already visible', this.toString());
-				}
 				else
 					console.log('%s: showing self', this.toString());
 			}
@@ -259,7 +260,7 @@
 				this.view.show();
 			}
 		
-			this.visible = true;
+			this.options.visible = true;
 	
 			return this;
 		},
@@ -272,10 +273,10 @@
 		hide: function(options) {
 			options = options || {};
 			
-			if (!this.visible)
+			if (!this.isVisible())
 				return false;
 			
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: hiding self', this.toString());
 			}
 			
@@ -291,18 +292,27 @@
 				});
 			}
 		
-			this.visible = false;
+			this.options.visible = false;
 	
 			return this;
 		},
 	
+		/**
+		 * Check if this component, or F as a whole, is in debug mode and should output debug messages
+		 *
+		 * @returns {Boolean} Component or F is in debug mode
+		 */
+		inDebugMode: function() {
+			return this.options.debug || F.options.debug;
+		},
+		
 		/**
 		 * Check if this component is currently visible
 		 *
 		 * @returns {Boolean} Component is visible
 		 */
 		isVisible: function() {
-			return this.visible;
+			return this.options.visible;
 		},
 
 		/**
@@ -342,7 +352,7 @@
 		},
 		
 		/**
-		 * Set a custom name for this component. Only useful before passing to addComponent
+		 * Set a custom name for this component. Only useful before passing to {@link F.Component.addComponent}
 		 *
 		 * @param {Function} componentName	Component name
 		 *
@@ -352,7 +362,7 @@
 			/**
 			 * Get this component's name
 			 *
-			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
+			 * @returns {String}	Component's name; either a custom name given when added with {@link F.Component.addComponent}, or toString method or string from prototype
 			 */
 			this.toString = function() {
 				return customName;
@@ -381,25 +391,50 @@
 		},
 		
 		/**
-		 * Merges options in the following order:
-		 *   Instance Options
-		 *   Class options
-		 *   Class defaults
+		 * Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
+		 */
+		mergeOptions: function() {
+			// Create a set of all options in the correct order
+			var optionSets = [];
+			var proto = this.constructor.prototype;
+			while (proto) {
+				if (proto.hasOwnProperty('options')) {
+					optionSets.unshift(proto.options);
+				}
+				proto = proto.superClass;
+			}
+			
+			// All options should end up merged into a new object
+			// That is, move our reference out of the prototype before we modify it
+			optionSets.unshift({});
+			
+			// Perform the merge and store the new options object
+			this.options = _.extend.apply(_, optionSets);
+		},
+		
+		/**
+		 * Applies passed options to instance options and applies instance options to passed options.
+		 * Individual passed options will not be applied to instance options unless they are defined in default options for the class or parent class.
+		 * <br>Note: The options merge is one level deep.
+		 * <br>Note: This function assumes that <code>this.options</code> does not refer to an object in the prototype.
 		 *
-		 * @param {Object} defaults	Default options object
-		 * @param {Object} options	Instance options object (argument to constructor)
+		 * @param {Object} options	Instance options object (usually argument to constructor)
 		 *
 		 * @returns {Object}	Merged options object
 		 */
-		mergeOptions: function(defaults, options) {
-			_.extend(
-				options, 
-				_.extend({}, defaults || {}, this.options || {}, options)
-			);
+		applyOptions: function(options) {
+			// Assume we already have moved our reference to this.options out of the prototype
+			// Apply options from passed object to this.options
+			for (var option in options) {
+				if (this.options.hasOwnProperty(option))
+					this.options[option] = options[option];
+			}
 			
+			// Apply any missing defaults back to passed options object
+			_.extend(options, this.options);
+
 			return options;
 		}
-		
 		
 		/**
 		 * Triggered when this component is shown
