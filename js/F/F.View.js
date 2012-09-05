@@ -101,7 +101,7 @@
 			this.$el.remove();
 		
 			// Remove change listener
-			if (this.model)
+			if (this.model && this.model.off)
 				this.model.off('change', this.render);
 		},
 		
@@ -148,13 +148,18 @@
 			return this;
 		},
 
+		inDebugMode: function() {
+			// Check if the component or F itself is in debug mode
+			return F.options.debug || (this.component && this.component.options.debug); 
+		},
+
 		/**
 		 * Render the view
 		 *
 		 * @returns {F.View}	this, chainable
 		 */
 		render: function() {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
 			}
 			
