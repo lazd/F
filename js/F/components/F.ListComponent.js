@@ -82,7 +82,7 @@
 		},
 
 		render: function() {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
 			
@@ -122,12 +122,7 @@
 		 * @constructs
 		 * @extends F.CollectionComponent
 		 *
-		 * @param {Object} options							Options for this component and its view. Options not listed below will be passed to the view.
-		 * @param {Backbone.Collection} options.Collection	The collection class this list will be rendered from
-		 * @param {Backbone.View} options.ListView			The view class this list will be rendered with
-		 * @param {Template} [options.ListTemplate]			The template this list will be rendered with. Renders to a UL tag by default
-		 * @param {Backbone.View} options.ItemView			The view that individual items will be rendered with
-		 * @param {Template} options.ItemTemplate			The template that individual items will be rendered with
+		 * @param {Object} options						Options for this component and its view. Options not listed below will be passed to the view.
 		 *
 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
 		 * @property {Backbone.View} ListView			The view class this list will be rendered with
@@ -136,15 +131,6 @@
 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {
-			// Set object properties from options object, removing them from the object thereafter
-			this.setPropsFromOptions(options, [
-				'Collection',
-				'ListTemplate',
-				'ListView',
-				'ItemTemplate',
-				'ItemView'
-			]);
-			
 			this.view = new this.ListView(_.extend({
 				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
 				collection: this.collection,
