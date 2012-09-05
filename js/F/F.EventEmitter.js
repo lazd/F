@@ -1,13 +1,18 @@
 /**
  * Provides observer pattern for basic eventing
  *
- * @class
+ * @class	
+ * @extends BaseClass
  */
 F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
+	/** @constructs */
 	construct: function() {
 		this._events = {};
 	},
 	
+	/**
+	 * Destroy references to events and listeners.
+	 */
 	destruct: function() {
 		delete this._events;
 	},
