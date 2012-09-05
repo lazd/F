@@ -130,12 +130,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 */
 	save: function(data, callback) {
 		if (this.model) {
-			if (F.options.debug)
+			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
 			this.model.save(data || {}, {
 				success: function() {
-					if (F.options.debug)
+					if (this.inDebugMode())
 						console.log('%s: Save successful', this.toString());
 					
 					if (typeof callback === 'function')
@@ -172,13 +172,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		options = options || {};
 		
 		if (options.id) {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: fetching item with ID %s', this.toString(), options.id);
 			}
 			
 			// Load the model by itemId, then show
 			this.fetch(options.id, function(model) {
-				if (F.options.debug) {
+				if (this.inDebugMode()) {
 					console.log('%s: fetch complete!', this.toString());
 				}
 				this.show({
@@ -187,7 +187,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			});
 		}
 		else if (options.model) {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: showing with new model', this.toString(), options.model);
 			}
 			
