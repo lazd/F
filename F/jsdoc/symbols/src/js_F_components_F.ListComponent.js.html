@@ -89,7 +89,7 @@
 <span class='line'> 82</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 83</span> 
 <span class='line'> 84</span> </span><span class="WHIT">		</span><span class="NAME">render</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 85</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">F.options.debug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.inDebugMode</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 86</span> </span><span class="WHIT">				</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'%s: rendering list view...'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.component</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this.component.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'List view'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 87</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 88</span> </span><span class="WHIT">			
@@ -129,111 +129,97 @@
 <span class='line'>122</span> 		 * @constructs
 <span class='line'>123</span> 		 * @extends F.CollectionComponent
 <span class='line'>124</span> 		 *
-<span class='line'>125</span> 		 * @param {Object} options							Options for this component and its view. Options not listed below will be passed to the view.
-<span class='line'>126</span> 		 * @param {Backbone.Collection} options.Collection	The collection class this list will be rendered from
-<span class='line'>127</span> 		 * @param {Backbone.View} options.ListView			The view class this list will be rendered with
-<span class='line'>128</span> 		 * @param {Template} [options.ListTemplate]			The template this list will be rendered with. Renders to a UL tag by default
-<span class='line'>129</span> 		 * @param {Backbone.View} options.ItemView			The view that individual items will be rendered with
-<span class='line'>130</span> 		 * @param {Template} options.ItemTemplate			The template that individual items will be rendered with
-<span class='line'>131</span> 		 *
-<span class='line'>132</span> 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
-<span class='line'>133</span> 		 * @property {Backbone.View} ListView			The view class this list will be rendered with
-<span class='line'>134</span> 		 * @property {Template} ListTemplate			The template this list will be rendered with. Renders to a UL tag by default
-<span class='line'>135</span> 		 * @property {Backbone.View} ItemView			The view that individual items will be rendered with
-<span class='line'>136</span> 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
-<span class='line'>137</span> 		 */</span><span class="WHIT">
-<span class='line'>138</span> </span><span class="WHIT">		</span><span class="NAME">construct</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>139</span> </span><span class="WHIT">			</span><span class="COMM">// Set object properties from options object, removing them from the object thereafter</span><span class="WHIT">
-<span class='line'>140</span> </span><span class="WHIT">			</span><span class="NAME">this.setPropsFromOptions</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">				</span><span class="STRN">'Collection'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">				</span><span class="STRN">'ListTemplate'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">				</span><span class="STRN">'ListView'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">				</span><span class="STRN">'ItemTemplate'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">				</span><span class="STRN">'ItemView'</span><span class="WHIT">
-<span class='line'>146</span> </span><span class="WHIT">			</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>147</span> </span><span class="WHIT">			
-<span class='line'>148</span> 			</span><span class="NAME">this.view</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.ListView</span><span class="PUNC">(</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">				</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// pass this as component so ItemView can trigger handleSelect if it likes</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">				</span><span class="NAME">collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">				</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemView</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">				</span><span class="NAME">ItemTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemTemplate</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">				</span><span class="NAME">events</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">					</span><span class="STRN">'click li'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'handleSelect'</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">			
-<span class='line'>158</span> 			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>159</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>160</span> </span><span class="WHIT">	
-<span class='line'>161</span> 		</span><span class="NAME">Collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Backbone.Collection</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Collection component expects to have prototype.Collection or options.Collection</span><span class="WHIT">
-<span class='line'>162</span> </span><span class="WHIT">	
-<span class='line'>163</span> 		</span><span class="NAME">ListTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>164</span> </span><span class="WHIT">		</span><span class="NAME">ListView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">ListView</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">	
-<span class='line'>166</span> 		</span><span class="NAME">ItemTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">		</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">ItemView</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">	
-<span class='line'>169</span> 		</span><span class="NAME">addModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">			</span><span class="COMM">// Add a subview for this model</span><span class="WHIT">
-<span class='line'>171</span> </span><span class="WHIT">			</span><span class="NAME">this.view.addSubView</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>172</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>173</span> </span><span class="WHIT">		
-<span class='line'>174</span> 		</span><span class="NAME">removeModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>175</span> </span><span class="WHIT">			</span><span class="COMM">// Add a subview for this model</span><span class="WHIT">
-<span class='line'>176</span> </span><span class="WHIT">			</span><span class="NAME">this.view.removeSubView</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			
-<span class='line'>177</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>178</span> </span><span class="WHIT">	
-<span class='line'>179</span> 		</span><span class="COMM">/**
-<span class='line'>180</span> 		 * Get the model associated with a list item
-<span class='line'>181</span> 		 *
-<span class='line'>182</span> 		 * @param {Node}	Node or jQuery Object to get model from
-<span class='line'>183</span> 		 *
-<span class='line'>184</span> 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
-<span class='line'>185</span> 		 */</span><span class="WHIT">
-<span class='line'>186</span> </span><span class="WHIT">		</span><span class="NAME">getModelFromLi</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>187</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.view.subViews</span><span class="PUNC">[</span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">data</span><span class="PUNC">(</span><span class="STRN">'viewIndex'</span><span class="PUNC">)</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">model</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>188</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">	
-<span class='line'>190</span> 		</span><span class="COMM">/**
-<span class='line'>191</span> 		 * Get the view associated with a list item
-<span class='line'>192</span> 		 *
-<span class='line'>193</span> 		 * @param {Node}	Node or jQuery Object to get model from
-<span class='line'>194</span> 		 *
-<span class='line'>195</span> 		 * @returns {Backbone.View}	The view associated with the passed DOM element
-<span class='line'>196</span> 		 */</span><span class="WHIT">
-<span class='line'>197</span> </span><span class="WHIT">		</span><span class="NAME">getViewFromLi</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>198</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.view.subViews</span><span class="PUNC">[</span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">data</span><span class="PUNC">(</span><span class="STRN">'viewIndex'</span><span class="PUNC">)</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>199</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">		
-<span class='line'>201</span> 		</span><span class="COMM">/**
-<span class='line'>202</span> 		 * Handles item selection events
-<span class='line'>203</span> 		 *
-<span class='line'>204</span> 		 * @param {Event} evt	The jQuery event object
-<span class='line'>205</span> 		 */</span><span class="WHIT">
-<span class='line'>206</span> </span><span class="WHIT">		</span><span class="NAME">handleSelect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>207</span> </span><span class="WHIT">			</span><span class="COMM">// Get model from DOM el's data</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getModelFromLi</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>209</span> </span><span class="WHIT">			
-<span class='line'>210</span> 			</span><span class="COMM">// Store ID of selected item</span><span class="WHIT">
-<span class='line'>211</span> </span><span class="WHIT">			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>212</span> </span><span class="WHIT">		
-<span class='line'>213</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'list:itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>214</span> </span><span class="WHIT">				</span><span class="NAME">listItem</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>215</span> </span><span class="WHIT">				</span><span class="NAME">model</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT">
-<span class='line'>216</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>217</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>218</span> </span><span class="WHIT">		
-<span class='line'>219</span> 		
-<span class='line'>220</span> 		</span><span class="COMM">/**
-<span class='line'>221</span> 		 * Triggered when and item in the list is selected by tapping or clicking
-<span class='line'>222</span> 		 *
-<span class='line'>223</span> 		 * @name F.ListComponent#list:itemSelected
-<span class='line'>224</span> 		 * @event
-<span class='line'>225</span> 		 *
-<span class='line'>226</span> 		 * @param {Object}	evt					Event object
-<span class='line'>227</span> 		 * @param {jQuery}	evt.listItem		The list item that was touched
-<span class='line'>228</span> 		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
-<span class='line'>229</span> 		 */</span><span class="WHIT">
-<span class='line'>230</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>231</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>232</span> </span></pre></body></html>
+<span class='line'>125</span> 		 * @param {Object} options						Options for this component and its view. Options not listed below will be passed to the view.
+<span class='line'>126</span> 		 *
+<span class='line'>127</span> 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
+<span class='line'>128</span> 		 * @property {Backbone.View} ListView			The view class this list will be rendered with
+<span class='line'>129</span> 		 * @property {Template} ListTemplate			The template this list will be rendered with. Renders to a UL tag by default
+<span class='line'>130</span> 		 * @property {Backbone.View} ItemView			The view that individual items will be rendered with
+<span class='line'>131</span> 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
+<span class='line'>132</span> 		 */</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">		</span><span class="NAME">construct</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">			</span><span class="NAME">this.view</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">this.ListView</span><span class="PUNC">(</span><span class="NAME">_.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">				</span><span class="NAME">component</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// pass this as component so ItemView can trigger handleSelect if it likes</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">				</span><span class="NAME">collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.collection</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">				</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemView</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">				</span><span class="NAME">ItemTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.ItemTemplate</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">				</span><span class="NAME">events</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">					</span><span class="STRN">'click li'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'handleSelect'</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">			
+<span class='line'>144</span> 			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">	
+<span class='line'>147</span> 		</span><span class="NAME">Collection</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">Backbone.Collection</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Collection component expects to have prototype.Collection or options.Collection</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">	
+<span class='line'>149</span> 		</span><span class="NAME">ListTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">		</span><span class="NAME">ListView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">ListView</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">	
+<span class='line'>152</span> 		</span><span class="NAME">ItemTemplate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">		</span><span class="NAME">ItemView</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">ItemView</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">	
+<span class='line'>155</span> 		</span><span class="NAME">addModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">			</span><span class="COMM">// Add a subview for this model</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">			</span><span class="NAME">this.view.addSubView</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">		
+<span class='line'>160</span> 		</span><span class="NAME">removeModel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">			</span><span class="COMM">// Add a subview for this model</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">			</span><span class="NAME">this.view.removeSubView</span><span class="PUNC">(</span><span class="NAME">model</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			
+<span class='line'>163</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">	
+<span class='line'>165</span> 		</span><span class="COMM">/**
+<span class='line'>166</span> 		 * Get the model associated with a list item
+<span class='line'>167</span> 		 *
+<span class='line'>168</span> 		 * @param {Node}	Node or jQuery Object to get model from
+<span class='line'>169</span> 		 *
+<span class='line'>170</span> 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
+<span class='line'>171</span> 		 */</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">		</span><span class="NAME">getModelFromLi</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.view.subViews</span><span class="PUNC">[</span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">data</span><span class="PUNC">(</span><span class="STRN">'viewIndex'</span><span class="PUNC">)</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">model</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">	
+<span class='line'>176</span> 		</span><span class="COMM">/**
+<span class='line'>177</span> 		 * Get the view associated with a list item
+<span class='line'>178</span> 		 *
+<span class='line'>179</span> 		 * @param {Node}	Node or jQuery Object to get model from
+<span class='line'>180</span> 		 *
+<span class='line'>181</span> 		 * @returns {Backbone.View}	The view associated with the passed DOM element
+<span class='line'>182</span> 		 */</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">		</span><span class="NAME">getViewFromLi</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.view.subViews</span><span class="PUNC">[</span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">listItem</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">data</span><span class="PUNC">(</span><span class="STRN">'viewIndex'</span><span class="PUNC">)</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">		
+<span class='line'>187</span> 		</span><span class="COMM">/**
+<span class='line'>188</span> 		 * Handles item selection events
+<span class='line'>189</span> 		 *
+<span class='line'>190</span> 		 * @param {Event} evt	The jQuery event object
+<span class='line'>191</span> 		 */</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">		</span><span class="NAME">handleSelect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">			</span><span class="COMM">// Get model from DOM el's data</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getModelFromLi</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">			
+<span class='line'>196</span> 			</span><span class="COMM">// Store ID of selected item</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">			</span><span class="NAME">this.selectedItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">		
+<span class='line'>199</span> 			</span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'list:itemSelected'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">				</span><span class="NAME">listItem</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">evt.currentTarget</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">				</span><span class="NAME">model</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">		
+<span class='line'>205</span> 		
+<span class='line'>206</span> 		</span><span class="COMM">/**
+<span class='line'>207</span> 		 * Triggered when and item in the list is selected by tapping or clicking
+<span class='line'>208</span> 		 *
+<span class='line'>209</span> 		 * @name F.ListComponent#list:itemSelected
+<span class='line'>210</span> 		 * @event
+<span class='line'>211</span> 		 *
+<span class='line'>212</span> 		 * @param {Object}	evt					Event object
+<span class='line'>213</span> 		 * @param {jQuery}	evt.listItem		The list item that was touched
+<span class='line'>214</span> 		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
+<span class='line'>215</span> 		 */</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="PUNC">}</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> </span></pre></body></html>

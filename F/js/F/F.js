@@ -1,9 +1,11 @@
-/*! F - v0.1.0 - 2012-08-22
+/*! F - v0.1.0 - 2012-09-05
 * http://lazd.github.com/F/
 * Copyright (c) 2012 Lawrence Davis; Licensed BSD */
 
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
+ *
+ * @function
  *
  * @param {Object} descriptor						Descriptor object
  * @param {String or Function} descriptor.toString	A string or method to use for the toString of this class and instances of this class
@@ -12,245 +14,308 @@
  * @param {Function} descriptor.destruct			The destructor (teardown) method for the new class
  * @param {Anything} descriptor.*					Other methods and properties for the new class
  *
- * @returns {Class} The created class.
+ * @returns {BaseClass} The created class.
 */
-function Class(descriptor) {
-	descriptor = descriptor || {};
-	
-	if (descriptor.hasOwnProperty('extend') && !descriptor.extend) {
-		console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString === 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
-	}
-	
-	// Extend Object by default
-	var extend = descriptor.extend || Object;
+var Class;
 
-	// Construct and destruct are not required
-	var construct = descriptor.construct;
-	var destruct = descriptor.destruct;
-
-	// Remove special methods and keywords from descriptor
-	delete descriptor.extend;
-	delete descriptor.destruct;
-	delete descriptor.construct;
-	
-	// Add toString method, if necessary
-	if (descriptor.hasOwnProperty('toString') && typeof descriptor.toString !== 'function') {
-		// Return the string provided
-		var classString = descriptor.toString;
-		descriptor.toString = function() {
-			return classString.toString();
-		};
-	}
-	else if (!descriptor.hasOwnProperty('toString') && extend.prototype.hasOwnProperty('toString')) {
-		// Use parent's toString
-		descriptor.toString = extend.prototype.toString;
-	}
-	
-	// The remaining properties in descriptor are our methods
-	var methodsAndProps = descriptor;
-	
-	// Create an object with the prototype of the class we're extending
-	var prototype = Object.create(extend && extend.prototype);
-	
-	// Store super class as a property of the new class' prototype
-	prototype.superClass = extend.prototype;
-	
-	// Copy new methods into prototype
-	if (methodsAndProps) {	
-		for (var key in methodsAndProps) {
-			if (methodsAndProps.hasOwnProperty(key)) {
-				prototype[key] = methodsAndProps[key];
-				
-				// Store the method name so calls to inherited() work
-				if (typeof methodsAndProps[key] === 'function') {
-					prototype[key]._methodName = key;
-					prototype[key]._parentProto = prototype;
-				}
-			}
-		}
-	}
-	
+(function() {
 	/**
-	 * A function that calls an inherited method by the same name as the callee
+	 * The class blueprint which contains the methods that all classes will automatically have.
+	 * BaseClass cannot be extended or instantiated and does not exist in the global namespace.
+	 * If you create a class using <code>new Class()</code> or <code>MyClass.extend()</code>, it will come with BaseClass' methods.
 	 *
-	 * @param {Arguments} args	Unadulterated arguments array from calling function
-	*/
-	prototype.inherited = function(args) {
-		// Get the function that call us from the passed arguments objected
-		var caller = args.callee;
-
-		// Get the name of the method that called us from a property of the method
-		var methodName = caller._methodName;
-		
-		if (!methodName) {
-			console.error("Class.inherited: can't call inherited method: calling method did not have _methodName", args.callee);
-			return;
-		}
-
-		// Start iterating at the prototype that this function is defined in
-		var curProto = caller._parentProto;
-		var inheritedFunc = null;
-		
-		// Iterate up the prototype chain until we find the inherited function
-		while (curProto.superClass) {
-			curProto = curProto.superClass;
-			inheritedFunc = curProto[methodName];
-			if (typeof inheritedFunc === 'function')
-				break;
-		}
-		
-		if (typeof inheritedFunc === 'function') {
-			// Store our inherited function
-			var oldInherited = this.inherited;
-			
-			// Overwrite our inherited function with that of the prototype so the called function can call its parent
-			this.inherited = curProto.inherited;
-			
-			// Call the inherited function our scope, apply the passed args array
-			var retVal = inheritedFunc.apply(this, args);
-			
-			// Revert our inherited function to the old function
-			this.inherited = oldInherited;
-			
-			// Return the value called by the inherited function
-			return retVal;
-		}
-		else {
-			console.warn("Class.inherited: can't call inherited method for '%s': no method by that name found", methodName);			
-		}
-	};
+	 * @class
+	 * @name BaseClass
+	 *
+	 * @param {Object} options	Instance options. Guaranteed to be defined as at least an empty Object
+	 */
 	
 	/**
-	 * Binds a method to the execution scope of this instance
+	 * Destroys this instance and frees associated memory.
+	 *
+	 * @name destruct
+	 * @memberOf BaseClass.prototype
+	 * @function
+	 */
+	
+	/**
+	 * Binds a method of this instance to the execution scope of this instance.
+	 *
+	 * @name bind
+	 * @memberOf BaseClass.prototype
+	 * @function
 	 *
 	 * @param {Function} func	The this.method you want to bind
 	 */
-	prototype.bind = function(func) {
+	var bindFunc = function(func) {
 		// Bind the function to always execute in scope
 		var boundFunc = func.bind(this);
-		
+
 		// Store the method name
 		boundFunc._methodName = func._methodName;
-		
+
 		// Store the bound function back to the class
 		this[boundFunc._methodName] = boundFunc;
-		
+
 		// Return the bound function
 		return boundFunc;
 	};
-
-	/**
-	 * Call the destruct method of all inherited classes
-	 */
-	prototype.destruct = function() {
-		// Call our destruct method first
-		if (typeof destruct === 'function') {
-			destruct.apply(this);
-		}
-		
-		// Call superclass destruct method after this class' method
-		if (extend && extend.prototype && typeof extend.prototype.destruct === 'function') {
-			extend.prototype.destruct.apply(this);			
-		}
-	};
 	
 	/**
-	 * Construct is called automatically
-	 */
-	// Create a chained construct function which calls the superclass' construct function
-	prototype.construct = function() {
-		// Add a blank object as the first arg to the constructor, if none provided
-		var args = arguments; // get around JSHint complaining about modifying arguments
-		if (args[0] === undefined) {
-			args.length = 1;
-			args[0] = {};
-		}
-		
-		// call superclass constructor
-		if (extend && extend.prototype && typeof extend.prototype.construct === 'function') {
-			extend.prototype.construct.apply(this, arguments);			
-		}
-
-		// call constructor
-		if (typeof construct === 'function') {
-			construct.apply(this, arguments);
-		}
-	};
-	
-	// Create a function that generates instances of our class and calls our construct functions
-	/** @private */
-	var instanceGenerator = function() {
-		// Create a new object with the prototype we built
-		var instance = Object.create(prototype);
-		
-		// Call all inherited construct functions
-		prototype.construct.apply(instance, arguments);
-		
-		return instance;
-	};
-	
-	// Set the prototype of our instance generator to the prototype of our new class so things like MyClass.prototype.method.apply(this) work
-	instanceGenerator.prototype = prototype;
-	
-	// The constructor, as far as JS is concerned, is actually our instance generator
-	prototype.constructor = instanceGenerator;
-	
-	return instanceGenerator;
-}
-
-if (!Object.create) {
-	/**
-	 * Polyfill for Object.create. Creates a new object with the specified prototype.
-	 * 
-	 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/create/">Mozilla MDN</a>
+	 * Extends this class using the passed descriptor. 
+	 * Called on the Class itself (not an instance), this is an alternative to using <code>new Class()</code>.
+	 * Any class created using Class will have this static method on the class itself.
 	 *
-	 * @param {Object} prototype	The prototype to create a new object with
-	 */
-	Object.create = function (prototype) {
-		if (arguments.length > 1) {
-			throw new Error('Object.create implementation only accepts the first parameter.');
-		}
-		function Func() {}
-		Func.prototype = prototype;
-		return new Func();
-	};
-}
-
-if (!Function.prototype.bind) {
-	/**
-	 * Polyfill for Function.bind. Binds a function to always execute in a specific scope.
-	 * 
-	 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">Mozilla MDN</a>
+	 * @name extend
+	 * @memberOf BaseClass
+	 * @function
 	 *
-	 * @param {Object} scope	The scope to bind the function to
+	 * @param {Object} descriptor						Descriptor object
+	 * @param {String or Function} descriptor.toString	A string or method to use for the toString of this class and instances of this class
+	 * @param {Object} descriptor.extend				The class to extend
+	 * @param {Function} descriptor.construct			The constructor (setup) method for the new class
+	 * @param {Function} descriptor.destruct			The destructor (teardown) method for the new class
+	 * @param {Anything} descriptor.*					Other methods and properties for the new class
 	 */
-	Function.prototype.bind = function (scope) {
-		if (typeof this !== "function") {
-			// closest thing possible to the ECMAScript 5 internal IsCallable function
-			throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+	var extendClass = function(descriptor) {
+		return new Class(_.extend({}, descriptor, {
+			extend: this
+		}));
+	};
+	
+	Class = function(descriptor) {
+		descriptor = descriptor || {};
+
+		if (descriptor.hasOwnProperty('extend') && !descriptor.extend) {
+			console.warn('Class: %s is attempting to extend a non-truthy thing', descriptor.toString === 'function' ? descriptor.toString : descriptor.toString, descriptor.extend);
 		}
 
-		var aArgs = Array.prototype.slice.call(arguments, 1);
-		var fToBind = this;
-		/** @ignore */
-		var NoOp = function() {};
-		/** @ignore */
-		var fBound = function() {
-			return fToBind.apply(this instanceof NoOp ? this : scope, aArgs.concat(Array.prototype.slice.call(arguments)));
+		// Extend Object by default
+		var extend = descriptor.extend || Object;
+
+		// Construct and destruct are not required
+		var construct = descriptor.construct;
+		var destruct = descriptor.destruct;
+
+		// Remove special methods and keywords from descriptor
+		delete descriptor.bind;
+		delete descriptor.extend;
+		delete descriptor.destruct;
+		delete descriptor.construct;
+
+		// Add toString method, if necessary
+		if (descriptor.hasOwnProperty('toString') && typeof descriptor.toString !== 'function') {
+			// Return the string provided
+			var classString = descriptor.toString;
+			descriptor.toString = function() {
+				return classString.toString();
+			};
+		}
+		else if (!descriptor.hasOwnProperty('toString') && extend.prototype.hasOwnProperty('toString')) {
+			// Use parent's toString
+			descriptor.toString = extend.prototype.toString;
+		}
+
+		// The remaining properties in descriptor are our methods
+		var methodsAndProps = descriptor;
+
+		// Create an object with the prototype of the class we're extending
+		var prototype = Object.create(extend && extend.prototype);
+
+		// Store super class as a property of the new class' prototype
+		prototype.superClass = extend.prototype;
+
+		// Copy new methods into prototype
+		if (methodsAndProps) {	
+			for (var key in methodsAndProps) {
+				if (methodsAndProps.hasOwnProperty(key)) {
+					prototype[key] = methodsAndProps[key];
+
+					// Store the method name so calls to inherited() work
+					if (typeof methodsAndProps[key] === 'function') {
+						prototype[key]._methodName = key;
+						prototype[key]._parentProto = prototype;
+					}
+				}
+			}
+		}
+
+		/**
+		 * A function that calls an inherited method by the same name as the callee
+		 *
+		 * @name inherited
+		 * @memberOf BaseClass.prototype
+		 * @function
+		 *
+		 * @param {Arguments} args	Unadulterated arguments array from calling function
+		 */
+		prototype.inherited = function(args) {
+			// Get the function that call us from the passed arguments objected
+			var caller = args.callee;
+
+			// Get the name of the method that called us from a property of the method
+			var methodName = caller._methodName;
+
+			if (!methodName) {
+				console.error("Class.inherited: can't call inherited method: calling method did not have _methodName", args.callee);
+				return;
+			}
+
+			// Start iterating at the prototype that this function is defined in
+			var curProto = caller._parentProto;
+			var inheritedFunc = null;
+
+			// Iterate up the prototype chain until we find the inherited function
+			while (curProto.superClass) {
+				curProto = curProto.superClass;
+				inheritedFunc = curProto[methodName];
+				if (typeof inheritedFunc === 'function')
+					break;
+			}
+
+			if (typeof inheritedFunc === 'function') {
+				// Store our inherited function
+				var oldInherited = this.inherited;
+
+				// Overwrite our inherited function with that of the prototype so the called function can call its parent
+				this.inherited = curProto.inherited;
+
+				// Call the inherited function our scope, apply the passed args array
+				var retVal = inheritedFunc.apply(this, args);
+
+				// Revert our inherited function to the old function
+				this.inherited = oldInherited;
+
+				// Return the value called by the inherited function
+				return retVal;
+			}
+			else {
+				console.warn("Class.inherited: can't call inherited method for '%s': no method by that name found", methodName);
+			}
+		};
+		
+		// Add bind to the prototype of the class
+		prototype.bind = bindFunc;
+
+		/**
+		 * Call the destruct method of all inherited classes
+		 */
+		prototype.destruct = function() {
+			// Call our destruct method first
+			if (typeof destruct === 'function') {
+				destruct.apply(this);
+			}
+
+			// Call superclass destruct method after this class' method
+			if (extend && extend.prototype && typeof extend.prototype.destruct === 'function') {
+				extend.prototype.destruct.apply(this);			
+			}
 		};
 
-		NoOp.prototype = this.prototype;
-		fBound.prototype = new NoOp();
+		/**
+		 * Construct is called automatically
+		 */
+		// Create a chained construct function which calls the superclass' construct function
+		prototype.construct = function() {
+			// Add a blank object as the first arg to the constructor, if none provided
+			var args = arguments; // get around JSHint complaining about modifying arguments
+			if (args[0] === undefined) {
+				args.length = 1;
+				args[0] = {};
+			}
 
-		return fBound;
+			// call superclass constructor
+			if (extend && extend.prototype && typeof extend.prototype.construct === 'function') {
+				extend.prototype.construct.apply(this, arguments);			
+			}
+
+			// call constructor
+			if (typeof construct === 'function') {
+				construct.apply(this, arguments);
+			}
+		};
+
+		// Create a function that generates instances of our class and calls our construct functions
+		/** @private */
+		var instanceGenerator = function() {
+			// Create a new object with the prototype we built
+			var instance = Object.create(prototype);
+
+			// Call all inherited construct functions
+			prototype.construct.apply(instance, arguments);
+
+			return instance;
+		};
+
+		// Set the prototype of our instance generator to the prototype of our new class so things like MyClass.prototype.method.apply(this) work
+		instanceGenerator.prototype = prototype;
+
+		// Add extend to the instance generator for the class
+		instanceGenerator.extend = extendClass;
+
+		// The constructor, as far as JS is concerned, is actually our instance generator
+		prototype.constructor = instanceGenerator;
+
+		return instanceGenerator;
 	};
-}
+
+	if (!Object.create) {
+		/**
+		 * Polyfill for Object.create. Creates a new object with the specified prototype.
+		 * 
+		 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/create/">Mozilla MDN</a>
+		 *
+		 * @param {Object} prototype	The prototype to create a new object with
+		 */
+		Object.create = function (prototype) {
+			if (arguments.length > 1) {
+				throw new Error('Object.create implementation only accepts the first parameter.');
+			}
+			function Func() {}
+			Func.prototype = prototype;
+			return new Func();
+		};
+	}
+
+	if (!Function.prototype.bind) {
+		/**
+		 * Polyfill for Function.bind. Binds a function to always execute in a specific scope.
+		 * 
+		 * @author <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">Mozilla MDN</a>
+		 *
+		 * @param {Object} scope	The scope to bind the function to
+		 */
+		Function.prototype.bind = function (scope) {
+			if (typeof this !== "function") {
+				// closest thing possible to the ECMAScript 5 internal IsCallable function
+				throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+			}
+
+			var aArgs = Array.prototype.slice.call(arguments, 1);
+			var fToBind = this;
+			/** @ignore */
+			var NoOp = function() {};
+			/** @ignore */
+			var fBound = function() {
+				return fToBind.apply(this instanceof NoOp ? this : scope, aArgs.concat(Array.prototype.slice.call(arguments)));
+			};
+
+			NoOp.prototype = this.prototype;
+			fBound.prototype = new NoOp();
+
+			return fBound;
+		};
+	}
+}());
 
 /** 
  * The main F namespace.
  *	
- * @property {Object} options	Options for all F components. Set F.options.debug=true to see debug messages.
- *@namespace 
+ * @namespace
+ *
+ * @property {Object} options						Options for all F components.
+ * @param {Boolean} options.debug					If true, show debug messages for all components.
+ * @param {Boolean} options.precompiledTemplates	Set to false if you need Handlebars.template() called on your templates
 */
 var F = F || {};
 
@@ -262,20 +327,25 @@ catch (err) {
 }
 
 F.options = {
-	debug: false,				// True to display debug messages
-	precompiledTemplates: true	// False if you need Handlebars.template() called on your templates
+	debug: false,
+	precompiledTemplates: true
 };
 
 /**
  * Provides observer pattern for basic eventing
  *
- * @class
+ * @class	
+ * @extends BaseClass
  */
 F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
+	/** @constructs */
 	construct: function() {
 		this._events = {};
 	},
 	
+	/**
+	 * Destroy references to events and listeners.
+	 */
 	destruct: function() {
 		delete this._events;
 	},
@@ -434,7 +504,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			this.$el.remove();
 		
 			// Remove change listener
-			if (this.model)
+			if (this.model && this.model.off)
 				this.model.off('change', this.render);
 		},
 		
@@ -481,13 +551,18 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			return this;
 		},
 
+		inDebugMode: function() {
+			// Check if the component or F itself is in debug mode
+			return F.options.debug || (this.component && this.component.options.debug); 
+		},
+
 		/**
 		 * Render the view
 		 *
 		 * @returns {F.View}	this, chainable
 		 */
 		render: function() {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
 			}
 			
@@ -589,6 +664,13 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	F.Component = new Class(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
+		
+		options: {
+			singly: false, // Show only one subcomponent at a time
+			visible: false, // Visible immediately or not
+			debug: false
+		},
+		
 		/**
 		 * Generic component class
 		 *
@@ -598,22 +680,17 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 * @param {Object} options	Component options
 		 * @param {Boolean} options.singly		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
 		 * @param {Boolean} options.visible		If true, this component will be visible immediately.
+		 * @param {Boolean} options.debug		If true, show debug messages for this component.
 		 *
-		 * @property {Object} options	Default options for this component. These will be merged with options passed to the constructor.
+		 * @property {Object} options			Default options for this component. These will be merged with options passed to the constructor.
 		 */
 		construct: function(options) {
-			// Looks funny, but it modifies options with defaults and makes them available to other constructors
-			this.mergeOptions({
-				singly: false, // Show only one subcomponent at a time
-				visible: false // Visible immediately or not
-			}, options);
+			// Merge options up the prototype chain
+			this.mergeOptions();
 			
-			// Store options into object
-			// TBD: figure out what to do with these props if set on the object already
-			this.setPropsFromOptions(options, [
-				'singly', 
-				'visible'
-			]);
+			// Add defaults to options arg and make available to other constructors
+			// Modify this.options to reflect any modifications the options arg may have made
+			this.applyOptions(options);
 			
 			// Sub components
 			this.components = {};
@@ -749,7 +826,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// Hide view by default
 			if (component.view) {
 				if (component.view.el) {
-					if (component.visible === true) {
+					if (component.options.visible === true) {
 						// Call show method so view is rendered
 						component.show({ silent: true });
 					}
@@ -800,7 +877,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
-				if (this.singly && !newComponent.overlay) {
+				if (this.options.singly && !newComponent.overlay) {
 					this.hideAllSubComponents([evt.name]);
 				}
 			
@@ -820,11 +897,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			options = options || {};
 			
 			// Debug output
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				// Don't show if already shown
-				if (this.visible) {		
+				if (this.options.visible)
 					console.log('%s: not showing self; already visible', this.toString());
-				}
 				else
 					console.log('%s: showing self', this.toString());
 			}
@@ -842,7 +918,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				this.view.show();
 			}
 		
-			this.visible = true;
+			this.options.visible = true;
 	
 			return this;
 		},
@@ -855,10 +931,10 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		hide: function(options) {
 			options = options || {};
 			
-			if (!this.visible)
+			if (!this.options.visible)
 				return false;
 			
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: hiding self', this.toString());
 			}
 			
@@ -874,18 +950,27 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				});
 			}
 		
-			this.visible = false;
+			this.options.visible = false;
 	
 			return this;
 		},
 	
+		/**
+		 * Check if this component, or F as a whole, is in debug mode and should output debug messages
+		 *
+		 * @returns {Boolean} Component or F is in debug mode
+		 */
+		inDebugMode: function() {
+			return this.options.debug || F.options.debug;
+		},
+		
 		/**
 		 * Check if this component is currently visible
 		 *
 		 * @returns {Boolean} Component is visible
 		 */
 		isVisible: function() {
-			return this.visible;
+			return this.options.visible;
 		},
 
 		/**
@@ -925,7 +1010,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		},
 		
 		/**
-		 * Set a custom name for this component. Only useful before passing to addComponent
+		 * Set a custom name for this component. Only useful before passing to {@link F.Component.addComponent}
 		 *
 		 * @param {Function} componentName	Component name
 		 *
@@ -935,7 +1020,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			/**
 			 * Get this component's name
 			 *
-			 * @returns {String}	Component's name; either a custom name given when added with addComponent, or toString method or string from prototype
+			 * @returns {String}	Component's name; either a custom name given when added with {@link F.Component.addComponent}, or toString method or string from prototype
 			 */
 			this.toString = function() {
 				return customName;
@@ -964,25 +1049,50 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		},
 		
 		/**
-		 * Merges options in the following order:
-		 *   Instance Options
-		 *   Class options
-		 *   Class defaults
+		 * Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
+		 */
+		mergeOptions: function() {
+			// Create a set of all options in the correct order
+			var optionSets = [];
+			var proto = this.constructor.prototype;
+			while (proto) {
+				if (proto.hasOwnProperty('options')) {
+					optionSets.unshift(proto.options);
+				}
+				proto = proto.superClass;
+			}
+			
+			// All options should end up merged into a new object
+			// That is, move our reference out of the prototype before we modify it
+			optionSets.unshift({});
+			
+			// Perform the merge and store the new options object
+			this.options = _.extend.apply(_, optionSets);
+		},
+		
+		/**
+		 * Applies passed options to instance options and applies instance options to passed options.
+		 * Individual passed options will not be applied to instance options unless they are defined in default options for the class or parent class.
+		 * <br>Note: The options merge is one level deep.
+		 * <br>Note: This function assumes that <code>this.options</code> does not refer to an object in the prototype.
 		 *
-		 * @param {Object} defaults	Default options object
-		 * @param {Object} options	Instance options object (argument to constructor)
+		 * @param {Object} options	Instance options object (usually argument to constructor)
 		 *
 		 * @returns {Object}	Merged options object
 		 */
-		mergeOptions: function(defaults, options) {
-			_.extend(
-				options, 
-				_.extend({}, defaults || {}, this.options || {}, options)
-			);
+		applyOptions: function(options) {
+			// Assume we already have moved our reference to this.options out of the prototype
+			// Apply options from passed object to this.options
+			for (var option in options) {
+				if (this.options.hasOwnProperty(option))
+					this.options[option] = options[option];
+			}
 			
+			// Apply any missing defaults back to passed options object
+			_.extend(options, this.options);
+
 			return options;
 		}
-		
 		
 		/**
 		 * Triggered when this component is shown
@@ -1140,12 +1250,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 */
 	save: function(data, callback) {
 		if (this.model) {
-			if (F.options.debug)
+			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
 			this.model.save(data || {}, {
 				success: function() {
-					if (F.options.debug)
+					if (this.inDebugMode())
 						console.log('%s: Save successful', this.toString());
 					
 					if (typeof callback === 'function')
@@ -1182,13 +1292,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		options = options || {};
 		
 		if (options.id) {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: fetching item with ID %s', this.toString(), options.id);
 			}
 			
 			// Load the model by itemId, then show
 			this.fetch(options.id, function(model) {
-				if (F.options.debug) {
+				if (this.inDebugMode()) {
 					console.log('%s: fetch complete!', this.toString());
 				}
 				this.show({
@@ -1197,7 +1307,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			});
 		}
 		else if (options.model) {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: showing with new model', this.toString(), options.model);
 			}
 			
@@ -1246,6 +1356,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
+	options: {
+		defaultParams: {}
+	},
 	
 	/**
 	 * A component that can load and render a collection
@@ -1254,18 +1367,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @extends F.Component
 	 *
 	 * @param {Object} options							Options for this component
-	 * @param {Backbone.Collection} options.Collection	The collection class this component should operate on. Sets this.Collection
-	 * @param {Object} [options.defaultParams ]			Default parameters to use when fetching this collection
+	 * @param {Object} [options.defaultParams]			Default parameters to use when fetching this collection
 	 *
 	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
 	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
 	 */
 	construct: function(options) {
-		// Store the collection class
-		this.setPropsFromOptions(options, [
-			'Collection'
-		]);
-		
 		// Bind for use as listeners
 		this.bind(this.addModel);
 		this.bind(this.removeModel);
@@ -1274,10 +1381,10 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this._useCollection(new this.Collection());
 		
 		// Default parameters are the prototype params + options params
-		this.defaultParams = _.extend({}, this.defaultParams, options.defaultParams);
+		this.options.defaultParams = _.extend({}, this.options.defaultParams, options.defaultParams);
 		
 		// Parameters to send with the request: just copy the default params
-		this.params = _.extend({}, this.defaultParams);
+		this.params = _.extend({}, this.options.defaultParams);
 	
 		// Store if this collection has ever been loaded
 		this.collectionLoaded = false;
@@ -1356,9 +1463,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	fetch: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
-			this.params = _.extend({}, this.defaultParams, fetchParams);
+			this.params = _.extend({}, this.options.defaultParams, fetchParams);
 		else // Overwrite old params with defaults and send a request with only default params
-			this.params = _.extend({}, this.defaultParams);
+			this.params = _.extend({}, this.options.defaultParams);
 		
 		// Fetch collection contents
 		this.collection.fetch({
@@ -1466,22 +1573,13 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @constructs
 		 * @extends F.ModelComponent
 		 *
-		 * @param {Object} options					Options for this component and its view. Options not listed below will be passed to the view.
-		 * @param {Backbone.Model} options.Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
-		 * @param {Backbone.View} options.View		The view class that the form will be rendered to
-		 * @param {Template} options.Template		The template that the form will be rendered with
+		 * @param {Object} options			Options for this component and its view. Options not listed below will be passed to the view.
 		 *
 		 * @property {Backbone.Model} Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
 		 * @property {Backbone.View} View	The view class that the form will be rendered to
 		 * @property {Template} Template	The template that the form will be rendered with
 		 */
 		construct: function(options) {
-			this.setPropsFromOptions(options, [
-				'Model',
-				'View',
-				'Template'
-			]);
-		
 			// Create a new edit view that responds to submit events
 			this.view = new this.View(_.extend({
 				component: this,
@@ -1626,7 +1724,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		},
 
 		render: function() {
-			if (F.options.debug) {
+			if (this.inDebugMode()) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
 			
@@ -1666,12 +1764,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @constructs
 		 * @extends F.CollectionComponent
 		 *
-		 * @param {Object} options							Options for this component and its view. Options not listed below will be passed to the view.
-		 * @param {Backbone.Collection} options.Collection	The collection class this list will be rendered from
-		 * @param {Backbone.View} options.ListView			The view class this list will be rendered with
-		 * @param {Template} [options.ListTemplate]			The template this list will be rendered with. Renders to a UL tag by default
-		 * @param {Backbone.View} options.ItemView			The view that individual items will be rendered with
-		 * @param {Template} options.ItemTemplate			The template that individual items will be rendered with
+		 * @param {Object} options						Options for this component and its view. Options not listed below will be passed to the view.
 		 *
 		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
 		 * @property {Backbone.View} ListView			The view class this list will be rendered with
@@ -1680,15 +1773,6 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
 		 */
 		construct: function(options) {
-			// Set object properties from options object, removing them from the object thereafter
-			this.setPropsFromOptions(options, [
-				'Collection',
-				'ListTemplate',
-				'ListView',
-				'ItemTemplate',
-				'ItemView'
-			]);
-			
 			this.view = new this.ListView(_.extend({
 				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
 				collection: this.collection,

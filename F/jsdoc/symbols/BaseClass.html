@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - _global_</title>
+		<title>JsDoc Reference - BaseClass</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -222,7 +222,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Built-In Namespace _global_
+				Class BaseClass
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -233,9 +233,32 @@ ul.inheritsList
 				
 				
 				
+					<br /><i>Defined in: </i> <a href="../symbols/src/js_Class_Class.js.html">Class.js</a>.
+				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class BaseClass.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/BaseClass.html#constructor">BaseClass</a></b>(options)
+							</div>
+							<div class="description">The class blueprint which contains the methods that all classes will automatically have.</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			
 
 <!-- ============================== properties summary ===================== -->
@@ -245,7 +268,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class _global_.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class BaseClass.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -258,9 +281,36 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#Class">Class</a></b>(descriptor)
+								<div class="fixedFont"><b><a href="../symbols/BaseClass.html#bind">bind</a></b>(func)
 								</div>
-								<div class="description">Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods</div>
+								<div class="description">Binds a method of this instance to the execution scope of this instance.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/BaseClass.html#destruct">destruct</a></b>()
+								</div>
+								<div class="description">Destroys this instance and frees associated memory.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">BaseClass.<b><a href="../symbols/BaseClass.html#.extend">extend</a></b>(descriptor)
+								</div>
+								<div class="description">Extends this class using the passed descriptor.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/BaseClass.html#inherited">inherited</a></b>(args)
+								</div>
+								<div class="description">A function that calls an inherited method by the same name as the callee</div>
 							</td>
 						</tr>
 					
@@ -275,6 +325,46 @@ ul.inheritsList
 
 <!-- ============================== constructor details ==================== -->		
 			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>BaseClass</b>(options)
+				</div>
+				
+				<div class="description">
+					The class blueprint which contains the methods that all classes will automatically have.
+BaseClass cannot be extended or instantiated and does not exist in the global namespace.
+If you create a class using <code>new Class()</code> or <code>MyClass.extend()</code>, it will come with BaseClass' methods.
+					
+				</div>
+				
+				
+				
+				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>options</b>
+								
+							</dt>
+								<dd>Instance options. Guaranteed to be defined as at least an empty Object</dd>
+						
+						</dl>
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
 
 <!-- ============================== field details ========================== -->		
 			
@@ -285,18 +375,78 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="Class"> </a>
+					<a name="bind"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/BaseClass.html">BaseClass</a>}</span>
-					<b>Class</b>(descriptor)
+					
+					<b>bind</b>(func)
 					
 					</div>
 					<div class="description">
-						Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
+						Binds a method of this instance to the execution scope of this instance.
 						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/js_Class_Class.js.html">Class.js</a>.
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>func</b>
+									
+								</dt>
+								<dd>The this.method you want to bind</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="destruct"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>destruct</b>()
+					
+					</div>
+					<div class="description">
+						Destroys this instance and frees associated memory.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".extend"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">BaseClass.</span><b>extend</b>(descriptor)
+					
+					</div>
+					<div class="description">
+						Extends this class using the passed descriptor. 
+Called on the Class itself (not an instance), this is an alternative to using <code>new Class()</code>.
+Any class created using Class will have this static method on the class itself.
 						
 						
 					</div>
@@ -349,12 +499,41 @@ ul.inheritsList
 						
 						
 						
+						
+						
+
+					<hr />
+				
+					<a name="inherited"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>inherited</b>(args)
+					
+					</div>
+					<div class="description">
+						A function that calls an inherited method by the same name as the callee
+						
+						
+					</div>
+					
+					
+					
+						
 							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/BaseClass.html">BaseClass</a>}</span> The created class.</dd>
+								<dt>
+									<span class="light fixedFont">{Arguments}</span> <b>args</b>
+									
+								</dt>
+								<dd>Unadulterated arguments array from calling function</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						

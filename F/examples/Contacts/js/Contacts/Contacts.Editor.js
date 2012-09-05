@@ -18,9 +18,15 @@ Contacts.Editor = new Class({
 	View: F.FormComponent.prototype.View.extend({
 		// Not only do we extend the View, but we also extend its events
 		events: _.extend({}, F.FormComponent.prototype.View.prototype.events, {
-			'click .back': "navigateBack"
+			'click .back': 'navigateBack',
+			'click .delete': 'deleteItem'
 		})
 	}),
+	
+	deleteItem: function() {
+		// Pass the model with the event so Contacts.App can destroy it
+		this.trigger('deleteItem', this.model);
+	},
 	
 	navigateBack: function() {
 		// Pass ourselves with the event so App.navigateBack knows what to do

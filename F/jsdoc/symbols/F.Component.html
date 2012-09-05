@@ -191,6 +191,8 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/BaseClass.html">BaseClass</a></li>
+	
 	<li><a href="../symbols/F.html">F</a></li>
 	
 	<li><a href="../symbols/F.CollectionComponent.html">F.CollectionComponent</a></li>
@@ -322,6 +324,15 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#applyOptions">applyOptions</a></b>(options)
+								</div>
+								<div class="description">Applies passed options to instance options and applies instance options to passed options.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.Component.html#bubble">bubble</a></b>(componentName, evt)
 								</div>
 								<div class="description">Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it</div>
@@ -358,6 +369,15 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#inDebugMode">inDebugMode</a></b>()
+								</div>
+								<div class="description">Check if this component, or F as a whole, is in debug mode and should output debug messages</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.Component.html#isVisible">isVisible</a></b>()
 								</div>
 								<div class="description">Check if this component is currently visible</div>
@@ -367,12 +387,9 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a></b>(defaults, options)
+								<div class="fixedFont"><b><a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a></b>()
 								</div>
-								<div class="description">Merges options in the following order:
-  Instance Options
-  Class options
-  Class defaults</div>
+								<div class="description">Merge options up the prototype chain.</div>
 							</td>
 						</tr>
 					
@@ -454,7 +471,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#construct">construct</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd><dt>Methods borrowed from class <a href="../symbols/BaseClass.html">BaseClass</a>: </dt><dd><a href="../symbols/BaseClass.html#bind">bind</a>, <a href="../symbols/BaseClass.html#inherited">inherited</a></dd>
 				</dl>
 				
 			
@@ -541,6 +558,12 @@ ul.inheritsList
 								
 							</dt>
 								<dd>If true, this component will be visible immediately.</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Boolean}</span>  <b>options.debug</b>
+								
+							</dt>
+								<dd>If true, show debug messages for this component.</dd>
 						
 						</dl>
 					
@@ -639,6 +662,52 @@ You can give a component an optional custom name as the second argument, then re
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> The sub-component that was added</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="applyOptions"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<b>applyOptions</b>(options)
+					
+					</div>
+					<div class="description">
+						Applies passed options to instance options and applies instance options to passed options.
+Individual passed options will not be applied to instance options unless they are defined in default options for the class or parent class.
+<br>Note: The options merge is one level deep.
+<br>Note: This function assumes that <code>this.options</code> does not refer to an object in the prototype.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
+									
+								</dt>
+								<dd>Instance options object (usually argument to constructor)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Merged options object</dd>
 							
 							</dl>
 						
@@ -807,6 +876,38 @@ You can give a component an optional custom name as the second argument, then re
 
 					<hr />
 				
+					<a name="inDebugMode"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Boolean}</span>
+					<b>inDebugMode</b>()
+					
+					</div>
+					<div class="description">
+						Check if this component, or F as a whole, is in debug mode and should output debug messages
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> Component or F is in debug mode</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="isVisible"> </a>
 					<div class="fixedFont">
 					
@@ -842,15 +943,12 @@ You can give a component an optional custom name as the second argument, then re
 					<a name="mergeOptions"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
-					<b>mergeOptions</b>(defaults, options)
+					
+					<b>mergeOptions</b>()
 					
 					</div>
 					<div class="description">
-						Merges options in the following order:
-  Instance Options
-  Class options
-  Class defaults
+						Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
 						
 						
 					</div>
@@ -858,33 +956,9 @@ You can give a component an optional custom name as the second argument, then re
 					
 					
 						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>defaults</b>
-									
-								</dt>
-								<dd>Default options object</dd>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>options</b>
-									
-								</dt>
-								<dd>Instance options object (argument to constructor)</dd>
-							
-							</dl>
 						
 						
 						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Merged options object</dd>
-							
-							</dl>
 						
 						
 						
@@ -974,7 +1048,7 @@ You can give a component an optional custom name as the second argument, then re
 					
 					</div>
 					<div class="description">
-						Set a custom name for this component. Only useful before passing to addComponent
+						Set a custom name for this component. Only useful before passing to F.Component.addComponent
 						
 						
 					</div>
@@ -1167,7 +1241,7 @@ You can give a component an optional custom name as the second argument, then re
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{String}</span> Component's name; either a custom name given when added with addComponent, or toString method or string from prototype</dd>
+								<dd><span class="light fixedFont">{String}</span> Component's name; either a custom name given when added with F.Component.addComponent, or toString method or string from prototype</dd>
 							
 							</dl>
 						
@@ -1338,7 +1412,7 @@ You can give a component an optional custom name as the second argument, then re
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Aug 22 2012 22:38:19 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Sep 05 2012 14:46:03 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>
