@@ -124,7 +124,7 @@ Contacts.Templates['ContactEditor'] = Handlebars.compile([
 
 Contacts.Templates['ContactDetails'] = Handlebars.compile([
 	'<div class="frame">',
-	'	<div class="header">',
+		'<div class="header">',
 	 	   '<div><button class="back" type="button">All Contacts</button></div>',
 	 	   '<h1>Info</h1>',
 	 	   '<div><button class="edit" type="button">Edit</button></div>',
