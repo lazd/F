@@ -55,7 +55,7 @@ h3{font-size:1.15em}
 .iOCSS div.footer button.down i:before,.iOCSS div.footer a.button.down i:before{color:#05afff;-webkit-mask-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,0.65)),to(#000));}
 .iOCSS div.footer button:first-child,.iOCSS div.footer a.button:first-child{border-left:none}
 .iOCSS div.footer button:last-child,.iOCSS div.footer a.button:last-child{border-right:none}
-.iOCSS form.search{position:relative;padding:.357em .5em;margin-bottom:.3em;border-bottom:.08333333333333333em solid $search-border-color;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #e0e4e7), color-stop(1, #b4bec6));background:-webkit-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-moz-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-o-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-ms-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);-webkit-box-shadow:0 .175em 1em rgba(0,0,0,0.3);box-shadow:0 .175em 1em rgba(0,0,0,0.3);}
+.iOCSS form.search{position:relative;padding:.357em .5em;border-bottom:.08333333333333333em solid $search-border-color;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #e0e4e7), color-stop(1, #b4bec6));background:-webkit-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-moz-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-o-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:-ms-linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);background:linear-gradient(top, #e0e4e7 0%, #b4bec6 100%);-webkit-box-shadow:0 .175em 1em rgba(0,0,0,0.3);box-shadow:0 .175em 1em rgba(0,0,0,0.3);}
 .iOCSS form.search i{position:absolute;color:#969ba1;font-size:1.357em}
 .iOCSS form.search i.icon-search{top:.475em;left:.85em}
 .iOCSS form.search i.icon-remove-sign{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;display:block;width:1.47383935151068em;height:1.47383935151068em;top:.263em;right:.5em;line-height:1.55em;text-align:center;cursor:pointer}
@@ -69,7 +69,7 @@ h3{font-size:1.15em}
 .iOCSS ul.list li a.button.unlock.unlocked,.iOCSS ul.list li button.unlock.unlocked{-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg);transform:rotate(-90deg)}
 .iOCSS ul.list li div:last-child{-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;box-flex:1;text-align:right;}
 .iOCSS ul.list li div:last-child a.button.details,.iOCSS ul.list li div:last-child button.details{padding-left:.085em}
-.iOCSS ul.list li div:last-child i.view{color:#7b7b7b;font-size:1.5em}
+.iOCSS ul.list li div:last-child i.view{color:#7b7b7b;font-size:1.45em;height:1em}
 .iOCSS .well.fields{padding:0}
 .iOCSS div.field{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;display:-webkit-box;display:-moz-box;display:-o-box;display:-ms-box;display:box;-webkit-box-orient:horizontal;-moz-box-orient:horizontal;-ms-box-orient:horizontal;box-orient:horizontal;-webkit-box-align:stretch;-moz-box-align:stretch;-ms-box-align:stretch;box-align:stretch;padding:.5em;border-top:.08333333333333333em solid #cacaca;}
 .iOCSS div.field:first-child{border-top:none}
