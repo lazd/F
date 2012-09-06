@@ -899,7 +899,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			// Debug output
 			if (this.inDebugMode()) {
 				// Don't show if already shown
-				if (this.options.visible)
+				if (this.isVisible())
 					console.log('%s: not showing self; already visible', this.toString());
 				else
 					console.log('%s: showing self', this.toString());
@@ -931,7 +931,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		hide: function(options) {
 			options = options || {};
 			
-			if (!this.options.visible)
+			if (!this.isVisible())
 				return false;
 			
 			if (this.inDebugMode()) {
