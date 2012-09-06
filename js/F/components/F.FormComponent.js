@@ -23,22 +23,13 @@
 		 * @constructs
 		 * @extends F.ModelComponent
 		 *
-		 * @param {Object} options					Options for this component and its view. Options not listed below will be passed to the view.
-		 * @param {Backbone.Model} options.Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
-		 * @param {Backbone.View} options.View		The view class that the form will be rendered to
-		 * @param {Template} options.Template		The template that the form will be rendered with
+		 * @param {Object} options			Options for this component and its view. Options not listed below will be passed to the view.
 		 *
 		 * @property {Backbone.Model} Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
 		 * @property {Backbone.View} View	The view class that the form will be rendered to
 		 * @property {Template} Template	The template that the form will be rendered with
 		 */
 		construct: function(options) {
-			this.setPropsFromOptions(options, [
-				'Model',
-				'View',
-				'Template'
-			]);
-		
 			// Create a new edit view that responds to submit events
 			this.view = new this.View(_.extend({
 				component: this,

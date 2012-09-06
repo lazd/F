@@ -84,7 +84,7 @@ Contacts.List = new Class({
 	
 	show: function() {
 		// Make sure the list is always up to date
-		if (!this.visible)
+		if (!this.isVisible())
 			this.refresh();
 
 		// Call the super class' show method

@@ -54,10 +54,11 @@ Contacts.App = new Class({
 			el: this.view.$('.editor'),
 			Model: this.Model
 		}), 'editor')
-		.on('navigateBack', this.navigateBack)	// Handle clicks to "Cancel" button
-		//.on('saved', this.handleSave)			// Show the details view on successful save. This is needed for real APIs
+		.on('navigateBack', this.navigateBack)		// Handle clicks to "Cancel" button
+		.on('deleteItem', this.deleteContact)		// Handle delete operations
+		//.on('model:saved', this.handleSave)		// Show the details view on successful save. Uncomment for real APIs
 		.on('model:saveFailed', this.handleSave); 	// Show the details view on failed save. This is needed for our faked API
-												// We need this one because we don't have a real API; normally you'd show an error
+													// We need this one because we don't have a real API; normally you'd show an error
 	},
 	
 	handleSave: function(evt) {
@@ -164,7 +165,7 @@ Contacts.App = new Class({
 	},
 	
 	showEditor: function(model) {
-		if (F.options.debug)
+		if (this.inDebugMode())
 			console.log('%s: showing editor for %s', this.toString());
 
 		/*
@@ -185,7 +186,7 @@ Contacts.App = new Class({
 	
 	// We'll use this function to pass the itemSelected event up to our parent
 	showDetails: function(info) {
-		if (F.options.debug)
+		if (this.inDebugMode())
 			console.log('%s: showing details for %s', this.toString(), info.model.name);
 		
 		// Set route, but don't navigate. Normally, you would navigate and avoid the call below, but we're not fetching models from the server
