@@ -141,5 +141,5 @@ Contacts.Templates['ContactDetails'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactListItem'] = Handlebars.compile([
-	'<button class="round red unlockDelete" style="display: none;"><i class="icon-minus"></i></button><strong>{{name}}</strong><div><button class="round blue view"><i class="icon-chevron-right"></i></button><button class="doDelete red" style="display: none;">Delete</button></div>'
+	'<button class="round red unlockDelete" style="display: none;"><i class="icon-minus"></i></button><strong>{{name}}</strong><div><i class="icon-chevron-right view"></i><button class="doDelete red" style="display: none;">Delete</button></div>'
 ].join(''));
