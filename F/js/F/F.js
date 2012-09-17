@@ -1,4 +1,4 @@
-/*! F - v0.1.0 - 2012-09-05
+/*! F - v0.1.0 - 2012-09-17
 * http://lazd.github.com/F/
 * Copyright (c) 2012 Lawrence Davis; Licensed BSD */
 
