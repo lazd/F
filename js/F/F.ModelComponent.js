@@ -49,19 +49,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	_setModel: function(model) {
-		if (this.model && this.model.off && this.view) {
-			// Unsubscribe from old model's change and render event in case view.remove() was not called
-			this.model.off('change', this.view.render);
-		}
-		
+	_setModel: function(model) {	
 		this.model = model;
-		
-		if (this.view) {
-			// Tell the view to re-render the next time it loads
-			this.view.rendered = null;
+	
+		if (this.model && this.model.off && this.view) {
+			this.view.setModel(model);
 		}
-
+		
 		return this;
 	},
 		
