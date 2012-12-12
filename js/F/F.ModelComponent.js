@@ -36,6 +36,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				
 				if (typeof callback === 'function')
 					callback.call(this, this.model);
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					response: response
+				});
 			}.bind(this)
 		});
 		
@@ -95,6 +102,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				// Call callback
 				if (typeof callback === 'function')
 					callback.call(this, model);
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					response: response
+				});
 			}.bind(this)
 		});
 		
@@ -134,21 +148,24 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				console.log('%s: Saving...', this.toString());
 			
 			this.model.save(data || {}, {
-				success: function() {
+				success: function(model, response) {
 					if (this.inDebugMode())
 						console.log('%s: Save successful', this.toString());
 					
 					if (typeof callback === 'function')
-						callback.call(this, this.model);
+						callback.call(this, this.model, response);
 						
-					this.trigger('model:saved', this.model);
+					this.trigger('model:saved', {
+						model: this.model,
+						response: response
+					});
 				}.bind(this),
-				error: function(model, error) {
+				error: function(model, response) {
 					console.warn('%s: Error saving model', this.toString());
 					
 					this.trigger('model:saveFailed', {
 						model: this.model,
-						error: error
+						response: response
 					});
 				}.bind(this)
 			});
