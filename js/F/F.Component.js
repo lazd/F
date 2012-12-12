@@ -216,11 +216,14 @@
 		 */
 		_handleSubComponentShown: function(evt) {
 			var newComponent = this.components[evt.name];
-		
+
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
 				if (this.options.singly && !newComponent.overlay) {
 					this.hideAllSubComponents([evt.name]);
+					
+					// Store currently visible subComponent
+					this.currentSubComponent = newComponent;
 				}
 			
 				// Show self
