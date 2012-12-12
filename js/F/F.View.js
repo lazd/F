@@ -11,7 +11,6 @@
 		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 		 *
 		 * @constructs
-		 * @extends Backbone.View
 		 *
 		 * @param {Object} options	Options for this view
 		 * @param {Template} options.template	The template to render this view with
@@ -52,9 +51,6 @@
 			// Store parent, if provided
 			this.parent = this.options.parent;
 			
-			// Store the model
-			this.model = this.options.model;
-			
 			// Store the controlling component
 			this.component = this.options.component;
 			
@@ -62,25 +58,23 @@
 			if (this.options.events)
 				this.delegateEvents(this.options.events);
 
+			// Store the model
+			if (this.options.model)
+				this.setModel(this.options.model);
+			
+			this.rendered = null;
+		},
+		
+		setModel: function(model) {
+			// Unsubscribe from old model's change and render event in case view.remove() was not called
+			if (this.model && this.model.off)
+				this.model.off('change', this.render);
+			
+			this.model = model;
+			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model && this.model.on) {
+			if (this.model.on)
 				this.model.on('change', this.render);
-				
-				/*
-				// TBD: Should we do these?
-				this.model.on('reset', function() {
-					console.log("View caught model reset!");
-					console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
-					this.render();
-				}.bind(this));
-				
-				// TBD: Should we do these?
-				this.model.on('loaded', function() {
-					console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
-					this.render();
-				}.bind(this));
-				*/
-			}
 			
 			this.rendered = null;
 		},
