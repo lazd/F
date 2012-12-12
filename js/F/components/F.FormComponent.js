@@ -70,7 +70,7 @@
 		handleSubmit: function(evt) {
 			// Blur focus to the submit button in order to hide keyboard on iOS
 			// This won't work for every situation, such as forms that don't have submit buttons
-			this.view.$el.find('[type="submit"]').first().focus();
+			this.view.$el.find('[type="submit"], button').first().focus();
 			
 			// Since this is a DOM event handler, prevent form submission
 			evt.preventDefault();
