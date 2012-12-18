@@ -210,7 +210,7 @@
 	
 	
 		/**
-		 * Handles showing/hiding components in singly mode
+		 * Handles showing/hiding components in singly mode, triggering of events
 		 *
 		 * @param {Function} evt	Event object from component:shown
 		 */
@@ -225,7 +225,13 @@
 					// Store currently visible subComponent
 					this.currentSubComponent = newComponent;
 				}
-			
+				
+				// Trigger an event to inidcate the component changed
+				this.trigger('subComponent:shown', {
+					name: evt.name,
+					component: evt.component
+				});
+				
 				// Show self
 				this.show();
 			}
