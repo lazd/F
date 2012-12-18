@@ -20,3 +20,6 @@ F.options = {
 	debug: false,
 	precompiledTemplates: true
 };
+
+// Let F be a global event hub
+ _.extend(F, Backbone.Events);
