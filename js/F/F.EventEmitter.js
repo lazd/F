@@ -1,69 +1,67 @@
 /**
- * Provides observer pattern for basic eventing
+ * Provides observer pattern for basic eventing. Directly uses Backbone.Events
  *
- * @class	
- * @extends BaseClass
+ * @class
  */
-F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
-	/** @constructs */
-	construct: function() {
-		this._events = {};
-	},
-	
-	/**
-	 * Destroy references to events and listeners.
-	 */
-	destruct: function() {
-		delete this._events;
-	},
-	
-	/**
-	 * Attach an event listener
-	 *
-	 * @param {String} evt		Name of event to listen to
-	 * @param {Function} func	Function to execute
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	on: function(evt, func) {
-		var listeners = this._events[evt] = this._events[evt] || [];
-		listeners.push(func);
-		
-		return this;
-	},
+F.EventEmitter = new Class(
+	Backbone.Events
 
 	/**
-	 * Remove an event listener
-	 *
-	 * @param {String} evt		Name of event that function is bound to
-	 * @param {Function} func	Bound function
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	off: function(evt, func) {
-		var listeners = this._events[evt];
-		if (listeners !== undefined);
-			listeners.splice(listeners.indexOf(func), 1);
-		
-		return this;
-	},
+		Bind one or more space separated events, or an events map,
+		to a `callback` function. Passing `"all"` will bind the callback to
+		all events fired.
+	
+		@name on
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
 	
 	/**
-	 * Trigger an event
-	 *
-	 * @param {String} evt		Name of event to trigger
-	 * @param {Arguments} args	Additional arguments are passed to the listener functions
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	trigger: function(evt) {
-		var listeners = this._events[evt];
-		if (listeners !== undefined) {
-			for (var i = 0, n = listeners.length; i < n; i++) {
-				listeners[i].apply(this, Array.prototype.slice.call(arguments, 1));
-			}
-		}
+		Bind events to only be triggered a single time. After the first time
+		the callback is invoked, it will be removed.
 		
-		return this;
-	}
-});
+		@name once
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		Remove one or many callbacks. If `context` is null, removes all
+		callbacks with that function. If `callback` is null, removes all
+		callbacks for the event. If `events` is null, removes all bound
+		callbacks for all events.
+		
+		@name off
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		Trigger one or many events, firing all bound callbacks. Callbacks are
+		passed the same arguments as `trigger` is, apart from the event name
+		(unless you're listening on `"all"`, which will cause your callback to
+		receive the true name of the event as the first argument).
+		
+		@name trigger
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		An inversion-of-control version of `on`. Tell *this* object to listen to
+		an event in another object ... keeping track of what it's listening to.
+		
+		@name listenTo
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+
+	/**
+		Tell this object to stop listening to either specific events ... or
+		to every object it's currently listening to.
+	
+		@name stopListening
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+);
