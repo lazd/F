@@ -35,6 +35,16 @@ var Class;
 	 */
 	
 	/**
+	 * A function that calls an inherited method by the same name as the callee
+	 *
+	 * @name inherited
+	 * @memberOf BaseClass.prototype
+	 * @function
+	 *
+	 * @param {Arguments} args	Unadulterated arguments array from calling function
+	 */
+	
+	/**
 	 * Binds a method of this instance to the execution scope of this instance.
 	 *
 	 * @name bind
@@ -103,6 +113,7 @@ var Class;
 		if (descriptor.hasOwnProperty('toString') && typeof descriptor.toString !== 'function') {
 			// Return the string provided
 			var classString = descriptor.toString;
+			/** @private */
 			descriptor.toString = function() {
 				return classString.toString();
 			};
@@ -136,15 +147,8 @@ var Class;
 			}
 		}
 
-		/**
-		 * A function that calls an inherited method by the same name as the callee
-		 *
-		 * @name inherited
-		 * @memberOf BaseClass.prototype
-		 * @function
-		 *
-		 * @param {Arguments} args	Unadulterated arguments array from calling function
-		 */
+		// A function that calls an inherited method by the same name as the callee
+		/** @private */
 		prototype.inherited = function(args) {
 			// Get the function that call us from the passed arguments objected
 			var caller = args.callee;
@@ -193,9 +197,8 @@ var Class;
 		// Add bind to the prototype of the class
 		prototype.bind = bindFunc;
 
-		/**
-		 * Call the destruct method of all inherited classes
-		 */
+		// Call the destruct method of all inherited classes
+		/** @private */
 		prototype.destruct = function() {
 			// Call our destruct method first
 			if (typeof destruct === 'function') {
@@ -208,10 +211,9 @@ var Class;
 			}
 		};
 
-		/**
-		 * Construct is called automatically
-		 */
 		// Create a chained construct function which calls the superclass' construct function
+		// Construct is called automatically
+		/** @private */
 		prototype.construct = function() {
 			// Add a blank object as the first arg to the constructor, if none provided
 			var args = arguments; // get around JSHint complaining about modifying arguments
