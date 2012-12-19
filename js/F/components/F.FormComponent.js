@@ -54,7 +54,7 @@
 		 */
 		clear: function() {
 			// Create a new model instead of resetting the old one
-			this.model = new this.Model();
+			this._setModel(new this.Model());
 
 			// Render the view so it will be blank again
 			this.render();
