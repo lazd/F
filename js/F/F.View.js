@@ -68,13 +68,13 @@
 		setModel: function(model) {
 			// Unsubscribe from old model's change and render event in case view.remove() was not called
 			if (this.model && this.model.off)
-				this.model.off('change', this.render);
+				this.stopListening(this.model);
 			
 			this.model = model;
 			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model.on)
-				this.model.on('change', this.render);
+			if (this.model && this.model.on)
+				this.listenTo(this.model, 'change', this.render);
 			
 			this.rendered = null;
 		},
@@ -94,9 +94,9 @@
 		remove: function() {
 			this.$el.remove();
 		
-			// Remove change listener
-			if (this.model && this.model.off)
-				this.model.off('change', this.render);
+			// Remove change listeners
+			if (this.model.off)
+				this.stopListening();
 		},
 		
 		/**

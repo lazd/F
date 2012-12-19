@@ -46,17 +46,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection = collection;
 		
 		// Re-render when the collection is fetched, items are added or removed
-		this.collection.on('add', this.addModel);
-		this.collection.on('remove', this.removeModel);
-		this.collection.on('loaded', this.render); // custom event we call after fetches
-		// this.collection.on('change', this.render); // Don't re-render on change! let the sub-views do that
+		this.listenTo(this.collection, 'add', this.addModel);
+		this.listenTo(this.collection, 'remove', this.removeModel);
+		this.listenTo(this.collection, 'loaded', this.render); // custom event we call after fetches
+		// this.listenTo(this.collection, 'change', this.render); // Don't re-render on change! let the sub-views do that
 	},
 	
 	_releaseCollection: function() {
 		// Unbind events
-		this.collection.off('add', this.addModel);
-		this.collection.off('remove', this.removeModel);
-		this.collection.off('loaded', this.render); // custom event we call after fetches
+		this.stopListening(this.collection);
 		
 		// Remove reference to collection
 		this.collection = null;

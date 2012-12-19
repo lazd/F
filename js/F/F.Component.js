@@ -183,7 +183,7 @@
 			}
 			
 			// Show a sub-component when it shows one of it's sub-components
-			component.on('component:shown', this._handleSubComponentShown);
+			this.listenTo(component, 'component:shown', this._handleSubComponentShown);
 			
 			return component;
 		},
@@ -199,7 +199,7 @@
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._handleSubComponentShown);
+				this.stopListening(component);
 		
 				delete this[componentName];
 				delete this.components[componentName];
