@@ -7,7 +7,7 @@
 	};
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
-		/**;
+		/**
 		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
 		 *
 		 * @constructs
@@ -24,11 +24,16 @@
 		 *
 		 */
 		initialize: function() {
-			if (this.template || this.options.template) {
+			if (this.options.parent !== undefined && this.options.el !== undefined) {
+				throw new Error('View: should provide either options.el or options.parent, never both');
+			}
+			
+			var template = this.template || this.options.template; // TBD: Should this be reversed?
+			if (template) {
 				if (F.options.precompiledTemplates)
-					this.template = this.template || this.options.template;
+					this.template = template;
 				else // For pre-compiled templates
-					this.template = Handlebars.template(this.template || this.options.template);
+					this.template = Handlebars.template(template);
 			}
 			
 			// Always call in our scope so parents can remove change listeners on models by referencing view.render
@@ -73,7 +78,7 @@
 			this.model = model;
 			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model && this.model.on)
+			if (this.model && this.model.on && !this.options.noRerender)
 				this.listenTo(this.model, 'change', this.render);
 			
 			this.rendered = null;
