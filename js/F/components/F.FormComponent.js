@@ -39,8 +39,14 @@
 			// Create a blank model
 			this.model = new this.Model();
 			
+			this.bind(this.handleSubmit);
+			
 			// Have to do it this way: with delegate, submit event is fired twice!
-			this.view.$el.on('submit', this.handleSubmit.bind(this));
+			this.view.$el.on('submit', this.handleSubmit);
+		},
+		
+		destruct: function() {
+			this.view.$el.off('submit', this.handleSubmit);
 		},
 	
 		View: FormView,
@@ -73,7 +79,8 @@
 			this.view.$el.find('[type="submit"], button').first().focus();
 			
 			// Since this is a DOM event handler, prevent form submission
-			evt.preventDefault();
+			if (evt && evt.preventDefault)
+				evt.preventDefault();
 			
 			// Get the data from the form fields
 			var fields = this.view.$el.serializeArray();
