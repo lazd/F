@@ -59,6 +59,9 @@
 				this.components[component].destruct();
 				delete this[component];
 			}
+			
+			// Stop listening, we're done
+			this.stopListening();
 		
 			// Clear references to components
 			delete this.components;
