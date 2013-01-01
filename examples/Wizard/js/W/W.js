@@ -15,7 +15,7 @@ var W = {
 		
 		// Create the wizard
 		W.wizard = new W.Wizard({
-			parent: '#wizard'
+			container: '#wizard'
 		});
 		
 		// Start watching history

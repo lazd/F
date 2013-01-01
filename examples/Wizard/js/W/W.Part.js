@@ -8,7 +8,7 @@ W.Part = new Class({
 	
 	construct: function(options) {
 		this.view = new F.View({
-			parent: options.parent,
+			container: options.container,
 			model: options.model,
 			template: this.Template,
 			component: this,
