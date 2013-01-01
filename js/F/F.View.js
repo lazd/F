@@ -8,14 +8,14 @@
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
 		/**
-		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
+		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a container or existing element
 		 *
 		 * @constructs
 		 *
 		 * @param {Object} options	Options for this view
 		 * @param {Template} options.template	The template to render this view with
-		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
-		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
+		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.container
+		 * @param {Element} [options.container]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
 		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
 		 * @param {Component} [options.component]	The component that events should be delegated to
 		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
@@ -24,11 +24,11 @@
 		 *
 		 */
 		initialize: function() {
-			if (this.options.parent !== undefined && this.options.el !== undefined) {
-				throw new Error('View: should provide either options.el or options.parent, never both');
+			if (this.options.container !== undefined && this.options.el !== undefined) {
+				throw new Error('View: should provide either options.el or options.container, never both');
 			}
 			
-			var template = this.template || this.options.template; // TBD: Should this be reversed?
+			var template = this.options.template || this.template;
 			if (template) {
 				if (F.options.precompiledTemplates)
 					this.template = template;
@@ -53,8 +53,8 @@
 				this.$el.addClass(this.className);
 			}
 			
-			// Store parent, if provided
-			this.parent = this.options.parent;
+			// Store container, if provided
+			this.container = this.options.container;
 			
 			// Store the controlling component
 			this.component = this.options.component;
@@ -162,19 +162,18 @@
 				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
 			}
 			
+			// Render template
 			if (this.template) {
-				// Render template
-				
 				// Use this view's model, or the model of the component it's part of
-				var model = this.model || this.component && this.component.model;
+				var model = this.model || (this.component && this.component.model);
 				
 				// First, see if the model exists. If so, see if it has toJSON. If so, use model.toJSON. Otherwise, if model exists, use model. Otherwise, use {}
 				this.$el.html(this.template(model && model.toJSON && model.toJSON() || model || {}));
 			}
 			
-			// Add to parent, if not already there
-			if (this.parent && !$(this.el.parentNode).is(this.parent)) {
-				$(this.parent).append(this.el);
+			// Add to container, if not already there
+			if (this.container && !$(this.el.parentNode).is(this.container)) {
+				$(this.container).append(this.el);
 			}
 		
 			// Store the last time this view was rendered

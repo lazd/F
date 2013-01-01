@@ -86,8 +86,8 @@
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
 			
-			if (this.parent && !$(this.el.parentNode).is(this.parent))
-				$(this.parent).append(this.el);
+			if (this.container && !$(this.el.parentNode).is(this.container))
+				$(this.container).append(this.el);
 
 			// Remove previous views from the DOM
 			this.removeSubViews();

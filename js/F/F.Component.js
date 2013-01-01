@@ -185,6 +185,9 @@
 				}
 			}
 			
+			// Store this component as the parent
+			component.parent = this;
+			
 			// Show a sub-component when it shows one of it's sub-components
 			this.listenTo(component, 'component:shown', this._handleSubComponentShown);
 			
