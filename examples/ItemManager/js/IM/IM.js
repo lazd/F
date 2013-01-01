@@ -22,7 +22,7 @@ var IM = {
 		// Prevent multiple calls to init from creating new Apps
 		if (!IM.app) {
 			IM.app = new IM.Components.App({
-				parent: '#itemManager',
+				container: '#itemManager',
 				visible: true // show immediately
 			});
 		}

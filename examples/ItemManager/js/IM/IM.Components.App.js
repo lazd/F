@@ -4,8 +4,8 @@ IM.Components.App = new Class({
 	
 	/*
 		Options can be used to insert a rendered view into the DOM:		
-			el: options.el,				// Directly use the el provided as this view's container
-			parent: options.parent,		// Or, create a container and insert it into the parent
+			el: options.el,				// Directly use the el provided as this view's element
+			container: options.container,		// Or, create an element and insert it into the container
 	*/
 	construct: function(options) {
 		// Hold the listItem and model associated with the currently selected item
@@ -22,7 +22,7 @@ IM.Components.App = new Class({
 			This component will display the list of items
 		*/  
 		this.addComponent(new this.ListComponent({
-			parent: this.view.$('.index'),
+			container: this.view.$('.index'),
 			visible: true,
 			Collection: this.Collection
 		}), 'list');          
@@ -32,13 +32,13 @@ IM.Components.App = new Class({
 			This component will display the details of the clicked item
 		*/
 		this.addComponent(new this.DetailsComponent({
-			parent: this.view.$('.details'),
+			container: this.view.$('.details'),
 			Model: this.Model
 		}), 'details');
 
 		// When an item is selected in the "list", tell the "details" component to display it
 		// Also, notify any parent components that an item is selected
-		this.list.on('itemSelected', this.itemSelected.bind(this));
+		this.list.on('list:itemSelected', this.itemSelected.bind(this));
 		
 		// Go back to list from details
 		this.details.on('component:hidden', this.deselectItem.bind(this));
