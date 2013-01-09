@@ -1,6 +1,6 @@
-/*! F - v0.1.0 - 2012-09-17
+/*! F - v0.1.0 - 2013-01-08
 * http://lazd.github.com/F/
-* Copyright (c) 2012 Lawrence Davis; Licensed BSD */
+* Copyright (c) 2013 Lawrence Davis; Licensed BSD */
 
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
@@ -36,6 +36,16 @@ var Class;
 	 * @name destruct
 	 * @memberOf BaseClass.prototype
 	 * @function
+	 */
+	
+	/**
+	 * A function that calls an inherited method by the same name as the callee
+	 *
+	 * @name inherited
+	 * @memberOf BaseClass.prototype
+	 * @function
+	 *
+	 * @param {Arguments} args	Unadulterated arguments array from calling function
 	 */
 	
 	/**
@@ -107,6 +117,7 @@ var Class;
 		if (descriptor.hasOwnProperty('toString') && typeof descriptor.toString !== 'function') {
 			// Return the string provided
 			var classString = descriptor.toString;
+			/** @private */
 			descriptor.toString = function() {
 				return classString.toString();
 			};
@@ -140,15 +151,8 @@ var Class;
 			}
 		}
 
-		/**
-		 * A function that calls an inherited method by the same name as the callee
-		 *
-		 * @name inherited
-		 * @memberOf BaseClass.prototype
-		 * @function
-		 *
-		 * @param {Arguments} args	Unadulterated arguments array from calling function
-		 */
+		// A function that calls an inherited method by the same name as the callee
+		/** @private */
 		prototype.inherited = function(args) {
 			// Get the function that call us from the passed arguments objected
 			var caller = args.callee;
@@ -197,9 +201,8 @@ var Class;
 		// Add bind to the prototype of the class
 		prototype.bind = bindFunc;
 
-		/**
-		 * Call the destruct method of all inherited classes
-		 */
+		// Call the destruct method of all inherited classes
+		/** @private */
 		prototype.destruct = function() {
 			// Call our destruct method first
 			if (typeof destruct === 'function') {
@@ -212,10 +215,9 @@ var Class;
 			}
 		};
 
-		/**
-		 * Construct is called automatically
-		 */
 		// Create a chained construct function which calls the superclass' construct function
+		// Construct is called automatically
+		/** @private */
 		prototype.construct = function() {
 			// Add a blank object as the first arg to the constructor, if none provided
 			var args = arguments; // get around JSHint complaining about modifying arguments
@@ -331,76 +333,76 @@ F.options = {
 	precompiledTemplates: true
 };
 
+// Let F be a global event hub
+ _.extend(F, Backbone.Events);
+
 /**
- * Provides observer pattern for basic eventing
+ * Provides observer pattern for basic eventing. Directly uses Backbone.Events
  *
- * @class	
- * @extends BaseClass
+ * @class
  */
-F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
-	/** @constructs */
-	construct: function() {
-		this._events = {};
-	},
-	
-	/**
-	 * Destroy references to events and listeners.
-	 */
-	destruct: function() {
-		delete this._events;
-	},
-	
-	/**
-	 * Attach an event listener
-	 *
-	 * @param {String} evt		Name of event to listen to
-	 * @param {Function} func	Function to execute
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	on: function(evt, func) {
-		var listeners = this._events[evt] = this._events[evt] || [];
-		listeners.push(func);
-		
-		return this;
-	},
+F.EventEmitter = new Class(
+	Backbone.Events
 
 	/**
-	 * Remove an event listener
-	 *
-	 * @param {String} evt		Name of event that function is bound to
-	 * @param {Function} func	Bound function
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	off: function(evt, func) {
-		var listeners = this._events[evt];
-		if (listeners !== undefined);
-			listeners.splice(listeners.indexOf(func), 1);
-		
-		return this;
-	},
+		Bind one or more space separated events, or an events map,
+		to a `callback` function. Passing `"all"` will bind the callback to
+		all events fired.
+	
+		@name on
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
 	
 	/**
-	 * Trigger an event
-	 *
-	 * @param {String} evt		Name of event to trigger
-	 * @param {Arguments} args	Additional arguments are passed to the listener functions
-	 *
-	 * @returns {F.EventEmitter}	this, chainable
-	 */
-	trigger: function(evt) {
-		var listeners = this._events[evt];
-		if (listeners !== undefined) {
-			for (var i = 0, n = listeners.length; i < n; i++) {
-				listeners[i].apply(this, Array.prototype.slice.call(arguments, 1));
-			}
-		}
+		Bind events to only be triggered a single time. After the first time
+		the callback is invoked, it will be removed.
 		
-		return this;
-	}
-});
+		@name once
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		Remove one or many callbacks. If `context` is null, removes all
+		callbacks with that function. If `callback` is null, removes all
+		callbacks for the event. If `events` is null, removes all bound
+		callbacks for all events.
+		
+		@name off
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		Trigger one or many events, firing all bound callbacks. Callbacks are
+		passed the same arguments as `trigger` is, apart from the event name
+		(unless you're listening on `"all"`, which will cause your callback to
+		receive the true name of the event as the first argument).
+		
+		@name trigger
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+	
+	/**
+		An inversion-of-control version of `on`. Tell *this* object to listen to
+		an event in another object ... keeping track of what it's listening to.
+		
+		@name listenTo
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
 
+	/**
+		Tell this object to stop listening to either specific events ... or
+		to every object it's currently listening to.
+	
+		@name stopListening
+		@memberOf F.EventEmitter.prototype
+		@function
+	*/
+);
 (function() {
 	// A couple functions required to override delegateEvents
 	var delegateEventSplitter = /^(\S+)\s*(.*)$/;
@@ -410,16 +412,15 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	};
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
-		/**;
-		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a parent
+		/**
+		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a container or existing element
 		 *
 		 * @constructs
-		 * @extends Backbone.View
 		 *
 		 * @param {Object} options	Options for this view
 		 * @param {Template} options.template	The template to render this view with
-		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.parent
-		 * @param {Element} [options.parent]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
+		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.container
+		 * @param {Element} [options.container]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
 		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
 		 * @param {Component} [options.component]	The component that events should be delegated to
 		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
@@ -428,11 +429,16 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		 *
 		 */
 		initialize: function() {
-			if (this.template || this.options.template) {
+			if (this.options.container !== undefined && this.options.el !== undefined) {
+				throw new Error('View: should provide either options.el or options.container, never both');
+			}
+			
+			var template = this.options.template || this.template;
+			if (template) {
 				if (F.options.precompiledTemplates)
-					this.template = this.template || this.options.template;
+					this.template = template;
 				else // For pre-compiled templates
-					this.template = Handlebars.template(this.template || this.options.template);
+					this.template = Handlebars.template(template);
 			}
 			
 			// Always call in our scope so parents can remove change listeners on models by referencing view.render
@@ -452,11 +458,8 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				this.$el.addClass(this.className);
 			}
 			
-			// Store parent, if provided
-			this.parent = this.options.parent;
-			
-			// Store the model
-			this.model = this.options.model;
+			// Store container, if provided
+			this.container = this.options.container;
 			
 			// Store the controlling component
 			this.component = this.options.component;
@@ -465,25 +468,23 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			if (this.options.events)
 				this.delegateEvents(this.options.events);
 
+			// Store the model
+			if (this.options.model)
+				this.setModel(this.options.model);
+			
+			this.rendered = null;
+		},
+		
+		setModel: function(model) {
+			// Unsubscribe from old model's change and render event in case view.remove() was not called
+			if (this.model && this.model.off)
+				this.stopListening(this.model);
+			
+			this.model = model;
+			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model && this.model.on) {
-				this.model.on('change', this.render);
-				
-				/*
-				// TBD: Should we do these?
-				this.model.on('reset', function() {
-					console.log("View caught model reset!");
-					console.log("%s: Re-rendering view because model was reset!", this.component && this.component.toString() || 'Orphaned view');
-					this.render();
-				}.bind(this));
-				
-				// TBD: Should we do these?
-				this.model.on('loaded', function() {
-					console.log("%s: Re-rendering view because model was loaded!", this.component && this.component.toString() || 'Orphaned view');
-					this.render();
-				}.bind(this));
-				*/
-			}
+			if (this.model && this.model.on && !this.options.noRerender)
+				this.listenTo(this.model, 'change', this.render);
 			
 			this.rendered = null;
 		},
@@ -503,9 +504,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 		remove: function() {
 			this.$el.remove();
 		
-			// Remove change listener
-			if (this.model && this.model.off)
-				this.model.off('change', this.render);
+			// Remove change listeners
+			if (this.model.off)
+				this.stopListening();
 		},
 		
 		/**
@@ -566,19 +567,18 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
 			}
 			
+			// Render template
 			if (this.template) {
-				// Render template
-				
 				// Use this view's model, or the model of the component it's part of
-				var model = this.model || this.component && this.component.model;
+				var model = this.model || (this.component && this.component.model);
 				
 				// First, see if the model exists. If so, see if it has toJSON. If so, use model.toJSON. Otherwise, if model exists, use model. Otherwise, use {}
 				this.$el.html(this.template(model && model.toJSON && model.toJSON() || model || {}));
 			}
 			
-			// Add to parent, if not already there
-			if (this.parent && !$(this.el.parentNode).is(this.parent)) {
-				$(this.parent).append(this.el);
+			// Add to container, if not already there
+			if (this.container && !$(this.el.parentNode).is(this.container)) {
+				$(this.container).append(this.el);
 			}
 		
 			// Store the last time this view was rendered
@@ -717,6 +717,9 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				this.components[component].destruct();
 				delete this[component];
 			}
+			
+			// Stop listening, we're done
+			this.stopListening();
 		
 			// Clear references to components
 			delete this.components;
@@ -840,8 +843,11 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 				}
 			}
 			
+			// Store this component as the parent
+			component.parent = this;
+			
 			// Show a sub-component when it shows one of it's sub-components
-			component.on('component:shown', this._handleSubComponentShown);
+			this.listenTo(component, 'component:shown', this._handleSubComponentShown);
 			
 			return component;
 		},
@@ -857,7 +863,7 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 			var component = this[componentName];
 		
 			if (component !== undefined) {
-				component.off('component:shown', this._handleSubComponentShown);
+				this.stopListening(component);
 		
 				delete this[componentName];
 				delete this.components[componentName];
@@ -868,19 +874,28 @@ F.EventEmitter = new Class(/** @lends F.EventEmitter# */{
 	
 	
 		/**
-		 * Handles showing/hiding components in singly mode
+		 * Handles showing/hiding components in singly mode, triggering of events
 		 *
 		 * @param {Function} evt	Event object from component:shown
 		 */
 		_handleSubComponentShown: function(evt) {
 			var newComponent = this.components[evt.name];
-		
+
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
 				if (this.options.singly && !newComponent.overlay) {
 					this.hideAllSubComponents([evt.name]);
+					
+					// Store currently visible subComponent
+					this.currentSubComponent = newComponent;
 				}
-			
+				
+				// Trigger an event to inidcate the component changed
+				this.trigger('subComponent:shown', {
+					name: evt.name,
+					component: evt.component
+				});
+				
 				// Show self
 				this.show();
 			}
@@ -1156,6 +1171,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				
 				if (typeof callback === 'function')
 					callback.call(this, this.model);
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					response: response
+				});
 			}.bind(this)
 		});
 		
@@ -1170,18 +1192,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	_setModel: function(model) {
-		if (this.model && this.model.off && this.view) {
-			// Unsubscribe from old model's change and render event in case view.remove() was not called
-			this.model.off('change', this.view.render);
-		}
-		
 		this.model = model;
-		
-		if (this.view) {
-			// Tell the view to re-render the next time it loads
-			this.view.rendered = null;
+	
+		if (this.model && this.model.off && this.view) {
+			this.view.setModel(model);
 		}
-
+		
 		return this;
 	},
 		
@@ -1215,6 +1231,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				// Call callback
 				if (typeof callback === 'function')
 					callback.call(this, model);
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					response: response
+				});
 			}.bind(this)
 		});
 		
@@ -1245,33 +1268,37 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @param {Object} data			Data to apply to model before performing save
 	 * @param {Function} callback	Callback to execute on successful fetch
+	 * @param {Object} options		Options to pass when calling model.save
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	save: function(data, callback) {
+	save: function(data, callback, options) {
 		if (this.model) {
 			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
-			this.model.save(data || {}, {
-				success: function() {
+			this.model.save(data || {}, _.extend({
+				success: function(model, response) {
 					if (this.inDebugMode())
 						console.log('%s: Save successful', this.toString());
 					
 					if (typeof callback === 'function')
-						callback.call(this, this.model);
+						callback.call(this, this.model, response);
 						
-					this.trigger('model:saved', this.model);
+					this.trigger('model:saved', {
+						model: this.model,
+						response: response
+					});
 				}.bind(this),
-				error: function(model, error) {
+				error: function(model, response) {
 					console.warn('%s: Error saving model', this.toString());
 					
 					this.trigger('model:saveFailed', {
 						model: this.model,
-						error: error
+						response: response
 					});
 				}.bind(this)
-			});
+			}, options));
 		}
 		else {
 			console.warn('%s: Cannot save, model is not truthy', this.toString());
@@ -1401,17 +1428,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection = collection;
 		
 		// Re-render when the collection is fetched, items are added or removed
-		this.collection.on('add', this.addModel);
-		this.collection.on('remove', this.removeModel);
-		this.collection.on('loaded', this.render); // custom event we call after fetches
-		// this.collection.on('change', this.render); // Don't re-render on change! let the sub-views do that
+		this.listenTo(this.collection, 'add', this.addModel);
+		this.listenTo(this.collection, 'remove', this.removeModel);
+		this.listenTo(this.collection, 'loaded', this.render); // custom event we call after fetches
+		// this.listenTo(this.collection, 'change', this.render); // Don't re-render on change! let the sub-views do that
 	},
 	
 	_releaseCollection: function() {
 		// Unbind events
-		this.collection.off('add', this.addModel);
-		this.collection.off('remove', this.removeModel);
-		this.collection.off('loaded', this.render); // custom event we call after fetches
+		this.stopListening(this.collection);
 		
 		// Remove reference to collection
 		this.collection = null;
@@ -1589,8 +1614,14 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			// Create a blank model
 			this.model = new this.Model();
 			
+			this.bind(this.handleSubmit);
+			
 			// Have to do it this way: with delegate, submit event is fired twice!
-			this.view.$el.on('submit', this.handleSubmit.bind(this));
+			this.view.$el.on('submit', this.handleSubmit);
+		},
+		
+		destruct: function() {
+			this.view.$el.off('submit', this.handleSubmit);
 		},
 	
 		View: FormView,
@@ -1604,7 +1635,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 */
 		clear: function() {
 			// Create a new model instead of resetting the old one
-			this.model = new this.Model();
+			this._setModel(new this.Model());
 
 			// Render the view so it will be blank again
 			this.render();
@@ -1620,21 +1651,22 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		handleSubmit: function(evt) {
 			// Blur focus to the submit button in order to hide keyboard on iOS
 			// This won't work for every situation, such as forms that don't have submit buttons
-			this.view.$el.find('[type="submit"]').first().focus();
+			this.view.$el.find('[type="submit"], button').first().focus();
 			
 			// Since this is a DOM event handler, prevent form submission
-			evt.preventDefault();
+			if (evt && evt.preventDefault)
+				evt.preventDefault();
 			
 			// Get the data from the form fields
 			var fields = this.view.$el.serializeArray();
-		
+			
 			// Build a data object from fields
 			var data = {};
 			_.each(fields, function(field) {
 				data[field.name] = field.value;
 			});
-		
-			// Perform the save, passing our modified as the second arg
+			
+			// Perform the save, passing our new, modified data
 			this.save(data);
 		}
 	});
@@ -1728,8 +1760,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
 			}
 			
-			if (this.parent && !$(this.el.parentNode).is(this.parent))
-				$(this.parent).append(this.el);
+			if (this.container && !$(this.el.parentNode).is(this.container))
+				$(this.container).append(this.el);
 
 			// Remove previous views from the DOM
 			this.removeSubViews();

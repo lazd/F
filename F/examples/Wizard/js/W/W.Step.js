@@ -5,8 +5,8 @@ W.Step = new Class({
 	
 	construct: function(options) {
 		this.view = new this.View({
-			parent: options.parent,
-			template: this.Template,
+			container: options.container,
+			template: options.template || this.Template,
 			component: this
 		}).render(); // render right away so subclasses can add other views and components to this templates
 	},
@@ -20,9 +20,6 @@ W.Step = new Class({
 			'click .prev': "prevStep"
 		}
 	}),
-	
-	// Use the template we've defined to render the review
-	Template: W.Templates['Step'],
 	
 	// Tell the parent to go to the next step
 	nextStep: function() {

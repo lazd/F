@@ -6,72 +6,69 @@
 	.REGX {color: #339;}
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
-<span class='line'>  2</span>  * Provides observer pattern for basic eventing
+<span class='line'>  2</span>  * Provides observer pattern for basic eventing. Directly uses Backbone.Events
 <span class='line'>  3</span>  *
-<span class='line'>  4</span>  * @class	
-<span class='line'>  5</span>  * @extends BaseClass
-<span class='line'>  6</span>  */</span><span class="WHIT">
-<span class='line'>  7</span> </span><span class="NAME">F.EventEmitter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Class</span><span class="PUNC">(</span><span class="COMM">/** @lends F.EventEmitter# */</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>  8</span> </span><span class="WHIT">	</span><span class="COMM">/** @constructs */</span><span class="WHIT">
-<span class='line'>  9</span> </span><span class="WHIT">	</span><span class="NAME">construct</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 10</span> </span><span class="WHIT">		</span><span class="NAME">this._events</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 11</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 12</span> </span><span class="WHIT">	
-<span class='line'> 13</span> 	</span><span class="COMM">/**
-<span class='line'> 14</span> 	 * Destroy references to events and listeners.
-<span class='line'> 15</span> 	 */</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">	</span><span class="NAME">destruct</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">		</span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">this._events</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 18</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 19</span> </span><span class="WHIT">	
-<span class='line'> 20</span> 	</span><span class="COMM">/**
-<span class='line'> 21</span> 	 * Attach an event listener
-<span class='line'> 22</span> 	 *
-<span class='line'> 23</span> 	 * @param {String} evt		Name of event to listen to
-<span class='line'> 24</span> 	 * @param {Function} func	Function to execute
-<span class='line'> 25</span> 	 *
-<span class='line'> 26</span> 	 * @returns {F.EventEmitter}	this, chainable
-<span class='line'> 27</span> 	 */</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">	</span><span class="NAME">on</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">listeners</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._events</span><span class="PUNC">[</span><span class="NAME">evt</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._events</span><span class="PUNC">[</span><span class="NAME">evt</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 30</span> </span><span class="WHIT">		</span><span class="NAME">listeners.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">		
-<span class='line'> 32</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 34</span> 
-<span class='line'> 35</span> </span><span class="WHIT">	</span><span class="COMM">/**
-<span class='line'> 36</span> 	 * Remove an event listener
-<span class='line'> 37</span> 	 *
-<span class='line'> 38</span> 	 * @param {String} evt		Name of event that function is bound to
-<span class='line'> 39</span> 	 * @param {Function} func	Bound function
-<span class='line'> 40</span> 	 *
-<span class='line'> 41</span> 	 * @returns {F.EventEmitter}	this, chainable
-<span class='line'> 42</span> 	 */</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">	</span><span class="NAME">off</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 44</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">listeners</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._events</span><span class="PUNC">[</span><span class="NAME">evt</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">listeners</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">			</span><span class="NAME">listeners.splice</span><span class="PUNC">(</span><span class="NAME">listeners.indexOf</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="WHIT">		
-<span class='line'> 48</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">	
-<span class='line'> 51</span> 	</span><span class="COMM">/**
-<span class='line'> 52</span> 	 * Trigger an event
-<span class='line'> 53</span> 	 *
-<span class='line'> 54</span> 	 * @param {String} evt		Name of event to trigger
-<span class='line'> 55</span> 	 * @param {Arguments} args	Additional arguments are passed to the listener functions
-<span class='line'> 56</span> 	 *
-<span class='line'> 57</span> 	 * @returns {F.EventEmitter}	this, chainable
-<span class='line'> 58</span> 	 */</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">	</span><span class="NAME">trigger</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">listeners</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._events</span><span class="PUNC">[</span><span class="NAME">evt</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">listeners</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">			</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">listeners.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">				</span><span class="NAME">listeners</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Array.prototype.slice.call</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">		
-<span class='line'> 67</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span></pre></body></html>
+<span class='line'>  4</span>  * @class
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="NAME">F.EventEmitter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Class</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">	</span><span class="NAME">Backbone.Events</span><span class="WHIT">
+<span class='line'>  8</span> 
+<span class='line'>  9</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 10</span> 		Bind one or more space separated events, or an events map,
+<span class='line'> 11</span> 		to a `callback` function. Passing `"all"` will bind the callback to
+<span class='line'> 12</span> 		all events fired.
+<span class='line'> 13</span> 	
+<span class='line'> 14</span> 		@name on
+<span class='line'> 15</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 16</span> 		@function
+<span class='line'> 17</span> 	*/</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">	
+<span class='line'> 19</span> 	</span><span class="COMM">/**
+<span class='line'> 20</span> 		Bind events to only be triggered a single time. After the first time
+<span class='line'> 21</span> 		the callback is invoked, it will be removed.
+<span class='line'> 22</span> 		
+<span class='line'> 23</span> 		@name once
+<span class='line'> 24</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 25</span> 		@function
+<span class='line'> 26</span> 	*/</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">	
+<span class='line'> 28</span> 	</span><span class="COMM">/**
+<span class='line'> 29</span> 		Remove one or many callbacks. If `context` is null, removes all
+<span class='line'> 30</span> 		callbacks with that function. If `callback` is null, removes all
+<span class='line'> 31</span> 		callbacks for the event. If `events` is null, removes all bound
+<span class='line'> 32</span> 		callbacks for all events.
+<span class='line'> 33</span> 		
+<span class='line'> 34</span> 		@name off
+<span class='line'> 35</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 36</span> 		@function
+<span class='line'> 37</span> 	*/</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">	
+<span class='line'> 39</span> 	</span><span class="COMM">/**
+<span class='line'> 40</span> 		Trigger one or many events, firing all bound callbacks. Callbacks are
+<span class='line'> 41</span> 		passed the same arguments as `trigger` is, apart from the event name
+<span class='line'> 42</span> 		(unless you're listening on `"all"`, which will cause your callback to
+<span class='line'> 43</span> 		receive the true name of the event as the first argument).
+<span class='line'> 44</span> 		
+<span class='line'> 45</span> 		@name trigger
+<span class='line'> 46</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 47</span> 		@function
+<span class='line'> 48</span> 	*/</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">	
+<span class='line'> 50</span> 	</span><span class="COMM">/**
+<span class='line'> 51</span> 		An inversion-of-control version of `on`. Tell *this* object to listen to
+<span class='line'> 52</span> 		an event in another object ... keeping track of what it's listening to.
+<span class='line'> 53</span> 		
+<span class='line'> 54</span> 		@name listenTo
+<span class='line'> 55</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 56</span> 		@function
+<span class='line'> 57</span> 	*/</span><span class="WHIT">
+<span class='line'> 58</span> 
+<span class='line'> 59</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 60</span> 		Tell this object to stop listening to either specific events ... or
+<span class='line'> 61</span> 		to every object it's currently listening to.
+<span class='line'> 62</span> 	
+<span class='line'> 63</span> 		@name stopListening
+<span class='line'> 64</span> 		@memberOf F.EventEmitter.prototype
+<span class='line'> 65</span> 		@function
+<span class='line'> 66</span> 	*/</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>

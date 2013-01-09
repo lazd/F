@@ -14,29 +14,29 @@ W.Wizard = new Class({
 		
 		// The main view for the wizard
 		this.view = new this.View({
-			parent: options.parent,
+			container: options.container,
 			component: this,			// Let this view directly call our functions by name in the Backbones event object
 			template: this.Template		// Pass the template from our prototype for rendering
 		}).render(); // since our sub-component insert themselves into our element, make sure we've already rendered the template, otherwise we'll erase them
 		
 		// Add each step
 		this.addComponent(new W.Step({
-			parent: this.view.el,	// insert it into the wizard's view
-			Template: W.Templates['Step1']
+			container: this.view.el,	// insert it into the wizard's view
+			template: W.Templates['Step1']
 		}), 'step1')
 		.on('nextStep', this.nextStep)
 		.on('prevStep', this.prevStep);
 		
 		// Step 2 isn't a generic step, so we broke it out into another class
 		this.addComponent(new W.Step2({
-			parent: this.view.el,	// insert it into the wizard's view
+			container: this.view.el,	// insert it into the wizard's view
 		}))
 		.on('nextStep', this.nextStep)
 		.on('prevStep', this.prevStep);
 		
 		this.addComponent(new W.Step({
-			parent: this.view.el,	// insert it into the wizard's view
-			Template: W.Templates['Step3']
+			container: this.view.el,	// insert it into the wizard's view
+			template: W.Templates['Step3']
 		}), 'step3')
 		.on('nextStep', this.nextStep)
 		.on('prevStep', this.prevStep);

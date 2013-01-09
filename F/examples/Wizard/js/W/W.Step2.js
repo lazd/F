@@ -14,7 +14,7 @@ W.Step2 = new Class({
 		// Add the components that make up step 2's parts
 		this.addComponent( 
 			new W.Part({
-				parent: this.view.$('.part1'),
+				container: this.view.$('.part1'),
 				model: {
 					name: 'Part 1',
 					content: 'Do the dew.'
@@ -27,7 +27,7 @@ W.Step2 = new Class({
 		// To reference this component: W.wizard.step2.part2
 		this.addComponent( 
 			new W.Part({
-				parent: this.view.$('.part2'),
+				container: this.view.$('.part2'),
 				model: {
 					name: 'Part 2',
 					content: 'Write the code.'
