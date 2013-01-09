@@ -122,7 +122,7 @@
 
 		_.extend(options, {
 			// Add this component to body of the page
-			parent: document.body,
+			container: document.body,
 			// Render this component with our template
 			template: this.Template,
 			// Let events call this component's methods
@@ -138,7 +138,7 @@
 			// show the component immediately
 			visible: true,
 			// add the sub-component to element div.welcome
-			parent: this.view.$('.welcome')
+			container: this.view.$('.welcome')
 		}));
 	},
 	destruct: function() {
