@@ -84,14 +84,14 @@
 			
 			// Get the data from the form fields
 			var fields = this.view.$el.serializeArray();
-		
+			
 			// Build a data object from fields
 			var data = {};
 			_.each(fields, function(field) {
 				data[field.name] = field.value;
 			});
-		
-			// Perform the save, passing our modified as the second arg
+			
+			// Perform the save, passing our new, modified data
 			this.save(data);
 		}
 	});
