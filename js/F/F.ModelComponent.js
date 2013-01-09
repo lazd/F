@@ -56,7 +56,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	_setModel: function(model) {	
+	_setModel: function(model) {
 		this.model = model;
 	
 		if (this.model && this.model.off && this.view) {
@@ -133,15 +133,16 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @param {Object} data			Data to apply to model before performing save
 	 * @param {Function} callback	Callback to execute on successful fetch
+	 * @param {Object} options		Options to pass when calling model.save
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	save: function(data, callback) {
+	save: function(data, callback, options) {
 		if (this.model) {
 			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
-			this.model.save(data || {}, {
+			this.model.save(data || {}, _.extend({
 				success: function(model, response) {
 					if (this.inDebugMode())
 						console.log('%s: Save successful', this.toString());
@@ -162,7 +163,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 						response: response
 					});
 				}.bind(this)
-			});
+			}, options));
 		}
 		else {
 			console.warn('%s: Cannot save, model is not truthy', this.toString());
