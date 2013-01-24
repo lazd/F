@@ -132,7 +132,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * Save a model to the server
 	 *
 	 * @param {Object} data			Data to apply to model before performing save
-	 * @param {Function} callback	Callback to execute on successful fetch
+	 * @param {Function} callback	Callback to execute on success/failure. Passed an error, the model, and the response from the server
 	 * @param {Object} options		Options to pass when calling model.save
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
@@ -148,7 +148,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 						console.log('%s: Save successful', this.toString());
 					
 					if (typeof callback === 'function')
-						callback.call(this, this.model, response);
+						callback.call(this, null, this.model, response);
 						
 					this.trigger('model:saved', {
 						model: this.model,
@@ -157,6 +157,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				}.bind(this),
 				error: function(model, response) {
 					console.warn('%s: Error saving model', this.toString());
+					
+					if (typeof callback === 'function')
+						callback.call(this, new Error('Error saving model'), this.model, response);
 					
 					this.trigger('model:saveFailed', {
 						model: this.model,
