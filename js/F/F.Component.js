@@ -273,6 +273,12 @@
 			// Always call show on the view so it has a chance to re-render
 			if (this.view) {
 				this.view.show();
+				
+				// Call setup if we're not setup
+				if (!this.options.isSetup && typeof this.setup === 'function') {
+					this.setup(options);
+					this.options.isSetup = true;
+				}
 			}
 		
 			this.options.visible = true;
@@ -305,6 +311,12 @@
 					name: this.toString(),
 					component: this
 				});
+			}
+			
+			// Call teardown if we're setup
+			if (this.options.isSetup && typeof this.teardown === 'function') {
+				this.teardown(options);
+				this.options.isSetup = false;
 			}
 		
 			this.options.visible = false;
