@@ -202,12 +202,12 @@ var Class;
 		prototype.destruct = function() {
 			// Call our destruct method first
 			if (typeof destruct === 'function') {
-				destruct.apply(this);
+				destruct.apply(this, arguments);
 			}
 
 			// Call superclass destruct method after this class' method
 			if (extend && extend.prototype && typeof extend.prototype.destruct === 'function') {
-				extend.prototype.destruct.apply(this);			
+				extend.prototype.destruct.apply(this, arguments);
 			}
 		};
 
