@@ -45,6 +45,7 @@ module.exports = function(grunt) {
 					'js/Class/Class.js',
 
 					'js/F/F.js',
+					'js/F/F.Utilities.js',
 					'js/F/F.EventEmitter.js',
 					'js/F/F.View.js',
 					'js/F/F.Component.js',
@@ -92,7 +93,7 @@ module.exports = function(grunt) {
 				boss: true,
 				eqnull: true,
 				browser: true,
-                smarttabs: true,
+				smarttabs: true,
 				predef: [
 					'F',				// component framework
 					'Class',			// modified version of Crockford's new_constructor
