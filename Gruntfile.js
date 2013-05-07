@@ -23,8 +23,7 @@ module.exports = function(grunt) {
 		copy: {
 			examples: {
 				files: {
-					src: ['examples/*'],
-					dest: '<%= dirs.build %>examples'
+					'<%= dirs.build %>/': 'examples/**/*'
 				}
 			}
 		},
@@ -59,24 +58,6 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		watch: {
-			copyExamples: {
-				files: '<config:copy.examples.src>',
-				tasks: 'copy:examples'
-			},
-			jshint: {
-				files: '<config:jshint.files>',
-				tasks: 'jshint'
-			},
-			concatjs: {
-				files: 'js/**',
-				tasks: 'concat:js'
-			},
-			uglify: {
-				files: '<config:concat.js.dest>',
-				tasks: 'uglify'
-			}
-		},
 		jshint: {
 			Gruntfile: 'Gruntfile.js',
 			source: 'js/**/*.js',
@@ -102,6 +83,24 @@ module.exports = function(grunt) {
 					'_',			// Underscore
 					'Handlebars'	// Handlebars
 				]
+			}
+		},
+		watch: {
+			copyExamples: {
+				files: ['examples/**/*'],
+				tasks: ['copy:examples']
+			},
+			jshint: {
+				files: ['Gruntfile.js', 'js/**/*.js'],
+				tasks: ['jshint']
+			},
+			concatjs: {
+				files: ['js/**/*.js'],
+				tasks: ['concat:js']
+			},
+			uglify: {
+				files: ['<config:concat.js.dest>'],
+				tasks: ['uglify']
 			}
 		}
 	});
