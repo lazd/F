@@ -6,7 +6,7 @@
 	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
-			// 'submit': 'handleSubmit'	// Can't do it this way: submit event is fired twice!
+			'submit': 'handleSubmit'
 		}
 	});
 	
@@ -40,15 +40,8 @@
 			this.model = new this.Model();
 			
 			this.bind(this.handleSubmit);
-			
-			// Have to do it this way: with delegate, submit event is fired twice!
-			this.view.$el.on('submit', this.handleSubmit);
 		},
-		
-		destruct: function() {
-			this.view.$el.off('submit', this.handleSubmit);
-		},
-	
+
 		View: FormView,
 	
 		Template: null,
@@ -62,10 +55,27 @@
 			// Create a new model instead of resetting the old one
 			this._setModel(new this.Model());
 
+			// Call the load success function
+			var trigger = true;
+			if (typeof this.handleLoadSuccess === 'function')
+				this.handleLoadSuccess(this.model);
+			
 			// Render the view so it will be blank again
 			this.render();
 		
 			return this;
+		},
+		
+		/**
+		 * Blurs focus from the form, mostly for iOS
+		 */
+		doBlur: function() {
+			// Blur focus to the submit button in order to hide keyboard on iOS
+			// This won't work for every situation, such as forms that don't have submit buttons
+			var $button = this.view.$('[type="submit"], button').filter(':visible').last().focus();
+			setTimeout(function() {
+				$button.blur();
+			}, 10);
 		},
 	
 		/**
@@ -74,26 +84,53 @@
 		 * @param {Event} evt	The jQuery event object
 		 */
 		handleSubmit: function(evt) {
-			// Blur focus to the submit button in order to hide keyboard on iOS
-			// This won't work for every situation, such as forms that don't have submit buttons
-			this.view.$el.find('[type="submit"], button').first().focus();
+			this.doBlur();
 			
 			// Since this is a DOM event handler, prevent form submission
 			if (evt && evt.preventDefault)
 				evt.preventDefault();
 			
+			this.saveForm();
+		},
+		
+		/**
+		 * Read data from the form. Override this function customization of extracting your form data
+		 *
+		 * @returns {Object}	Data read from form
+		 */
+		extractValuesFromForm: function() {
 			// Get the data from the form fields
-			var fields = this.view.$el.serializeArray();
+			var $form = this.view.$el;
+			if (this.view.el.tagName !== 'FORM')
+				$form = this.view.$('form');
+				
+			var fields = $form.filter(':not([data-serialize="false"])').serializeArray();
 			
 			// Build a data object from fields
 			var data = {};
 			_.each(fields, function(field) {
-				data[field.name] = field.value;
+				F.set(data, field.name, field.value, true);
 			});
 			
+			return data;
+		},
+		
+		/**
+		 * Read the data from the form and store it in the model
+		 */
+		setValuesFromForm: function() {
+			this.model.set(this.extractValuesFromForm());
+		},
+		
+		/**
+		 * Read the data from the form and perform the save
+		 *
+		 * @param {Function} callback	A callback to execute when the save is complete
+		 */
+		saveForm: function(callback) {
 			// Perform the save, passing our new, modified data
-			this.save(data);
+			this.save(this.extractValuesFromForm(), callback);
 		}
+		
 	});
-
 }());
