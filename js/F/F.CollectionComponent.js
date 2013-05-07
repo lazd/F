@@ -110,6 +110,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		else // Overwrite old params with defaults and send a request with only default params
 			this.params = _.extend({}, this.options.defaultParams);
 		
+		this.trigger('collection:loading', this.collection);
+		
 		// Fetch collection contents
 		this.collection.fetch({
 			data: this.params,
@@ -180,6 +182,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		return this;
 	}
 	
+	
+	/**
+	 * Triggered when the collection is being loaded from the server
+	 *
+	 * @name F.CollectionComponent#collection:loading
+	 * @event
+	 *
+	 * @param {Backbone.Collection}	collection	The collection that is being loaded
+	 */
 	
 	/**
 	 * Triggered when the collection is loaded from the server
