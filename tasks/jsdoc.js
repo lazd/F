@@ -1,21 +1,24 @@
+'use strict';
+
 module.exports = function(grunt) {
-	grunt.registerMultiTask('jsdoc', 'This builds jsdoc from source files.', function() {
-		var config = grunt.config();
+	var exports = {};
+
+	grunt.task.registerMultiTask('jsdoc', 'This builds jsdoc from source files.', function() {
+		var async = this.async;
+
+		this.files.forEach(function(file) {
+			// Run JSDoc
+			exports.jsdoc({
+				done: async(),
+				src: grunt.file.expand({ filter: 'isFile' }, file.src),
+				dest:  file.dest
+			});
+		});
 		
-		var src = grunt.file.expandFiles(this.data.src);
-		var dest = grunt.template.process(this.data.dest, config);
-		
-		var options = {
-			done: this.async(),
-			script: this.data.script,
-			src: src,
-			dest: dest
-		};
-		
-		grunt.helper('jsdoc', options);
 	});
 
-	grunt.registerHelper('jsdoc', function(options) {
+	// Expose for testing
+	exports.jsdoc = function(options) {
 		// jsdoc args
 		var args = [
 			'-jar',
@@ -29,7 +32,7 @@ module.exports = function(grunt) {
 		// Add source files
 		args = args.concat(options.src);
 		
-		return grunt.utils.spawn(
+		return grunt.util.spawn(
 			{
 				cmd: 'java',
 				args: args
@@ -38,7 +41,10 @@ module.exports = function(grunt) {
 				var success = (code == 0);
 			
 				if (success) {
-					grunt.log.write(result.stdout);
+					grunt.log.writeln(result.stdout);
+
+					// Print a success message.
+					grunt.log.ok('JSDoc built.');
 				}
 				else {
 					grunt.log.error(err.stderr);
@@ -48,6 +54,7 @@ module.exports = function(grunt) {
 				options.done(success);
 			}
 		);
-	});
-};
+	};
 
+	return exports;
+};
