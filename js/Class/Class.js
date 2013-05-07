@@ -242,6 +242,9 @@ var Class;
 			// Call all inherited construct functions
 			prototype.construct.apply(instance, arguments);
 
+			if (typeof prototype.constructed === 'function')
+				prototype.constructed.apply(instance, arguments);
+
 			return instance;
 		};
 
