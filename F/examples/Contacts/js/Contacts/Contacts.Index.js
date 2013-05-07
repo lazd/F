@@ -67,10 +67,14 @@ Contacts.Index = new Class({
 	ListComponent: Contacts.List,
 	
 	show: function() {
-		this.endDeleteMode();
+		// End delete mode before we're shown
+		if (this.deleteMode)
+			this.endEditMode();
 
+		// Call the super class' show method
 		this.inherited(arguments);
 
+		// Show the list whenever we're shown
 		this.list.show();
 	},
 	
@@ -81,24 +85,24 @@ Contacts.Index = new Class({
 	
 	handleDeleteMode: function() {
 		if (this.deleteMode)
-			this.endDeleteMode();
+			this.endEditMode();
 		else
-			this.startDeleteMode();
+			this.startEditMode();
 	},
 	
-	endDeleteMode: function() {
+	endEditMode: function() {
 		this.view.$('.edit').html('Edit').removeClass('default');
 		this.view.$('.new').show();
 		this.view.$('.search').show();
-		this.list.endDeleteMode();
+		this.list.endEditMode();
 		this.deleteMode = false;
 	},
 	
-	startDeleteMode: function() {
+	startEditMode: function() {
 		this.view.$('.edit').html('Done').addClass('default');
 		this.view.$('.new').hide();
 		this.view.$('.search').hide();
-		this.list.startDeleteMode();
+		this.list.startEditMode();
 		this.deleteMode = true;
 	},
 	
