@@ -46,6 +46,36 @@
 			this.bind(this.render);
 		},
 		
+		constructed: function() {
+			// Hide view by default
+			if (this.view) {
+				if (this.view.el) {
+					if (this.options.visible === true) {
+						// Call show method so view is rendered
+						this.show({ silent: true });
+					}
+					else {
+						// Just hide the el
+						this.view.$el.hide();
+					}
+				}
+				else {
+					console.warn('Component %s has a view without an element', this.toString, this, this.view, this.view.options);
+				}
+				
+				var self = this;
+				this.listenTo(this.view, 'renderComplete', function() {
+					if (typeof this.handleRenderComplete === 'function')
+						this.handleRenderComplete();
+					
+					self.trigger('view:rendered', {
+						component: self,
+						view: self.view
+					});
+				});
+			}
+		},
+		
 		/**
 		 * Destroy this instance and free associated memory
 		 */
@@ -55,10 +85,7 @@
 				this.view.remove();
 			
 			// Destroy sub-components
-			for (var component in this.components) {
-				this.components[component].destruct();
-				delete this[component];
-			}
+			this.removeComponents();
 			
 			// Stop listening, we're done
 			this.stopListening();
@@ -168,23 +195,6 @@
 			// Store component
 			this[componentName] = this.components[componentName] = component;
 		
-			// Hide view by default
-			if (component.view) {
-				if (component.view.el) {
-					if (component.options.visible === true) {
-						// Call show method so view is rendered
-						component.show({ silent: true });
-					}
-					else {
-						// Just hide the el
-						component.view.$el.hide();
-					}
-				}
-				else {
-					console.warn('Component %s has a view without an element', componentName, component, component.view, component.view.options);
-				}
-			}
-			
 			// Store this component as the parent
 			component.parent = this;
 			
@@ -195,7 +205,7 @@
 		},
 	
 		/**
-		 * Remove a sub-component
+		 * Remove and destroy a sub-component
 		 *
 		 * @param {Function} componentName	Component name
 		 *
@@ -209,11 +219,27 @@
 		
 				delete this[componentName];
 				delete this.components[componentName];
+				
+				if (typeof component.destruct === 'function')
+					component.destruct();
 			}
 		
 			return this;
 		},
-	
+		
+		/**
+		 * Remove and destroy all sub-components
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		removeComponents: function() {
+			for (var component in this.components) {
+				this.components[component].destruct();
+				delete this[component];
+			}
+			
+			return this;
+		},
 	
 		/**
 		 * Handles showing/hiding components in singly mode, triggering of events
@@ -225,21 +251,12 @@
 
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
-				if (this.options.singly && !newComponent.overlay) {
+				if (this.options.singly && !newComponent.options.overlay) {
 					this.hideAllSubComponents([evt.name]);
 					
 					// Store currently visible subComponent
 					this.currentSubComponent = newComponent;
 				}
-				
-				// Trigger an event to inidcate the component changed
-				this.trigger('subComponent:shown', {
-					name: evt.name,
-					component: evt.component
-				});
-				
-				// Show self
-				this.show();
 			}
 		},
 	
@@ -262,7 +279,7 @@
 					console.log('%s: showing self', this.toString());
 			}
 		
-			if (!options.silent) {
+			if (!options.silent && !this.options.independent) {
 				// Always trigger event before we show ourself so others can hide/show
 				this.trigger('component:shown', {
 					name: this.toString(),
@@ -273,14 +290,14 @@
 			// Always call show on the view so it has a chance to re-render
 			if (this.view) {
 				this.view.show();
-				
-				// Call setup if we're not setup
-				if (!this.options.isSetup && typeof this.setup === 'function') {
-					this.setup(options);
-					this.options.isSetup = true;
-				}
 			}
-		
+			
+			// Call setup if we're not setup
+			if (!this.options.isSetup && typeof this.setup === 'function') {
+				this.setup(options);
+				this.options.isSetup = true;
+			}
+			
 			this.options.visible = true;
 	
 			return this;
@@ -318,6 +335,10 @@
 				this.teardown(options);
 				this.options.isSetup = false;
 			}
+		
+			// Hide children
+			if (this.options.hideChildren !== false)
+				this.hideAllSubComponents();
 		
 			this.options.visible = false;
 	
@@ -368,9 +389,9 @@
 		 * @returns {F.Component}	this, chainable
 		 */
 		hideAllSubComponents: function(except) {
-			except = !_.isArray(except) ? [] : except;
+			except = _.isArray(except) ? except : false;
 			for (var componentName in this.components) {
-				if (~except.indexOf(componentName))
+				if (except && ~except.indexOf(componentName))
 					continue;
 				this.components[componentName].hide();
 			}
@@ -462,6 +483,14 @@
 
 			return options;
 		}
+
+		/**
+		 * Called when view rendering is complete
+		 *
+		 * @name handleRenderComplete
+		 * @memberOf F.Component.prototype
+		 * @function
+		 */
 		
 		/**
 		 * Triggered when this component is shown
