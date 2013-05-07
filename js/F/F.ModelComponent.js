@@ -26,23 +26,41 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	refresh: function(callback) {
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
 		this.model.fetch({
-			success: function() {
-				// Trigger model event
-				this.model.trigger('loaded');
+			success: function(model, response) {
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Trigger model event
+					this.model.trigger('loaded');
 				
-				// Trigger component event
-				this.trigger('model:loaded', this.model);
+					// Trigger component event
+					this.trigger('model:loaded', {
+						model: this.model
+					});
 				
-				if (typeof callback === 'function')
-					callback.call(this, this.model);
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
 			}.bind(this),
 			error: function(model, response) {
 				console.warn('%s: Error loading model', this.toString());
 				
 				this.trigger('model:loadFailed', {
+					model: this.model,
 					response: response
 				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
 			}.bind(this)
 		});
 		
@@ -79,30 +97,47 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		if (itemId !== undefined) { // add the ID passed to the model data
 			data[this.Model.prototype.idAttribute] = itemId;
 		}
-		
+
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
 		// Create a blank model
 		var model = new this.Model(data);
 	
 		// Fetch model contents
 		model.fetch({
 			// TBD: add fetch options?
-			success: function() {
+			success: function(model, response) {
 				// Assign the model to the view
 				this._setModel(model);
 				
-				// Notify
-				this.trigger('model:loaded', this.model);
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Notify
+					this.trigger('model:loaded', {
+						model: this.model
+					});
 				
-				// Call callback
-				if (typeof callback === 'function')
-					callback.call(this, model);
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
 			}.bind(this),
 			error: function(model, response) {
 				console.warn('%s: Error loading model', this.toString());
 				
 				this.trigger('model:loadFailed', {
+					model: this.model,
 					response: response
 				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
 			}.bind(this)
 		});
 		
@@ -123,7 +158,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			this._setModel(new this.Model(modelOrData));
 		
 		// Notify
-		this.trigger('model:loaded', this.model);
+		this.trigger('model:loaded', {
+			model: this.model
+		});
 		
 		return this;
 	},
@@ -142,6 +179,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
+			this.trigger('model:saving', {
+				model: this.model
+			});
+			
 			this.model.save(data || {}, _.extend({
 				success: function(model, response) {
 					if (this.inDebugMode())
@@ -149,7 +190,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					
 					if (typeof callback === 'function')
 						callback.call(this, null, this.model, response);
-						
+					
+					if (typeof this.handleSaveSuccess === 'function')
+						this.handleSaveSuccess(this.model, response);
+					
 					this.trigger('model:saved', {
 						model: this.model,
 						response: response
@@ -161,6 +205,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					if (typeof callback === 'function')
 						callback.call(this, new Error('Error saving model'), this.model, response);
 					
+					if (typeof this.handleSaveError === 'function')
+						this.handleSaveError(this.model, response);
+						
 					this.trigger('model:saveFailed', {
 						model: this.model,
 						response: response
@@ -216,11 +263,46 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			
 		return this;
 	}
+
+	/**
+	 * Called when a model has been loaded successfully
+	 *
+	 * @name handleLoadSuccess
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+
+	/**
+	 * Called when a model fails to load
+	 *
+	 * @param {Backbone.Model} model	The model that failed to load
+	 * @param {Object} response			The response from Backbone
+	 *
+	 * @name handleLoadError
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
 	
 	/**
-	 * Triggered after a successful save
+	 * Called when a model has been saved successfully
 	 *
-	 * @name F.ModelComponent#model:saved
+	 * @name handleSaveSuccess
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+	
+	/**
+	 * Called when a model fails to save
+	 *
+	 * @name handleSaveError
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+	
+	/**
+	 * Triggered when a model is saving
+	 *
+	 * @name F.ModelComponent#model:saving
 	 * @event
 	 *
 	 * @param {Object} evt					Event object
@@ -235,6 +317,39 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @param {Object} evt					Event object
 	 * @param {Backbone.Model} evt.model	The model that failed to save
+	 * @param {Object} evt.response			Response from the server
+	 */
+	
+	/**
+	 * Triggered after a successful save
+	 *
+	 * @name F.ModelComponent#model:saved
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was saved
+	 * @param {Object} evt.response			Response from the server
+	 */
+	
+	/**
+	 * Triggered when the model is being loaded from the server
+	 *
+	 * @name F.ModelComponent#model:loading
+	 * @event
+	 *	
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was loaded
+	 */
+	 
+	/**
+	 * Triggered when load is unsuccessful
+	 *
+	 * @name F.ModelComponent#model:loadFailed
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that failed to load
+	 * @param {Object} evt.response			Response from the server
 	 */
 	
 	/**
