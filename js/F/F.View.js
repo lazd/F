@@ -77,8 +77,11 @@
 			
 			this.model = model;
 			
+			// Either the view or the component can have noRerender
+			var noRerender = this.options.noRerender || (this.options.component && this.options.component.options.noRerender);
+			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model && this.model.on && !this.options.noRerender)
+			if (this.model && this.model.on && !noRerender)
 				this.listenTo(this.model, 'change', this.render);
 			
 			this.rendered = null;
