@@ -95,7 +95,7 @@ Contacts.Templates['Index'] = Handlebars.compile([
 		'<h1>Contacts</h1>',
 		'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
 	'</div>',
-	'<div class="scroller">',
+	'<div class="scrollable">',
 		'<form class="search" autocomplete="off">',
 			'<i class="icon-search"></i>',
 			'<input type="text" name="search" class="searchField" autocomplete="off" placeholder="Search">',
@@ -112,7 +112,7 @@ Contacts.Templates['ContactEditor'] = Handlebars.compile([
 	 	   '<h1>{{# if id}}Edit Contact{{else}}New Contact{{/if}}</h1>',
 	 	   '<div><button class="default" type="submit">Done</button></div>',
 		'</div>',
-		'<div class="scroller">',
+		'<div class="scrollable">',
 		'<div class="well fields">',
 			'<div class="field"><label>name</label><input type="text" name="name" value="{{name}}"></div>',
 			'<div class="field"><label>e-mail</label><input type="text" name="email" value="{{email}}"></div>',
@@ -130,7 +130,7 @@ Contacts.Templates['ContactDetails'] = Handlebars.compile([
 	 	   '<h1>Info</h1>',
 	 	   '<div><button class="edit" type="button">Edit</button></div>',
 		'</div>',
-		'<div class="scroller">',
+		'<div class="scrollable">',
 	 	   '<div class="well">',
 	 	   	'<h2>{{name}}</h2>',
 	 	   	'{{#if phone}}<p>{{phone}}</p>{{/if}}',
@@ -141,5 +141,5 @@ Contacts.Templates['ContactDetails'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactListItem'] = Handlebars.compile([
-	'<button class="round red unlockDelete" style="display: none;"><i class="icon-minus"></i></button><strong>{{name}}</strong><div><i class="icon-chevron-right view"></i><button class="doDelete red" style="display: none;">Delete</button></div>'
+	'<button class="unlock round red" style="display: none;"><i class="icon-minus"></i></button><strong>{{name}}</strong><div><i class="icon-chevron-right view"></i><button class="doDelete red" style="display: none;">Delete</button></div>'
 ].join(''));

@@ -68,7 +68,10 @@ Contacts.Index = new Class({
 	
 	show: function() {
 		this.endDeleteMode();
+
 		this.inherited(arguments);
+
+		this.list.show();
 	},
 	
 	newContact: function() {
