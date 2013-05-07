@@ -344,9 +344,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#destruct">destruct</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#doBlur">doBlur</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Blurs focus from the form, mostly for iOS</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#extractValuesFromForm">extractValuesFromForm</a></b>()
+								</div>
+								<div class="description">Read data from the form.</div>
 							</td>
 						</tr>
 					
@@ -359,13 +368,31 @@ ul.inheritsList
 							</td>
 						</tr>
 					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#saveForm">saveForm</a></b>(callback)
+								</div>
+								<div class="description">Read the data from the form and perform the save</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.FormComponent.html#setValuesFromForm">setValuesFromForm</a></b>()
+								</div>
+								<div class="description">Read the data from the form and store it in the model</div>
+							</td>
+						</tr>
+					
 					</tbody>
 				</table>
 				
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#fetch">fetch</a>, <a href="../symbols/F.ModelComponent.html#load">load</a>, <a href="../symbols/F.ModelComponent.html#refresh">refresh</a>, <a href="../symbols/F.ModelComponent.html#save">save</a>, <a href="../symbols/F.ModelComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#applyOptions">applyOptions</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#inDebugMode">inDebugMode</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#listenTo">listenTo</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#once">once</a>, <a href="../symbols/F.EventEmitter.html#stopListening">stopListening</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#fetch">fetch</a>, <a href="../symbols/F.ModelComponent.html#handleLoadError">handleLoadError</a>, <a href="../symbols/F.ModelComponent.html#handleLoadSuccess">handleLoadSuccess</a>, <a href="../symbols/F.ModelComponent.html#handleSaveError">handleSaveError</a>, <a href="../symbols/F.ModelComponent.html#handleSaveSuccess">handleSaveSuccess</a>, <a href="../symbols/F.ModelComponent.html#load">load</a>, <a href="../symbols/F.ModelComponent.html#refresh">refresh</a>, <a href="../symbols/F.ModelComponent.html#save">save</a>, <a href="../symbols/F.ModelComponent.html#show">show</a></dd><dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#applyOptions">applyOptions</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#constructed">constructed</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#handleRenderComplete">handleRenderComplete</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#inDebugMode">inDebugMode</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#removeComponents">removeComponents</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#listenTo">listenTo</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#once">once</a>, <a href="../symbols/F.EventEmitter.html#stopListening">stopListening</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
@@ -376,7 +403,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Events borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#event:model:loaded">model:loaded</a>, <a href="../symbols/F.ModelComponent.html#event:model:saved">model:saved</a>, <a href="../symbols/F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></dd><dt>Events borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a>, <a href="../symbols/F.Component.html#event:component:shown">component:shown</a></dd>
+				<dt>Events borrowed from class <a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>: </dt><dd><a href="../symbols/F.ModelComponent.html#event:model:loaded">model:loaded</a>, <a href="../symbols/F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a>, <a href="../symbols/F.ModelComponent.html#event:model:loading">model:loading</a>, <a href="../symbols/F.ModelComponent.html#event:model:saved">model:saved</a>, <a href="../symbols/F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a>, <a href="../symbols/F.ModelComponent.html#event:model:saving">model:saving</a></dd><dt>Events borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#event:component:hidden">component:hidden</a>, <a href="../symbols/F.Component.html#event:component:shown">component:shown</a></dd>
 				</dl>
 				
 			
@@ -534,15 +561,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="destruct"> </a>
+					<a name="doBlur"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>destruct</b>()
+					<b>doBlur</b>()
 					
 					</div>
 					<div class="description">
-						
+						Blurs focus from the form, mostly for iOS
 						
 						
 					</div>
@@ -553,6 +580,38 @@ ul.inheritsList
 						
 						
 						
+						
+						
+						
+
+					<hr />
+				
+					<a name="extractValuesFromForm"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<b>extractValuesFromForm</b>()
+					
+					</div>
+					<div class="description">
+						Read data from the form. Override this function customization of extracting your form data
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Data read from form</dd>
+							
+							</dl>
 						
 						
 						
@@ -593,6 +652,67 @@ ul.inheritsList
 						
 						
 
+					<hr />
+				
+					<a name="saveForm"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>saveForm</b>(callback)
+					
+					</div>
+					<div class="description">
+						Read the data from the form and perform the save
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
+									
+								</dt>
+								<dd>A callback to execute when the save is complete</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setValuesFromForm"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setValuesFromForm</b>()
+					
+					</div>
+					<div class="description">
+						Read the data from the form and store it in the model
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
 					
 				
 			
@@ -607,7 +727,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jan 23 2013 22:55:22 GMT-0800 (PST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue May 07 2013 02:46:22 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

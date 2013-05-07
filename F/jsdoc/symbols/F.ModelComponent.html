@@ -324,6 +324,42 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#handleLoadError">handleLoadError</a></b>(model, response)
+								</div>
+								<div class="description">Called when a model fails to load</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#handleLoadSuccess">handleLoadSuccess</a></b>()
+								</div>
+								<div class="description">Called when a model has been loaded successfully</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#handleSaveError">handleSaveError</a></b>()
+								</div>
+								<div class="description">Called when a model fails to save</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#handleSaveSuccess">handleSaveSuccess</a></b>()
+								</div>
+								<div class="description">Called when a model has been saved successfully</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#load">load</a></b>(modelOrData)
 								</div>
 								<div class="description">Load a Backbone.Model directly or create a model from data</div>
@@ -363,7 +399,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#applyOptions">applyOptions</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#inDebugMode">inDebugMode</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#listenTo">listenTo</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#once">once</a>, <a href="../symbols/F.EventEmitter.html#stopListening">stopListening</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/F.Component.html">F.Component</a>: </dt><dd><a href="../symbols/F.Component.html#addComponent">addComponent</a>, <a href="../symbols/F.Component.html#applyOptions">applyOptions</a>, <a href="../symbols/F.Component.html#bubble">bubble</a>, <a href="../symbols/F.Component.html#constructed">constructed</a>, <a href="../symbols/F.Component.html#destruct">destruct</a>, <a href="../symbols/F.Component.html#handleRenderComplete">handleRenderComplete</a>, <a href="../symbols/F.Component.html#hide">hide</a>, <a href="../symbols/F.Component.html#hideAllSubComponents">hideAllSubComponents</a>, <a href="../symbols/F.Component.html#inDebugMode">inDebugMode</a>, <a href="../symbols/F.Component.html#isVisible">isVisible</a>, <a href="../symbols/F.Component.html#mergeOptions">mergeOptions</a>, <a href="../symbols/F.Component.html#removeComponent">removeComponent</a>, <a href="../symbols/F.Component.html#removeComponents">removeComponents</a>, <a href="../symbols/F.Component.html#render">render</a>, <a href="../symbols/F.Component.html#setName">setName</a>, <a href="../symbols/F.Component.html#setPropsFromOptions">setPropsFromOptions</a>, <a href="../symbols/F.Component.html#showAllSubComponents">showAllSubComponents</a>, <a href="../symbols/F.Component.html#toString">toString</a>, <a href="../symbols/F.Component.html#unbubble">unbubble</a></dd><dt>Methods borrowed from class <a href="../symbols/F.EventEmitter.html">F.EventEmitter</a>: </dt><dd><a href="../symbols/F.EventEmitter.html#listenTo">listenTo</a>, <a href="../symbols/F.EventEmitter.html#off">off</a>, <a href="../symbols/F.EventEmitter.html#on">on</a>, <a href="../symbols/F.EventEmitter.html#once">once</a>, <a href="../symbols/F.EventEmitter.html#stopListening">stopListening</a>, <a href="../symbols/F.EventEmitter.html#trigger">trigger</a></dd>
 				</dl>
 				
 			
@@ -393,6 +429,24 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a></b>(evt)
+								</div>
+								<div class="description">Triggered when load is unsuccessful</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:loading">model:loading</a></b>(evt)
+								</div>
+								<div class="description">Triggered when the model is being loaded from the server</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:saved">model:saved</a></b>(evt)
 								</div>
 								<div class="description">Triggered after a successful save</div>
@@ -405,6 +459,15 @@ ul.inheritsList
 								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></b>(evt)
 								</div>
 								<div class="description">Triggered when save is unsuccessful</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/F.ModelComponent.html#event:model:saving">model:saving</a></b>(evt)
+								</div>
+								<div class="description">Triggered when a model is saving</div>
 							</td>
 						</tr>
 					
@@ -545,6 +608,123 @@ ul.inheritsList
 								<dd><span class="light fixedFont">{<a href="../symbols/F.ModelComponent.html">F.ModelComponent</a>}</span> this, chainable</dd>
 							
 							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="handleLoadError"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handleLoadError</b>(model, response)
+					
+					</div>
+					<div class="description">
+						Called when a model fails to load
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>model</b>
+									
+								</dt>
+								<dd>The model that failed to load</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>response</b>
+									
+								</dt>
+								<dd>The response from Backbone</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="handleLoadSuccess"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handleLoadSuccess</b>()
+					
+					</div>
+					<div class="description">
+						Called when a model has been loaded successfully
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="handleSaveError"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handleSaveError</b>()
+					
+					</div>
+					<div class="description">
+						Called when a model fails to save
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="handleSaveSuccess"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handleSaveSuccess</b>()
+					
+					</div>
+					<div class="description">
+						Called when a model has been saved successfully
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
 						
 						
 						
@@ -797,6 +977,96 @@ ul.inheritsList
 
 					<hr />
 				
+					<a name="event:model:loadFailed"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:loadFailed</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when load is unsuccessful
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that failed to load</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt.response</b>
+									
+								</dt>
+								<dd>Response from the server</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:model:loading"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:loading</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when the model is being loaded from the server
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that was loaded</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="event:model:saved"> </a>
 					<div class="fixedFont">
 					
@@ -827,6 +1097,12 @@ ul.inheritsList
 									
 								</dt>
 								<dd>The model that was saved</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt.response</b>
+									
+								</dt>
+								<dd>Response from the server</dd>
 							
 							</dl>
 						
@@ -870,6 +1146,54 @@ ul.inheritsList
 								</dt>
 								<dd>The model that failed to save</dd>
 							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt.response</b>
+									
+								</dt>
+								<dd>Response from the server</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:model:saving"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>model:saving</b>(evt)
+					
+					</div>
+					<div class="description">
+						Triggered when a model is saving
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>evt</b>
+									
+								</dt>
+								<dd>Event object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Backbone.Model}</span> <b>evt.model</b>
+									
+								</dt>
+								<dd>The model that was saved</dd>
+							
 							</dl>
 						
 						
@@ -890,7 +1214,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jan 23 2013 22:55:22 GMT-0800 (PST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue May 07 2013 02:46:22 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

@@ -1,7 +1,6 @@
-/*! F - v0.1.0 - 2013-01-23
-* http://lazd.github.com/F/
-* Copyright (c) 2013 Lawrence Davis; Licensed BSD */
-
+/*! F - v0.2.0 - 2013-05-07
+* https://lazd.github.com/Class/
+* Copyright (c) 2013 Larry Davis <lazdnet@gmail.com>; Licensed BSD */
 /**
  * Crockford's new_constructor pattern, modified to allow walking the prototype chain, automatic init/destruct calling of super classes, and easy toString methods
  *
@@ -206,12 +205,12 @@ var Class;
 		prototype.destruct = function() {
 			// Call our destruct method first
 			if (typeof destruct === 'function') {
-				destruct.apply(this);
+				destruct.apply(this, arguments);
 			}
 
 			// Call superclass destruct method after this class' method
 			if (extend && extend.prototype && typeof extend.prototype.destruct === 'function') {
-				extend.prototype.destruct.apply(this);			
+				extend.prototype.destruct.apply(this, arguments);
 			}
 		};
 
@@ -245,6 +244,9 @@ var Class;
 
 			// Call all inherited construct functions
 			prototype.construct.apply(instance, arguments);
+
+			if (typeof prototype.constructed === 'function')
+				prototype.constructed.apply(instance, arguments);
 
 			return instance;
 		};
@@ -335,6 +337,92 @@ F.options = {
 
 // Let F be a global event hub
  _.extend(F, Backbone.Events);
+
+/**
+ * Extend the view of the provided component with a deep copy of the events property
+ *
+ * @param {Object} component	Component whose view should be extended
+ * @param {String} properties	Properties to mix in to resulting view
+ *
+ * @todo add pushToArray option to always push to an array
+ *
+ * @returns {F.Component}	this, chainable
+ */
+F.extendView = function(component, properties) {
+	var view = component.prototype.View || component.prototype.ListView;
+	if (view) {
+		properties.events = _.extend({}, view.prototype.events, properties.events);
+		return view.extend(properties);
+	}
+};
+
+/**
+ * Add a value to a property that should become an array when and only when collisions occurr
+ *
+ * @param {Object} object	Object to set the property on
+ * @param {String} prop		Proprety to set
+ * @param {Mixed} Value		Value to set
+ *
+ * @todo add pushToArray option to always push to an array
+ */
+F.addToSet = function(obj, prop, value) {
+	if (typeof obj[prop] !== 'undefined') {
+		// Turn it into an array
+		if (!_.isArray(obj[prop]))
+			obj[prop] = [obj[prop]];
+		
+		// Push the new value
+		obj[prop].push(value);
+	}
+	else {
+		// Directly set the value if there is only one
+		obj[prop] = value;
+	}
+};
+
+/**
+ * Set a property of an object using dot notiation
+ *
+ * @param {Object} object		Optional object to set the property on. A new object will be created if no object was passed.
+ * @param {String} prop			Proprety to set
+ * @param {Value} prop			The new value
+ * @param {Boolean} makeArrays	Use F.addToSet on the property to 
+ *
+ * @todo add push option to always push to an array
+ *
+ * @returns {Object}	Object the property was set on or the created object
+ */
+F.set = function(obj, prop, value, makeArrays) {
+	if (!obj) obj = {};
+	
+	var propParts = prop.split('.');
+	
+	if (propParts.length > 1) {
+		var curObj = obj;
+		propParts.forEach(function(part, index) {
+			if (index === propParts.length-1) { // Set the value if we've reached the end of the chain
+				if (makeArrays)
+					F.addToSet(curObj, part, value);
+				else 
+					curObj[part] = value;
+			}
+			else {
+				if (typeof curObj[part] === 'undefined') // Define the part if it's not defined
+					curObj[part] = {};
+				
+				curObj = curObj[part]; // Drill inward
+			}
+		});
+	}
+	else {
+		if (makeArrays)
+			F.addToSet(obj, prop, value);
+		else 
+			obj[prop] = value;
+	}
+	
+	return obj;
+};
 
 /**
  * Provides observer pattern for basic eventing. Directly uses Backbone.Events
@@ -482,8 +570,11 @@ F.EventEmitter = new Class(
 			
 			this.model = model;
 			
+			// Either the view or the component can have noRerender
+			var noRerender = this.options.noRerender || (this.options.component && this.options.component.options.noRerender);
+			
 			// Add change listeners to the model, but only if has an on method
-			if (this.model && this.model.on && !this.options.noRerender)
+			if (this.model && this.model.on && !noRerender)
 				this.listenTo(this.model, 'change', this.render);
 			
 			this.rendered = null;
@@ -505,7 +596,7 @@ F.EventEmitter = new Class(
 			this.$el.remove();
 		
 			// Remove change listeners
-			if (this.model.off)
+			if (this.model && this.model.off)
 				this.stopListening();
 		},
 		
@@ -704,6 +795,36 @@ F.EventEmitter = new Class(
 			this.bind(this.render);
 		},
 		
+		constructed: function() {
+			// Hide view by default
+			if (this.view) {
+				if (this.view.el) {
+					if (this.options.visible === true) {
+						// Call show method so view is rendered
+						this.show({ silent: true });
+					}
+					else {
+						// Just hide the el
+						this.view.$el.hide();
+					}
+				}
+				else {
+					console.warn('Component %s has a view without an element', this.toString, this, this.view, this.view.options);
+				}
+				
+				var self = this;
+				this.listenTo(this.view, 'renderComplete', function() {
+					if (typeof this.handleRenderComplete === 'function')
+						this.handleRenderComplete();
+					
+					self.trigger('view:rendered', {
+						component: self,
+						view: self.view
+					});
+				});
+			}
+		},
+		
 		/**
 		 * Destroy this instance and free associated memory
 		 */
@@ -713,10 +834,7 @@ F.EventEmitter = new Class(
 				this.view.remove();
 			
 			// Destroy sub-components
-			for (var component in this.components) {
-				this.components[component].destruct();
-				delete this[component];
-			}
+			this.removeComponents();
 			
 			// Stop listening, we're done
 			this.stopListening();
@@ -826,23 +944,6 @@ F.EventEmitter = new Class(
 			// Store component
 			this[componentName] = this.components[componentName] = component;
 		
-			// Hide view by default
-			if (component.view) {
-				if (component.view.el) {
-					if (component.options.visible === true) {
-						// Call show method so view is rendered
-						component.show({ silent: true });
-					}
-					else {
-						// Just hide the el
-						component.view.$el.hide();
-					}
-				}
-				else {
-					console.warn('Component %s has a view without an element', componentName, component, component.view, component.view.options);
-				}
-			}
-			
 			// Store this component as the parent
 			component.parent = this;
 			
@@ -853,7 +954,7 @@ F.EventEmitter = new Class(
 		},
 	
 		/**
-		 * Remove a sub-component
+		 * Remove and destroy a sub-component
 		 *
 		 * @param {Function} componentName	Component name
 		 *
@@ -867,11 +968,27 @@ F.EventEmitter = new Class(
 		
 				delete this[componentName];
 				delete this.components[componentName];
+				
+				if (typeof component.destruct === 'function')
+					component.destruct();
 			}
 		
 			return this;
 		},
-	
+		
+		/**
+		 * Remove and destroy all sub-components
+		 *
+		 * @returns {F.Component}	this, chainable
+		 */
+		removeComponents: function() {
+			for (var component in this.components) {
+				this.components[component].destruct();
+				delete this[component];
+			}
+			
+			return this;
+		},
 	
 		/**
 		 * Handles showing/hiding components in singly mode, triggering of events
@@ -883,21 +1000,12 @@ F.EventEmitter = new Class(
 
 			if (newComponent !== undefined) {
 				// hide current component(s) for non-overlays
-				if (this.options.singly && !newComponent.overlay) {
+				if (this.options.singly && !newComponent.options.overlay) {
 					this.hideAllSubComponents([evt.name]);
 					
 					// Store currently visible subComponent
 					this.currentSubComponent = newComponent;
 				}
-				
-				// Trigger an event to inidcate the component changed
-				this.trigger('subComponent:shown', {
-					name: evt.name,
-					component: evt.component
-				});
-				
-				// Show self
-				this.show();
 			}
 		},
 	
@@ -920,7 +1028,7 @@ F.EventEmitter = new Class(
 					console.log('%s: showing self', this.toString());
 			}
 		
-			if (!options.silent) {
+			if (!options.silent && !this.options.independent) {
 				// Always trigger event before we show ourself so others can hide/show
 				this.trigger('component:shown', {
 					name: this.toString(),
@@ -932,7 +1040,13 @@ F.EventEmitter = new Class(
 			if (this.view) {
 				this.view.show();
 			}
-		
+			
+			// Call setup if we're not setup
+			if (!this.options.isSetup && typeof this.setup === 'function') {
+				this.setup(options);
+				this.options.isSetup = true;
+			}
+			
 			this.options.visible = true;
 	
 			return this;
@@ -964,6 +1078,16 @@ F.EventEmitter = new Class(
 					component: this
 				});
 			}
+			
+			// Call teardown if we're setup
+			if (this.options.isSetup && typeof this.teardown === 'function') {
+				this.teardown(options);
+				this.options.isSetup = false;
+			}
+		
+			// Hide children
+			if (this.options.hideChildren !== false)
+				this.hideAllSubComponents();
 		
 			this.options.visible = false;
 	
@@ -1014,9 +1138,9 @@ F.EventEmitter = new Class(
 		 * @returns {F.Component}	this, chainable
 		 */
 		hideAllSubComponents: function(except) {
-			except = !_.isArray(except) ? [] : except;
+			except = _.isArray(except) ? except : false;
 			for (var componentName in this.components) {
-				if (~except.indexOf(componentName))
+				if (except && ~except.indexOf(componentName))
 					continue;
 				this.components[componentName].hide();
 			}
@@ -1108,6 +1232,14 @@ F.EventEmitter = new Class(
 
 			return options;
 		}
+
+		/**
+		 * Called when view rendering is complete
+		 *
+		 * @name handleRenderComplete
+		 * @memberOf F.Component.prototype
+		 * @function
+		 */
 		
 		/**
 		 * Triggered when this component is shown
@@ -1161,23 +1293,41 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
 	refresh: function(callback) {
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
 		this.model.fetch({
-			success: function() {
-				// Trigger model event
-				this.model.trigger('loaded');
+			success: function(model, response) {
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Trigger model event
+					this.model.trigger('loaded');
 				
-				// Trigger component event
-				this.trigger('model:loaded', this.model);
+					// Trigger component event
+					this.trigger('model:loaded', {
+						model: this.model
+					});
 				
-				if (typeof callback === 'function')
-					callback.call(this, this.model);
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
 			}.bind(this),
 			error: function(model, response) {
 				console.warn('%s: Error loading model', this.toString());
 				
 				this.trigger('model:loadFailed', {
+					model: this.model,
 					response: response
 				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
 			}.bind(this)
 		});
 		
@@ -1214,30 +1364,47 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		if (itemId !== undefined) { // add the ID passed to the model data
 			data[this.Model.prototype.idAttribute] = itemId;
 		}
-		
+
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
 		// Create a blank model
 		var model = new this.Model(data);
 	
 		// Fetch model contents
 		model.fetch({
 			// TBD: add fetch options?
-			success: function() {
+			success: function(model, response) {
 				// Assign the model to the view
 				this._setModel(model);
 				
-				// Notify
-				this.trigger('model:loaded', this.model);
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Notify
+					this.trigger('model:loaded', {
+						model: this.model
+					});
 				
-				// Call callback
-				if (typeof callback === 'function')
-					callback.call(this, model);
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
 			}.bind(this),
 			error: function(model, response) {
 				console.warn('%s: Error loading model', this.toString());
 				
 				this.trigger('model:loadFailed', {
+					model: this.model,
 					response: response
 				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
 			}.bind(this)
 		});
 		
@@ -1258,7 +1425,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			this._setModel(new this.Model(modelOrData));
 		
 		// Notify
-		this.trigger('model:loaded', this.model);
+		this.trigger('model:loaded', {
+			model: this.model
+		});
 		
 		return this;
 	},
@@ -1277,6 +1446,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			if (this.inDebugMode())
 				console.log('%s: Saving...', this.toString());
 			
+			this.trigger('model:saving', {
+				model: this.model
+			});
+			
 			this.model.save(data || {}, _.extend({
 				success: function(model, response) {
 					if (this.inDebugMode())
@@ -1284,7 +1457,10 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					
 					if (typeof callback === 'function')
 						callback.call(this, null, this.model, response);
-						
+					
+					if (typeof this.handleSaveSuccess === 'function')
+						this.handleSaveSuccess(this.model, response);
+					
 					this.trigger('model:saved', {
 						model: this.model,
 						response: response
@@ -1296,6 +1472,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 					if (typeof callback === 'function')
 						callback.call(this, new Error('Error saving model'), this.model, response);
 					
+					if (typeof this.handleSaveError === 'function')
+						this.handleSaveError(this.model, response);
+						
 					this.trigger('model:saveFailed', {
 						model: this.model,
 						response: response
@@ -1351,11 +1530,46 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 			
 		return this;
 	}
+
+	/**
+	 * Called when a model has been loaded successfully
+	 *
+	 * @name handleLoadSuccess
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+
+	/**
+	 * Called when a model fails to load
+	 *
+	 * @param {Backbone.Model} model	The model that failed to load
+	 * @param {Object} response			The response from Backbone
+	 *
+	 * @name handleLoadError
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
 	
 	/**
-	 * Triggered after a successful save
+	 * Called when a model has been saved successfully
 	 *
-	 * @name F.ModelComponent#model:saved
+	 * @name handleSaveSuccess
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+	
+	/**
+	 * Called when a model fails to save
+	 *
+	 * @name handleSaveError
+	 * @memberOf F.ModelComponent.prototype
+	 * @function
+	 */
+	
+	/**
+	 * Triggered when a model is saving
+	 *
+	 * @name F.ModelComponent#model:saving
 	 * @event
 	 *
 	 * @param {Object} evt					Event object
@@ -1370,6 +1584,39 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @param {Object} evt					Event object
 	 * @param {Backbone.Model} evt.model	The model that failed to save
+	 * @param {Object} evt.response			Response from the server
+	 */
+	
+	/**
+	 * Triggered after a successful save
+	 *
+	 * @name F.ModelComponent#model:saved
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was saved
+	 * @param {Object} evt.response			Response from the server
+	 */
+	
+	/**
+	 * Triggered when the model is being loaded from the server
+	 *
+	 * @name F.ModelComponent#model:loading
+	 * @event
+	 *	
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that was loaded
+	 */
+	 
+	/**
+	 * Triggered when load is unsuccessful
+	 *
+	 * @name F.ModelComponent#model:loadFailed
+	 * @event
+	 *
+	 * @param {Object} evt					Event object
+	 * @param {Backbone.Model} evt.model	The model that failed to load
+	 * @param {Object} evt.response			Response from the server
 	 */
 	
 	/**
@@ -1495,6 +1742,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		else // Overwrite old params with defaults and send a request with only default params
 			this.params = _.extend({}, this.options.defaultParams);
 		
+		this.trigger('collection:loading', this.collection);
+		
 		// Fetch collection contents
 		this.collection.fetch({
 			data: this.params,
@@ -1567,6 +1816,15 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	
 	/**
+	 * Triggered when the collection is being loaded from the server
+	 *
+	 * @name F.CollectionComponent#collection:loading
+	 * @event
+	 *
+	 * @param {Backbone.Collection}	collection	The collection that is being loaded
+	 */
+	
+	/**
 	 * Triggered when the collection is loaded from the server
 	 *
 	 * @name F.CollectionComponent#collection:loaded
@@ -1584,7 +1842,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
 		tagName: 'form',
 		events: {
-			// 'submit': 'handleSubmit'	// Can't do it this way: submit event is fired twice!
+			'submit': 'handleSubmit'
 		}
 	});
 	
@@ -1618,15 +1876,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			this.model = new this.Model();
 			
 			this.bind(this.handleSubmit);
-			
-			// Have to do it this way: with delegate, submit event is fired twice!
-			this.view.$el.on('submit', this.handleSubmit);
 		},
-		
-		destruct: function() {
-			this.view.$el.off('submit', this.handleSubmit);
-		},
-	
+
 		View: FormView,
 	
 		Template: null,
@@ -1640,10 +1891,27 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			// Create a new model instead of resetting the old one
 			this._setModel(new this.Model());
 
+			// Call the load success function
+			var trigger = true;
+			if (typeof this.handleLoadSuccess === 'function')
+				this.handleLoadSuccess(this.model);
+			
 			// Render the view so it will be blank again
 			this.render();
 		
 			return this;
+		},
+		
+		/**
+		 * Blurs focus from the form, mostly for iOS
+		 */
+		doBlur: function() {
+			// Blur focus to the submit button in order to hide keyboard on iOS
+			// This won't work for every situation, such as forms that don't have submit buttons
+			var $button = this.view.$('[type="submit"], button').filter(':visible').last().focus();
+			setTimeout(function() {
+				$button.blur();
+			}, 10);
 		},
 	
 		/**
@@ -1652,35 +1920,63 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @param {Event} evt	The jQuery event object
 		 */
 		handleSubmit: function(evt) {
-			// Blur focus to the submit button in order to hide keyboard on iOS
-			// This won't work for every situation, such as forms that don't have submit buttons
-			this.view.$el.find('[type="submit"], button').first().focus();
+			this.doBlur();
 			
 			// Since this is a DOM event handler, prevent form submission
 			if (evt && evt.preventDefault)
 				evt.preventDefault();
 			
+			this.saveForm();
+		},
+		
+		/**
+		 * Read data from the form. Override this function customization of extracting your form data
+		 *
+		 * @returns {Object}	Data read from form
+		 */
+		extractValuesFromForm: function() {
 			// Get the data from the form fields
-			var fields = this.view.$el.serializeArray();
+			var $form = this.view.$el;
+			if (this.view.el.tagName !== 'FORM')
+				$form = this.view.$('form');
+				
+			var fields = $form.filter(':not([data-serialize="false"])').serializeArray();
 			
 			// Build a data object from fields
 			var data = {};
 			_.each(fields, function(field) {
-				data[field.name] = field.value;
+				F.set(data, field.name, field.value, true);
 			});
 			
+			return data;
+		},
+		
+		/**
+		 * Read the data from the form and store it in the model
+		 */
+		setValuesFromForm: function() {
+			this.model.set(this.extractValuesFromForm());
+		},
+		
+		/**
+		 * Read the data from the form and perform the save
+		 *
+		 * @param {Function} callback	A callback to execute when the save is complete
+		 */
+		saveForm: function(callback) {
 			// Perform the save, passing our new, modified data
-			this.save(data);
+			this.save(this.extractValuesFromForm(), callback);
 		}
+		
 	});
-
 }());
+
 (function() {
 	
 	/* Views
 	*******************/
 	
-	// Available as F.ListComponent.prototype.View
+	// Available as F.ListComponent.prototype.ListView
 	var ListView = F.View.extend({
 		tagName: 'ul',
 
@@ -1711,7 +2007,10 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			view.render();
 			
 			// Add the list item to the List
-			this.$el.append(view.el);
+			if (this.options.ListContainer)
+				this.$(this.options.ListContainer).append(view.el);
+			else
+				this.$el.append(view.el);
 			
 			// Store the position in the views array
 			// Don't store the actual view to prevent circular references
@@ -1765,12 +2064,58 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			
 			if (this.container && !$(this.el.parentNode).is(this.container))
 				$(this.container).append(this.el);
+			
+
+			if (this.rendered === null) {
+				// Render template
+				if (this.template) {
+					// First, see if the model exists. If so, see if it has toJSON. If so, use model.toJSON. Otherwise, if model exists, use model. Otherwise, use {}
+					this.$el.html(this.template({}));
+				}
+				// Store the last time this view was rendered
+				this.rendered = new Date().getTime();
+			}
 
 			// Remove previous views from the DOM
 			this.removeSubViews();
 			
 			// Add and render each list item
 			this.collection.each(this.addSubView);
+			
+			if (this.collection.isEmpty()) {
+				var EmptyView = this.ItemView;
+				var emptyTemplate;
+				
+				// Determine if we have searched
+				if (_.isEqual(this.component.params, this.component.options.defaultParams) && this.component.ListEmptyTemplate) {
+					emptyTemplate = this.component.ListEmptyTemplate;
+					if (this.component.ListEmptyView)
+						EmptyView = this.component.ListEmptyView;
+				}
+				else if (this.component.NoResultsTemplate) {
+					emptyTemplate = this.component.NoResultsTemplate;
+					if (this.component.NoResultsView)
+						EmptyView = this.component.NoResultsView;
+				}
+				
+				// Proceed if we have the appropritate template
+				if (emptyTemplate) {
+					var view = new EmptyView({
+						template: emptyTemplate,
+						component: this.component,
+						model: this.component.params
+					}).render();
+				
+					// Add the empty template item to the list or specified list container
+					if (this.options.ListContainer)
+						this.$(this.options.ListContainer).append(view.el);
+					else
+						this.$el.append(view.el);
+				
+					// Store in views array for removal later
+					this.subViews.push(view);
+				}
+			}
 			
 			// Store the last time this view was rendered
 			this.rendered = new Date().getTime();
@@ -1801,21 +2146,24 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 *
 		 * @param {Object} options						Options for this component and its view. Options not listed below will be passed to the view.
 		 *
-		 * @property {Backbone.Collection} Collection	The collection class this list will be rendered from
-		 * @property {Backbone.View} ListView			The view class this list will be rendered with
-		 * @property {Template} ListTemplate			The template this list will be rendered with. Renders to a UL tag by default
-		 * @property {Backbone.View} ItemView			The view that individual items will be rendered with
-		 * @property {Template} ItemTemplate			The template that individual items will be rendered with
+		 * @property {Backbone.Collection} Collection		The collection class this list will be rendered from
+		 * @property {Mixed} ListContainer					The DOM element or jQuery object list items should be appended to
+		 * @property {Backbone.View} ListView				The view class this list will be rendered with
+		 * @property {Template} ListTemplate				The template this list will be rendered with. Renders to a UL tag by default
+		 * @property {Backbone.View} ItemView				The view that individual items will be rendered with
+		 * @property {Template} ItemTemplate				The template that individual items will be rendered with
 		 */
 		construct: function(options) {
 			this.view = new this.ListView(_.extend({
 				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
 				collection: this.collection,
+				template: this.ListTemplate,
 				ItemView: this.ItemView,
 				ItemTemplate: this.ItemTemplate,
-				events: {
+				ListContainer: this.ListContainer,
+				events: _.extend({}, {
 					'click li': 'handleSelect'
-				}
+				}, this.ListView.prototype.events)
 			}, options));
 			
 			this.selectedItem = null;
@@ -1823,6 +2171,24 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 		Collection: Backbone.Collection, // Collection component expects to have prototype.Collection or options.Collection
 	
+		/** The template render when there are no results **/
+		NoResultsTemplate: null,
+
+		/** The view to render when there are no results. Defaults to using ListView. **/
+		NoResultsView: null,
+
+		/**
+		 * The view to render when the list is empty
+		 * @todo give a default here
+		**/
+		ListEmptyView: null,
+
+		/**
+		 * The template to render when a list is empty. Rendered with ListEmptyView if defined, or ItemView otherwise.
+		 * @todo give a default here
+		**/
+		ListEmptyTemplate: null,
+
 		ListTemplate: null,
 		ListView: ListView,
 	
@@ -1836,7 +2202,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 		removeModel: function(model) {
 			// Add a subview for this model
-			this.view.removeSubView(model);			
+			this.view.removeSubView(model);
 		},
 	
 		/**
@@ -1847,7 +2213,8 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		 * @returns {Backbone.Model}	The model associated with the passed DOM element
 		 */
 		getModelFromLi: function(listItem) {
-			return this.view.subViews[$(listItem).data('viewIndex')].model;
+			var viewIndex = $(listItem).data('viewIndex');
+			return (viewIndex !== undefined && this.view.subViews[viewIndex] && this.view.subViews[viewIndex].model) || null;
 		},
 	
 		/**
@@ -1870,13 +2237,17 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			// Get model from DOM el's data
 			var model = this.getModelFromLi(evt.currentTarget);
 			
-			// Store ID of selected item
-			this.selectedItem = model.id;
+			// Only trigger if the target had a model
+			// The empty views do not have a model
+			if (model) {
+				// Store ID of selected item
+				this.selectedItem = model.id;
 		
-			this.trigger('list:itemSelected', {
-				listItem: $(evt.currentTarget),
-				model: model
-			});
+				this.trigger('list:itemSelected', {
+					listItem: $(evt.currentTarget),
+					model: model
+				});
+			}
 		}
 		
 		

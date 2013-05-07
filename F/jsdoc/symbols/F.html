@@ -294,6 +294,51 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class F.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">F.<b><a href="../symbols/F.html#.addToSet">addToSet</a></b>(object, prop, Value)
+								</div>
+								<div class="description">Add a value to a property that should become an array when and only when collisions occurr</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">F.<b><a href="../symbols/F.html#.extendView">extendView</a></b>(component, properties)
+								</div>
+								<div class="description">Extend the view of the provided component with a deep copy of the events property</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">F.<b><a href="../symbols/F.html#.set">set</a></b>(object, prop, prop, makeArrays)
+								</div>
+								<div class="description">Set a property of an object using dot notiation</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -376,6 +421,178 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name=".addToSet"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">F.</span><b>addToSet</b>(object, prop, Value)
+					
+					</div>
+					<div class="description">
+						Add a value to a property that should become an array when and only when collisions occurr
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/js_F_F.Utilities.js.html">F.Utilities.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>object</b>
+									
+								</dt>
+								<dd>Object to set the property on</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>prop</b>
+									
+								</dt>
+								<dd>Proprety to set</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Mixed}</span> <b>Value</b>
+									
+								</dt>
+								<dd>Value to set</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".extendView"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/F.Component.html">F.Component</a>}</span>
+					<span class="light">F.</span><b>extendView</b>(component, properties)
+					
+					</div>
+					<div class="description">
+						Extend the view of the provided component with a deep copy of the events property
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/js_F_F.Utilities.js.html">F.Utilities.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>component</b>
+									
+								</dt>
+								<dd>Component whose view should be extended</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>properties</b>
+									
+								</dt>
+								<dd>Properties to mix in to resulting view</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/F.Component.html">F.Component</a>}</span> this, chainable</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".set"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<span class="light">F.</span><b>set</b>(object, prop, prop, makeArrays)
+					
+					</div>
+					<div class="description">
+						Set a property of an object using dot notiation
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/js_F_F.Utilities.js.html">F.Utilities.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>object</b>
+									
+								</dt>
+								<dd>Optional object to set the property on. A new object will be created if no object was passed.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>prop</b>
+									
+								</dt>
+								<dd>Proprety to set</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Value}</span> <b>prop</b>
+									
+								</dt>
+								<dd>The new value</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>makeArrays</b>
+									
+								</dt>
+								<dd>Use F.addToSet on the property to</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Object the property was set on or the created object</dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -387,7 +604,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Jan 23 2013 22:55:22 GMT-0800 (PST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue May 07 2013 02:46:22 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

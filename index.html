@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="css/styles.css">
 	<link rel="stylesheet" href="css/pygment_trac.css">
 	<link rel="stylesheet" href="css/font-awesome.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="js/respond.js"></script>
 	
 	<link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
@@ -44,18 +44,18 @@
 		<section>
 			<div id="title">
 				<h1>&#402;</h1>
-				<p>A component framework for JavaScript applications</p>
+				<p>A Backbone framework that encourages code re-use</p>
 				<hr>
 			</div>
 
-			<h2>&#402; helps you build large, modular apps.</h2>
+			<h2>Build large, modular apps.</h2>
 			<p>Dead simple inheritance, nested components, view rendering, and easy REST integration.</p>
 
-			<h2>&#402; doesn't reinvent the wheel.</h2>
+			<h2>Doesn't reinvent the wheel.</h2>
 			<p>Using Backbone, jQuery, and Handlebars, &#402; provides a simple way to modularize large JavaScript applications.</p>
 
-			<h2>&#402; is classy.</h2>
-			<p>&#402; provides an inheritance model, Class. Based on Douglas Crockford's new_constructor, Class lets you create building blocks that you can extend and integrate.</p>
+			<h2>Stays (pseudo) classy.</h2>
+			<p>&#402; uses <a href="http://lazd.github.io/PseudoClass">PseudoClass</a>, an OOP framework that lets you create building blocks that you can extend, mixin, and re-use.</p>
 			
 		</section>
 
@@ -81,25 +81,31 @@
 <code class="prettyprint">App.Welcome = new Class({
 	toString: 'Welcome',
 	extend: F.Component,
-	construct: function(options) {
-		_.extend(options, {
-			// Render this component with our template
-			template: this.ItemTemplate,
-			// Let events call this component's methods
-			component: this
-		});
 
-		// Create your view, no need to render!
-		this.view = new F.View(options);
-	},
+	// Add custom events to your view
+	View: F.View.extend({
+		events: {
+			'click .sayHi': 'sayHi'
+		}
+	}),
 
 	// Store templates and events here so they can be overridden
 	Template: Handlebars.compile(
 		'&lt;strong&gt;Welcome!&lt;/strong&gt;'+
 		'&lt;button class="sayHi"&gt;Say hi!&lt;/button&gt;'
 	),
-	events: {
-		'click .sayHi': 'sayHi'
+
+	construct: function(options) {
+		// Pass constructor options to the view
+		_.extend(options, {
+			// Render this component with our template
+			template: this.Template,
+			// Let events call this component's methods
+			component: this
+		});
+
+		// Create your view, no need to render!
+		this.view = new this.View(options);
 	},
 
 	// Define your methods
@@ -113,16 +119,23 @@
 <code class="prettyprint">App.Main = new Class({
 	toString: 'Main',
 	extend: F.Component,
-	options: {
-		visible: true
-	},
+
+	// Use F's default view
+	View: F.View,
+
+	// Store the template in the prototype so it can be overridden
+	Template: Handlebars.compile(
+		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
+		'&lt;div class="welcome"&gt;&lt;/div&gt;'
+	),
+
 	construct: function(options) {
 		// Config is always passed to the constructor
 		console.log('%s: started. Options:', this, options);
 
 		_.extend(options, {
 			// Add this component to body of the page
-			container: document.body,
+			el: document.body,
 			// Render this component with our template
 			template: this.Template,
 			// Let events call this component's methods
@@ -131,32 +144,30 @@
 
 		// Create a view for the app
 		// Render right away if you use selectors below
-		this.view = new F.View(options).render();
+		this.view = new this.View(options);
+	},
 
+	// Called when this component is shown
+	setup: function() {
 		// Add your components
 		this.addComponent(new App.Welcome({
 			// show the component immediately
 			visible: true,
 			// add the sub-component to element div.welcome
-			container: this.view.$('.welcome')
+			el: this.view.$('.welcome')
 		}));
 	},
-	destruct: function() {
-		// Superclass destructors are called for you, and F
-		// will call destruct() on all your components for you
-		console.log('%s: shutting down', this.toString());
-	},
 
-	// store the template in the prototype so it can be overridden
-	Template: Handlebars.compile(
-		'&lt;h1&gt;Killer App&lt;/h1&gt;'+
-		'&lt;div class="welcome"&gt;&lt;/div&gt;'
-	)
+	// Called when this component is hidden
+	teardown: function() {
+		this.removeSubComponents();
+	}
 });</code>
 	
 <h3>3. Create an instance of your app</h3>
 <p>Fire it up!</p>
-<code class="prettyprint">var myApp = new App.Main();</code>
+<code class="prettyprint">var myApp = new App.Main();
+myApp.show();</code>
 
 			</section>
 		</section>

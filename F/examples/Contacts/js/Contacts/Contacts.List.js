@@ -19,75 +19,74 @@ Contacts.List = new Class({
 	
 	// Our custom template
 	ItemTemplate: Contacts.Templates.ContactListItem,
-	
+
+	// Extend F.ListComponent's view, adding some custom events
+	ListView: F.extendView(F.ListComponent, {
+		events: {
+			'click .unlock': 'handleLockUnlock',
+			'click .doDelete': 'handleDelete'
+		}
+	}),
+
 	handleSelect: function(evt) {
-		// Delegating events using Backbone's events property doesn't work with Hammer.js taps, so delegate manually
-		if ($(evt.srcElement).hasClass('unlockDelete') || $(evt.srcElement).hasClass('icon-minus')) {  // if the delete button was tapped
-			this.handleLockUnlock(evt.currentTarget);
-			evt.stopPropagation();
-		}
-		else if ($(evt.srcElement).hasClass('doDelete')) { // if the delete button was tapped
-			this.doDelete(evt.currentTarget);
-			evt.stopPropagation();
-		}
-		else if (!this.deleteMode) { // if anything else was tapped, do standard behavior
-			this.endDeleteMode();
+		// Don't select elements if we're in delete mode
+		if (!this.editMode) {
 			this.inherited(arguments);
 		}
 	},
-	
-	endDeleteMode: function() {
-		this.view.$('.unlockDelete,.doDelete').hide();
+
+	endEditMode: function() {
+		this.view.$('.unlock, .doDelete').hide();
 		this.view.$('.view').show();
-		this.view.$('.unlockDelete').removeClass('unlocked');
-		this.deleteMode = false;
+		this.view.$('.unlock').removeClass('unlocked');
+		this.EditMode = false;
 	},
 	
-	startDeleteMode: function() {
+	startEditMode: function() {
 		// Reset state of unlocker
-		this.view.$('.unlockDelete').removeClass('unlocked');
+		this.view.$('.unlock').removeClass('unlocked');
 		
 		// Hide the do view button
 		this.view.$('.view').hide();
 		
 		// Show delete buttons
-		this.view.$('.unlockDelete').show();
+		this.view.$('.unlock').show();
 		
 		// Set flat
-		this.deleteMode = true;
+		this.editMode = true;
 	},
-	
-	handleLockUnlock: function(listItem) {
-		// Toggle locked/unlocked state
-		if ($(listItem).find('.unlockDelete').hasClass('unlocked'))
-			this.lockDelete(listItem);
-		else
-			this.unlockDelete(listItem);
-	},
-	
-	lockDelete: function(listItem) {
-		// Hide delete button
-		$(listItem).find('.doDelete').fadeOut(75);
-		$(listItem).find('.unlockDelete').removeClass('unlocked');
-	},
-	
-	unlockDelete: function(listItem) {
-		// Show delete button
-		$(listItem).find('.doDelete').fadeIn(75);
-		$(listItem).find('.unlockDelete').addClass('unlocked');
-	},
-	
-	doDelete: function(listItem) {
-		// Perform actual delete
-		this.trigger('deleteItem', this.getModelFromLi(listItem));
-	},
-	
-	show: function() {
-		// Make sure the list is always up to date
-		if (!this.isVisible())
-			this.refresh();
 
-		// Call the super class' show method
-		this.inherited(arguments);
+	handleDelete: function(evt) {
+		// Get the list item that contains the clicked element
+		var $listItem = $(evt.currentTarget).closest('li');
+
+		// Get the model associatd with the list item
+		var model = this.getModelFromLi($listItem);
+
+		// Perform actual delete
+		this.trigger('deleteItem', model);
+	},
+	
+	handleLockUnlock: function(evt) {
+		// Get the list item that contains the clicked element
+		var $listItem = $(evt.currentTarget).closest('li');
+
+		// Toggle locked/unlocked state
+		if ($listItem.find('.unlock').hasClass('unlocked'))
+			this.lockDelete($listItem);
+		else
+			this.unlockDelete($listItem);
+	},
+	
+	lockDelete: function($listItem) {
+		// Hide delete button
+		$listItem.find('.doDelete').fadeOut(75);
+		$listItem.find('.unlock').removeClass('unlocked');
+	},
+	
+	unlockDelete: function($listItem) {
+		// Show delete button
+		$listItem.find('.doDelete').fadeIn(75);
+		$listItem.find('.unlock').addClass('unlocked');
 	}
 });
