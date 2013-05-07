@@ -108,7 +108,7 @@ Contacts.Templates['Index'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactEditor'] = Handlebars.compile([
-	'<div class="frame">',
+	'<div class="frame striped">',
 		'<div class="header">',
 	 	   '<div><button class="back" type="button">Cancel</button></div>',
 	 	   '<h1>{{# if id}}Edit Contact{{else}}New Contact{{/if}}</h1>',
@@ -126,7 +126,7 @@ Contacts.Templates['ContactEditor'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['ContactDetails'] = Handlebars.compile([
-	'<div class="frame">',
+	'<div class="frame striped">',
 		'<div class="header">',
 	 	   '<div><button class="back" type="button">All Contacts</button></div>',
 	 	   '<h1>Info</h1>',
