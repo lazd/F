@@ -3,7 +3,7 @@
 	/* Views
 	*******************/
 	
-	// Available as F.ListComponent.prototype.View
+	// Available as F.ListComponent.prototype.ListView
 	var ListView = F.View.extend({
 		tagName: 'ul',
 
