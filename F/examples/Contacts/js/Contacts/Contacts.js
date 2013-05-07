@@ -90,18 +90,20 @@ Contacts.Templates['App'] = Handlebars.compile([
 ].join(''));
 
 Contacts.Templates['Index'] = Handlebars.compile([
-	'<div class="header">',
-		'<div><button class="edit" type="button">Edit</button></div>',
-		'<h1>Contacts</h1>',
-		'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
-	'</div>',
-	'<div class="scrollable">',
-		'<form class="search" autocomplete="off">',
-			'<i class="icon-search"></i>',
-			'<input type="text" name="search" class="searchField" autocomplete="off" placeholder="Search">',
-			'<i style="display: none;" class="clearButton icon-remove-sign"></i>',
-		'</form>',
-		'<ul class="list"></ul>',
+	'<div class="frame">',
+		'<div class="header">',
+			'<div><button class="edit" type="button">Edit</button></div>',
+			'<h1>Contacts</h1>',
+			'<div><button class="new" type="button"><i class="icon-plus"></i></button></div>',
+		'</div>',
+		'<div class="scrollable">',
+			'<form class="search" autocomplete="off">',
+				'<i class="icon-search"></i>',
+				'<input type="text" name="search" class="searchField" autocomplete="off" placeholder="Search">',
+				'<i style="display: none;" class="clearButton icon-remove-sign"></i>',
+			'</form>',
+			'<ul class="list"></ul>',
+		'</div>',
 	'</div>'
 ].join(''));
 
