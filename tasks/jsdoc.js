@@ -21,37 +21,35 @@ module.exports = function(grunt) {
 	exports.jsdoc = function(options) {
 		// jsdoc args
 		var args = [
-			'-jar',
-			'util/jsdoc-toolkit/jsrun.jar',
-			'util/jsdoc-toolkit/app/run.js',
-			'-a',
-			'-t=util/jsdoc-toolkit/templates/jsdoc',
-			'-d='+options.dest
+			'-t',
+			'node_modules/jsdoc/templates/default',
+			'-d',
+			options.dest
 		];
 		
 		// Add source files
 		args = args.concat(options.src);
 		
+		console.log(args);
+
 		return grunt.util.spawn(
 			{
-				cmd: 'java',
+				cmd: 'node_modules/jsdoc/nodejs/bin/jsdoc',
 				args: args
 			},
 			function(err, result, code) {
-				var success = (code == 0);
-			
-				if (success) {
+				if (err) {
+					grunt.log.error(err.stderr);
+				}
+				else {
 					grunt.log.writeln(result.stdout);
 
 					// Print a success message.
 					grunt.log.ok('JSDoc built.');
 				}
-				else {
-					grunt.log.error(err.stderr);
-				}
 				
 				grunt.log.writeln();
-				options.done(success);
+				options.done(err);
 			}
 		);
 	};
