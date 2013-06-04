@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 			},
 			js: {
 				src: [
-					'js/Class/Class.js',
+					'node_modules/pseudoclass/source/Class.js',
 
 					'js/F/F.js',
 					'js/F/F.Utilities.js',
@@ -91,12 +91,12 @@ module.exports = function(grunt) {
 				tasks: ['copy:examples']
 			},
 			jshint: {
-				files: ['Gruntfile.js', 'js/**/*.js'],
+				files: ['Gruntfile.js'],
 				tasks: ['jshint']
 			},
 			concatjs: {
 				files: ['js/**/*.js'],
-				tasks: ['concat:js']
+				tasks: ['jshint', 'concat:js']
 			},
 			uglify: {
 				files: ['<config:concat.js.dest>'],
@@ -106,9 +106,9 @@ module.exports = function(grunt) {
 	});
     
 	// Default task
-	grunt.registerTask('default', ['clean','jshint','copy','concat','uglify','jsdoc']);
+	grunt.registerTask('default', ['clean','jshint','copy','concat','uglify']);
 	
-	grunt.registerTask('build', ['clean','jshint','copy','concat','uglify']);
+	grunt.registerTask('build', ['clean','jshint','copy','concat','uglify','jsdoc']);
 	
 	grunt.registerTask('dev', ['clean','jshint','copy','concat']);
 	
