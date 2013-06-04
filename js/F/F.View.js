@@ -191,7 +191,7 @@
 		/**
 		 * Delegate events to this view. This overrides Backbone.View.delegateEvents and lets us specify an object to call methods on instead of the view
 		 *
-		 * @param {Events hash to delegate} events
+		 * @param {Object} events	Events hash to delegate
 		 *
 		 * @returns {F.View}	this, chainable
 		 */

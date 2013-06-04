@@ -39,7 +39,7 @@
 			// Create a blank model
 			this.model = new this.Model();
 			
-			this.bind(this.handleSubmit);
+			this.bind('handleSubmit');
 		},
 
 		View: FormView,
