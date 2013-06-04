@@ -11,19 +11,22 @@ Contacts.App = new Class({
 		this.selectedItem = null;
 		
 		// The main view for the item manager
-		this.view = new this.View(_.extend({
-			component: this,				// Let this view directly call our functions by name in the Backbones event object
-			template: this.Template	// Pass the template from our prototype for rendering
-		}, options)).render();	// Immediately call render so we can pass child nodes to our subcomponents
+		this.view = new this.View({
+			component: this,			// Let this view directly call our functions by name in the Backbones event object
+			el: options.el,				// Tell it where to render
+			template: this.Template,	// Pass the template from our prototype for rendering
+		});		// Immediately call render so we can pass child nodes to our subcomponents
 		
 		// Since we'll use these functions as listeners, make sure they always execute in our scope
-		this.bind(this.navigateBack);
-		this.bind(this.showEditor);
-		this.bind(this.showDetails);
-		this.bind(this.newContact);
-		this.bind(this.deleteContact);
-		this.bind(this.handleSave);
-		
+		this.bind('navigateBack');
+		this.bind('showEditor');
+		this.bind('showDetails');
+		this.bind('newContact');
+		this.bind('deleteContact');
+		this.bind('handleSave');
+	},
+
+	setup: function() {
 		/*
 			Item index
 			This component will display the list of items and the search box
@@ -68,7 +71,6 @@ Contacts.App = new Class({
 		contacts to our collection so they render in the list. In real situation,
 		you would simply do this.index.list.refresh() to fetch the models from the
 		server and re-render the list
-		
 		*/
 		
 		// Check if the model is new or old

@@ -3,12 +3,6 @@ Contacts.Index = new Class({
 	extend: F.Component,
 	
 	construct: function(options) {
-		// Overwrite defaults directly into options
-		_.extend(options, {
-			template: this.Template,
-			component: this
-		});
-		
 		/*
 		Since we use this as an event listener, don't forget to bind it, rascala!
 		Also, since we're going to use handleSearch as a keyup listener, make sure
@@ -17,8 +11,14 @@ Contacts.Index = new Class({
 		this.handleSearch = _.throttle(this.handleSearch.bind(this), 100);
 		
 		// Create a view for our search/list display
-		this.view = new this.View(options).render();
-		
+		this.view = new this.View({
+			component: this,		// Alaywas
+			el: options.el,			// Tell it where to render
+			template: this.Template	// Template to render
+		});
+	},
+	
+	setup: function() {
 		/*
 			Item list
 			This component will display the list of items
@@ -49,7 +49,7 @@ Contacts.Index = new Class({
 		this.bubble('list', 'list:itemSelected');
 		this.bubble('list', 'deleteItem');
 	},
-	
+
 	// Our template and view should go in the prototype so they can be overridden
 	Template: Contacts.Templates.Index,
 	
@@ -66,16 +66,19 @@ Contacts.Index = new Class({
 	// Put the component we'll use in our prototype so it can be overridden
 	ListComponent: Contacts.List,
 	
-	show: function() {
+	show: function(_super) {
 		// End delete mode before we're shown
 		if (this.deleteMode)
 			this.endEditMode();
 
 		// Call the super class' show method
-		this.inherited(arguments);
+		_super.apply(this, arguments);
 
 		// Show the list whenever we're shown
 		this.list.show();
+
+		// Show is expected to be chained, so return this
+		return this;
 	},
 	
 	newContact: function() {

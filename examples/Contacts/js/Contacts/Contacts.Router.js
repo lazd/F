@@ -42,7 +42,6 @@ Contacts.Router = Backbone.Router.extend({
 	},
 	
 	search: function(query) {
-		Contacts.app.index.show();
-		Contacts.app.index.search(query);
+		Contacts.app.index.show().search(query);
 	}
 });
