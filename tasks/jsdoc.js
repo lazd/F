@@ -30,8 +30,6 @@ module.exports = function(grunt) {
 		// Add source files
 		args = args.concat(options.src);
 		
-		console.log(args);
-
 		return grunt.util.spawn(
 			{
 				cmd: 'node_modules/jsdoc/nodejs/bin/jsdoc',
