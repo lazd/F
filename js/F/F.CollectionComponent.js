@@ -12,25 +12,18 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 * @extends F.Component
 	 *
 	 * @param {Object} options							Options for this component
-	 * @param {Object} [options.defaultParams]			Default parameters to use when fetching this collection
 	 *
 	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
 	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
 	 */
 	construct: function(options) {
 		// Bind for use as listeners
-		this.bind(this.addModel);
-		this.bind(this.removeModel);
-		this.bind(this.render);
+		this.bind('addModel');
+		this.bind('removeModel');
+		this.bind('render');
 		
 		this._useCollection(new this.Collection());
 		
-		// Default parameters are the prototype params + options params
-		this.options.defaultParams = _.extend({}, this.options.defaultParams, options.defaultParams);
-		
-		// Parameters to send with the request: just copy the default params
-		this.params = _.extend({}, this.options.defaultParams);
-	
 		// Store if this collection has ever been loaded
 		this.collectionLoaded = false;
 	},
@@ -158,7 +151,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	 *
 	 * @returns {F.CollectionComponent}	this, chainable
 	 */
-	show: function(options) {
+	show: function(_super, options) {
 		options = options || {};
 		if (options.params) {
 			// Fetch the collection from the server
@@ -176,8 +169,9 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 				}); // show when we're fully loaded
 			});
 		}
-		else
-			this.inherited(arguments);
+		else {
+			_super.apply(this, arguments);
+		}
 		
 		return this;
 	}

@@ -230,7 +230,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	 *
 	 * @returns {F.ModelComponent}	this, chainable
 	 */
-	show: function(options) {
+	show: function(_super, options) {
 		options = options || {};
 		
 		if (options.id) {
@@ -258,8 +258,9 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				silent: options.silent
 			});
 		}
-		else
-			this.inherited(arguments);
+		else {
+			_super.apply(this, arguments);
+		}
 			
 		return this;
 	}
