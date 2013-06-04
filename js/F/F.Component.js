@@ -27,13 +27,9 @@
 		 * @property {Object} options			Default options for this component. These will be merged with options passed to the constructor.
 		 */
 		construct: function(options) {
-			// Merge options up the prototype chain
-			this.mergeOptions();
-			
-			// Add defaults to options arg and make available to other constructors
-			// Modify this.options to reflect any modifications the options arg may have made
-			this.applyOptions(options);
-			
+			// Merge options up the prototype chain, with passed options overriding
+			this.mergeOptions(options);
+
 			// Sub components
 			this.components = {};
 			
@@ -42,11 +38,11 @@
 			
 			// Make sure the following functions are always called in scope
 			// They are used in event handlers, and we want to be able to remove them
-			this.bind(this._handleSubComponentShown);
-			this.bind(this.render);
+			this.bind('_handleSubComponentShown');
+			this.bind('render');
 		},
 		
-		constructed: function() {
+		init: function() {
 			// Hide view by default
 			if (this.view) {
 				if (this.view.el) {
@@ -106,6 +102,25 @@
 			
 			return this;
 		},
+
+		/**
+		 * Binds a method to the execution scope of this instance.
+		 *
+		 * @name bind
+		 * @memberOf BaseClass.prototype
+		 * @function
+		 *
+		 * @param {Function} func	The this.method you want to bind
+		 */
+		bind: function(name) {
+			if (typeof this[name] === 'function')
+				this[name] = this[name].bind(this);
+		},
+
+		/**
+		 * Destoroy the unbind function
+		 */
+		unbind: undefined,
 	
 		/**
 		 * Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it
@@ -441,7 +456,7 @@
 		/**
 		 * Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
 		 */
-		mergeOptions: function() {
+		mergeOptions: function(options) {
 			// Create a set of all options in the correct order
 			var optionSets = [];
 			var proto = this.constructor.prototype;
@@ -449,39 +464,20 @@
 				if (proto.hasOwnProperty('options')) {
 					optionSets.unshift(proto.options);
 				}
-				proto = proto.superClass;
+				
+				proto = proto.superPrototype;
 			}
 			
-			// All options should end up merged into a new object
-			// That is, move our reference out of the prototype before we modify it
+			// All options should end up merged into a new object to avoid overwriting prototype.options
 			optionSets.unshift({});
 			
-			// Perform the merge and store the new options object
-			this.options = _.extend.apply(_, optionSets);
-		},
-		
-		/**
-		 * Applies passed options to instance options and applies instance options to passed options.
-		 * Individual passed options will not be applied to instance options unless they are defined in default options for the class or parent class.
-		 * <br>Note: The options merge is one level deep.
-		 * <br>Note: This function assumes that <code>this.options</code> does not refer to an object in the prototype.
-		 *
-		 * @param {Object} options	Instance options object (usually argument to constructor)
-		 *
-		 * @returns {Object}	Merged options object
-		 */
-		applyOptions: function(options) {
-			// Assume we already have moved our reference to this.options out of the prototype
-			// Apply options from passed object to this.options
-			for (var option in options) {
-				if (this.options.hasOwnProperty(option))
-					this.options[option] = options[option];
+			// Add in instance options
+			if (options) {
+				optionSets.push(options);
 			}
-			
-			// Apply any missing defaults back to passed options object
-			_.extend(options, this.options);
 
-			return options;
+			// Perform the merge and store the new options object on the instance
+			this.options = _.extend.apply(_, optionSets);
 		}
 
 		/**
