@@ -18,17 +18,17 @@
 		extend: F.ModelComponent,
 	
 		/**
-		 * A component that can display an add/edit form for a model and handle form submission and save events
-		 *
-		 * @constructs
-		 * @extends F.ModelComponent
-		 *
-		 * @param {Object} options			Options for this component and its view. Options not listed below will be passed to the view.
-		 *
-		 * @property {Backbone.Model} Model	The model class that the form will manipulate. Not an instance of the model, but the model class itself
-		 * @property {Backbone.View} View	The view class that the form will be rendered to
-		 * @property {Template} Template	The template that the form will be rendered with
-		 */
+			A component that can display an add/edit form for a model and handle form submission and save events
+			
+			@constructs
+			@extends F.ModelComponent
+			
+			@param {Object}	options		Options for this component and its view. Options not listed below will be passed to the view.
+			
+			@property {Backbone.Model}	Model		The model class that the form will manipulate. Not an instance of the model, but the model class itself
+			@property {Backbone.View}	View		The view class that the form will be rendered to
+			@property {Template}		Template	The template that the form will be rendered with
+		*/
 		construct: function(options) {
 			// Create a new edit view that responds to submit events
 			this.view = new this.View(_.extend({
@@ -47,10 +47,10 @@
 		Template: null,
 
 		/**
-		 * Clears the form by rendering it with a new, empty model
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Clears the form by rendering it with a new, empty model
+			
+			@returns {F.Component}	this, chainable
+		*/
 		clear: function() {
 			// Create a new model instead of resetting the old one
 			this._setModel(new this.Model());
@@ -67,8 +67,8 @@
 		},
 		
 		/**
-		 * Blurs focus from the form, mostly for iOS
-		 */
+			Blurs focus from the form, mostly for iOS
+		*/
 		doBlur: function() {
 			// Blur focus to the submit button in order to hide keyboard on iOS
 			// This won't work for every situation, such as forms that don't have submit buttons
@@ -79,10 +79,10 @@
 		},
 	
 		/**
-		 * Handles form submit events
-		 *
-		 * @param {Event} evt	The jQuery event object
-		 */
+			Handles form submit events
+			
+			@param {Event}	evt		The jQuery event object
+		*/
 		handleSubmit: function(evt) {
 			this.doBlur();
 			
@@ -94,10 +94,10 @@
 		},
 		
 		/**
-		 * Read data from the form. Override this function customization of extracting your form data
-		 *
-		 * @returns {Object}	Data read from form
-		 */
+			Read data from the form. Override this function customization of extracting your form data
+			
+			@returns {Object}	Data read from form
+		*/
 		extractValuesFromForm: function() {
 			// Get the data from the form fields
 			var $form = this.view.$el;
@@ -116,17 +116,17 @@
 		},
 		
 		/**
-		 * Read the data from the form and store it in the model
-		 */
+			Read the data from the form and store it in the model
+		*/
 		setValuesFromForm: function() {
 			this.model.set(this.extractValuesFromForm());
 		},
 		
 		/**
-		 * Read the data from the form and perform the save
-		 *
-		 * @param {Function} callback	A callback to execute when the save is complete
-		 */
+			Read the data from the form and perform the save
+			
+			@param {Function}	callback	A callback to execute when the save is complete
+		*/
 		saveForm: function(callback) {
 			// Perform the save, passing our new, modified data
 			this.save(this.extractValuesFromForm(), callback);

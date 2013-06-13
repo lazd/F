@@ -2,29 +2,29 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
 	/**
-	 * A component that can load and render a model
-	 *
-	 * @constructs
-	 * @extends F.Component
-	 *
-	 * @param {Object} options	Options for this component
-	 * @param {Object} options.Model	Model class this component will be operating on. Sets this.Model
-	 *
-	 * @property {Backbone.Model} Model		The model class to operate on. Not an instance of a model, but the model class itself.
-	 */
+		A component that can load and render a model
+		
+		@constructs
+		@extends F.Component
+		
+		@param {Object}		options			Options for this component
+		@param {Object}		options.Model	Model class this component will be operating on. Sets this.Model
+		
+		@property {Backbone.Model}	Model	The model class to operate on. Not an instance of a model, but the model class itself.
+	*/
 	construct: function(options) {
 		this.Model = this.Model || options.Model;
 	},
 	
 	Model: Backbone.Model,
 	
-	/***
-	 * Refresh the model
-	 *
-	 * @param {Function} callback	Callback to call after successful refresh
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+	/**
+		Refresh the model
+		
+		@param {Function}	callback	Callback to call after successful refresh
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	refresh: function(callback) {
 		this.trigger('model:loading', {
 			model: this.model
@@ -68,12 +68,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Use a different item model
-	 *
-	 * @param {Backbone.Model} model
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+		Use a different item model
+		
+		@param {Backbone.Model}		model	The model to use
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	_setModel: function(model) {
 		this.model = model;
 	
@@ -85,13 +85,13 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 		
 	/**
-	 * Fetch a model with the given ID
-	 *
-	 * @param {String} itemId		ID of the item to fetch
-	 * @param {Function} [callback]	Callback to execute on successful fetch
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+		Fetch a model with the given ID
+		
+		@param {String}		itemId		ID of the item to fetch
+		@param {Function}	[callback]	Callback to execute on successful fetch
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	fetch: function(itemId, callback) {
 		var data = {};
 		if (itemId !== undefined) { // add the ID passed to the model data
@@ -145,12 +145,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Load a Backbone.Model directly or create a model from data
-	 *
-	 * @param {mixed} modelOrData	Backbone.Model to load or Object with data to create model from
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+		Load a Backbone.Model directly or create a model from data
+		
+		@param {mixed}	modelOrData		Backbone.Model to load or Object with data to create model from
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	load: function(modelOrData) {
 		if (modelOrData instanceof Backbone.Model)
 			this._setModel(modelOrData);
@@ -166,14 +166,14 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Save a model to the server
-	 *
-	 * @param {Object} data			Data to apply to model before performing save
-	 * @param {Function} callback	Callback to execute on success/failure. Passed an error, the model, and the response from the server
-	 * @param {Object} options		Options to pass when calling model.save
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+		Save a model to the server
+		
+		@param {Object}		data		Data to apply to model before performing save
+		@param {Function}	callback	Callback to execute on success/failure. Passed an error, the model, and the response from the server
+		@param {Object}		options		Options to pass when calling model.save
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	save: function(data, callback, options) {
 		if (this.model) {
 			if (this.inDebugMode())
@@ -222,14 +222,14 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	},
 	
 	/**
-	 * Show this component, optionally fetching an item by ID or assigning a new model before render
-	 *
-	 * @param {Object} options			Show options
-	 * @param {String} options.id		ID of model to fetch from the server before showing
-	 * @param {Backbone.Model} options.model	Model to use directly (don't fetch)
-	 *
-	 * @returns {F.ModelComponent}	this, chainable
-	 */
+		Show this component, optionally fetching an item by ID or assigning a new model before render
+		
+		@param {Object}			options			Show options
+		@param {String}			options.id		ID of model to fetch from the server before showing
+		@param {Backbone.Model}	options.model	Model to use directly (don't fetch)
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
 	show: function(_super, options) {
 		options = options || {};
 		
@@ -266,100 +266,111 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	}
 
 	/**
-	 * Called when a model has been loaded successfully
-	 *
-	 * @name handleLoadSuccess
-	 * @memberOf F.ModelComponent.prototype
-	 * @function
-	 */
+		Called when a model has been loaded successfully
+		
+		@param {Backbone.Model}	model		The model that was to loaded
+		@param {Object}			response	The response from Backbone
+
+		@returns {Boolean}	If false is returned, events will not be triggered and the callback will not be called
+
+		@name handleLoadSuccess
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
 
 	/**
-	 * Called when a model fails to load
-	 *
-	 * @param {Backbone.Model} model	The model that failed to load
-	 * @param {Object} response			The response from Backbone
-	 *
-	 * @name handleLoadError
-	 * @memberOf F.ModelComponent.prototype
-	 * @function
-	 */
+		Called when a model fails to load
+		
+		@param {Backbone.Model}	model		The model that failed to load
+		@param {Object}			response	The response from Backbone
+		
+		@name handleLoadError
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
 	
 	/**
-	 * Called when a model has been saved successfully
-	 *
-	 * @name handleSaveSuccess
-	 * @memberOf F.ModelComponent.prototype
-	 * @function
-	 */
+		Called when a model has been saved successfully
+		
+		@param {Backbone.Model}	model		The model that was saved
+		@param {Object}			response	The response from Backbone
+
+		@name handleSaveSuccess
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
 	
 	/**
-	 * Called when a model fails to save
-	 *
-	 * @name handleSaveError
-	 * @memberOf F.ModelComponent.prototype
-	 * @function
-	 */
+		Called when a model fails to save
+		
+		@param {Backbone.Model}	model		The model that failed to save
+		@param {Object}			response	The response from Backbone
+
+		@name handleSaveError
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
 	
 	/**
-	 * Triggered when a model is saving
-	 *
-	 * @name F.ModelComponent#model:saving
-	 * @event
-	 *
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that was saved
-	 */
+		Triggered when a model is saving
+		
+		@name F.ModelComponent#model:saving
+		@event
+		
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was saved
+	*/
 	
 	/**
-	 * Triggered when save is unsuccessful
-	 *
-	 * @name F.ModelComponent#model:saveFailed
-	 * @event
-	 *
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that failed to save
-	 * @param {Object} evt.response			Response from the server
-	 */
+		Triggered when save is unsuccessful
+		
+		@name F.ModelComponent#model:saveFailed
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that failed to save
+		@param {Object}			evt.response	Response from the server
+	*/
 	
 	/**
-	 * Triggered after a successful save
-	 *
-	 * @name F.ModelComponent#model:saved
-	 * @event
-	 *
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that was saved
-	 * @param {Object} evt.response			Response from the server
-	 */
+		Triggered after a successful save
+		
+		@name F.ModelComponent#model:saved
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that was saved
+		@param {Object}			evt.response	Response from the server
+	*/
 	
 	/**
-	 * Triggered when the model is being loaded from the server
-	 *
-	 * @name F.ModelComponent#model:loading
-	 * @event
-	 *	
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that was loaded
-	 */
+		Triggered when the model is being loaded from the server
+		
+		@name F.ModelComponent#model:loading
+		@event
+			
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was loaded
+	*/
 	 
 	/**
-	 * Triggered when load is unsuccessful
-	 *
-	 * @name F.ModelComponent#model:loadFailed
-	 * @event
-	 *
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that failed to load
-	 * @param {Object} evt.response			Response from the server
-	 */
+		Triggered when load is unsuccessful
+		
+		@name F.ModelComponent#model:loadFailed
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that failed to load
+		@param {Object}			evt.response	Response from the server
+	*/
 	
 	/**
-	 * Triggered when the model is loaded from the server or passed to load()
-	 *
-	 * @name F.ModelComponent#model:loaded
-	 * @event
-	 *	
-	 * @param {Object} evt					Event object
-	 * @param {Backbone.Model} evt.model	The model that was loaded
-	 */
+		Triggered when the model is loaded from the server or passed to load()
+		
+		@name F.ModelComponent#model:loaded
+		@event
+			
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was loaded
+	*/
 });

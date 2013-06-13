@@ -8,21 +8,20 @@
 	
 	F.View = Backbone.View.extend(/** @lends F.View# */{
 		/**
-		 * Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a container or existing element
-		 *
-		 * @constructs
-		 *
-		 * @param {Object} options	Options for this view
-		 * @param {Template} options.template	The template to render this view with
-		 * @param {Element} [options.el]		The element, jQuery selector, or jQuery object to render this view to. Should not be used with options.container
-		 * @param {Element} [options.container]	The element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
-		 * @param {Backbone.Model} [options.model]	Instance of a Backbone model to render this view from
-		 * @param {Component} [options.component]	The component that events should be delegated to
-		 * @param {Object} [options.events]		Backbone events object indicating events to listen for on this view
-		 *
-		 * @property {Template} template		The template to render this view with
-		 *
-		 */
+			Generic view class. Provides rendering and templating based on a model, eventing based on a component, and element management based on a container or existing element
+			
+			@constructs
+			
+			@param {Object}			options				Options for this view
+			@param {Template}		options.template	The template to render this view with
+			@param {Element}		[options.el]		The DOM element, jQuery selector, or jQuery object to render this view to. Should not be used with options.container
+			@param {Element}		[options.container]	The DOM element, jQuery selector, or jQuery object to insert this components element into. Should not be used with options.el
+			@param {Backbone.Model}	[options.model]		Instance of a Backbone model to render this view from
+			@param {Component}		[options.component]	The component that events should be delegated to
+			@param {Object}			[options.events]	Backbone events object indicating events to listen for on this view
+			
+			@property {Template} template		The template to render this view with
+		*/
 		initialize: function() {
 			if (this.options.container !== undefined && this.options.el !== undefined) {
 				throw new Error('View: should provide either options.el or options.container, never both');
@@ -88,17 +87,17 @@
 		},
 		
 		/**
-		 * Get the number of milliseconds seconds since the view was last rendered
-		 *
-		 * @returns {number} Number of milliseconds since this view was rendered
-		 */
+			Get the time since the view was last rendered
+			
+			@returns {number} Number of milliseconds since this view was rendered
+		*/
 		age: function() {
 			return this.rendered !== null ? new Date().getTime() - this.rendered : -1;
 		},
 		
 		/**
-		 * Remove this view from the DOM and stop listening to model change events
-		 */
+			Remove this view from the DOM and stop listening to model change events
+		*/
 		remove: function() {
 			this.$el.remove();
 		
@@ -108,10 +107,10 @@
 		},
 		
 		/**
-		 * Show the view. The view will be rendered before it is shown if it hasn't already been rendered
-		 *
-		 * @returns {F.View}	this, chainable
-		 */
+			Show the view. The view will be rendered before it is shown if it hasn't already been rendered
+			
+			@returns {F.View}	this, chainable
+		*/
 		show: function() {
 			// Ensure the view is rendered
 			if (this.template) {
@@ -125,10 +124,10 @@
 		},
 	
 		/**
-		 * Hide the view
-		 *
-		 * @returns {F.View}	this, chainable
-		 */
+			Hide the view
+			
+			@returns {F.View}	this, chainable
+		*/
 		hide: function() {
 			// Hide the view
 			this.$el.hide();
@@ -137,10 +136,10 @@
 		},
 	
 		/**
-		 * Render the view only if it has not been rendered before (or has been reset)
-		 *
-		 * @returns {F.View}	this, chainable
-		 */
+			Render the view only if it has not been rendered before (or has been reset)
+			
+			@returns {F.View}	this, chainable
+		*/
 		renderOnce: function() {
 			// Only render the view if it has never been rendered
 			if (this.rendered === null) {
@@ -156,10 +155,10 @@
 		},
 
 		/**
-		 * Render the view
-		 *
-		 * @returns {F.View}	this, chainable
-		 */
+			Render the view
+			
+			@returns {F.View}	this, chainable
+		*/
 		render: function() {
 			if (this.inDebugMode()) {
 				console.log('%s: Rendering view...', this.component && this.component.toString() || 'Orphaned view');
@@ -189,12 +188,12 @@
 		},
 		
 		/**
-		 * Delegate events to this view. This overrides Backbone.View.delegateEvents and lets us specify an object to call methods on instead of the view
-		 *
-		 * @param {Object} events	Events hash to delegate
-		 *
-		 * @returns {F.View}	this, chainable
-		 */
+			Delegate events to this view. This overrides Backbone.View.delegateEvents and lets us specify an object to call methods on instead of the view
+			
+			@param {Object}	events	Events hash to delegate
+			
+			@returns {F.View}	this, chainable
+		*/
 		delegateEvents: function(events) {
 			if (!(events || (events = getValue(this, 'events')))) return;
 			this.undelegateEvents();

@@ -6,16 +6,16 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * A component that can load and render a collection
-	 *
-	 * @constructs
-	 * @extends F.Component
-	 *
-	 * @param {Object} options							Options for this component
-	 *
-	 * @property {Object} defaultParams				Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to load(fetchParams) will merge fetchParams with defaultParams.
-	 * @property {Backbone.Collection} Collection	The collection class to operate on. Not an instance of a collection, but the collection class itself.
-	 */
+		A component that can load and render a collection
+		
+		@constructs
+		@extends F.Component
+		
+		@param {Object}		options		Options for this component
+		
+		@property {Object}					defaultParams	Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to <code>load(fetchParams)</code> will merge <code>fetchParams</code> with <code>defaultParams</code>
+		@property {Backbone.Collection}		Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself
+	*/
 	construct: function(options) {
 		// Bind for use as listeners
 		this.bind('addModel');
@@ -54,12 +54,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Refresh this collection with the last parameters used
-	 *
-	 * @param {Function} callback	Optional callback to execute on successful fetch
-	 *
-	 * @returns {F.CollectionComponent}	this, chainable
-	 */
+		Refresh this collection with the last parameters used
+		
+		@param {Function}	callback	Optional callback to execute on successful fetch
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
 	refresh: function(callback) {
 		// Just fetch the collection with the current params
 		this.fetch(this.params, callback);
@@ -68,20 +68,20 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Callback called when model is added to collection
-	 */
+		Callback called when model is added to collection
+	*/
 	addModel: function(model) {},
 	
 	/**
-	 * Callback called when model is removed from collection
-	 */
+		Callback called when model is removed from collection
+	*/
 	removeModel: function(model) {},
 	
 	/**
-	 * Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
-	 *
-	 * @returns {F.CollectionComponent}	this, chainable
-	 */
+		Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
 	clearParams: function() {
 		this.params = {};
 		
@@ -89,13 +89,13 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	},
 	
 	/**
-	 * Fetch the collection by fetching it from the server
-	 *
-	 * @param {Object} [fetchParams]	Parameters to pass when fetching
-	 * @param {Function} [callback]		Callback to execute on successful fetch
-	 *
-	 * @returns {F.CollectionComponent}	this, chainable
-	 */
+		Fetch the collection by fetching it from the server
+		
+		@param {Object}		[fetchParams]	Parameters to pass when fetching
+		@param {Function}	[callback]		Callback to execute on successful fetch
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
 	fetch: function(fetchParams, callback) {
 		// Combine new params, if any, with defaults and store, overwriting previous params
 		if (fetchParams)
@@ -126,12 +126,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	
 	/**
-	 * Load a Backbone.Collection directly or create a collection from an array of data
-	 *
-	 * @param {mixed} collectionOrData	Backbone.Collection to load or Array of Objects with data to create the collection from
-	 *
-	 * @returns {F.CollectionComponent}	this, chainable
-	 */
+		Load a Backbone.Collection directly or create a collection from an array of data
+		
+		@param {Mixed}	collectionOrData	Backbone.Collection to load or Array of Objects with data to create the collection from
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
 	load: function(collectionOrData) {
 		this._releaseCollection();
 
@@ -145,12 +145,12 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	
 	/**
-	 * Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
-	 *
-	 * @param {Object} options	Pass fetch parameters with options.params
-	 *
-	 * @returns {F.CollectionComponent}	this, chainable
-	 */
+		Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
+		
+		@param {Object}		options		Pass fetch parameters with options.params
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
 	show: function(_super, options) {
 		options = options || {};
 		if (options.params) {
@@ -178,20 +178,20 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	
 	/**
-	 * Triggered when the collection is being loaded from the server
-	 *
-	 * @name F.CollectionComponent#collection:loading
-	 * @event
-	 *
-	 * @param {Backbone.Collection}	collection	The collection that is being loaded
-	 */
+		Triggered when the collection is being loaded from the server
+		
+		@name F.CollectionComponent#collection:loading
+		@event
+		
+		@param {Backbone.Collection}	collection	The collection that is being loaded
+	*/
 	
 	/**
-	 * Triggered when the collection is loaded from the server
-	 *
-	 * @name F.CollectionComponent#collection:loaded
-	 * @event
-	 *
-	 * @param {Backbone.Collection}	collection	The collection that was loaded
-	 */
+		Triggered when the collection is loaded from the server
+		
+		@name F.CollectionComponent#collection:loaded
+		@event
+		
+		@param {Backbone.Collection}	collection	The collection that was loaded
+	*/
 });

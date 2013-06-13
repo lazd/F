@@ -2,7 +2,6 @@
 	
 	/* Views
 	*******************/
-	
 	// Available as F.ListComponent.prototype.ListView
 	var ListView = F.View.extend({
 		tagName: 'ul',
@@ -166,20 +165,20 @@
 		extend: F.CollectionComponent,
 	
 		/**
-		 * A component that can load and render a collection as a list
-		 *
-		 * @constructs
-		 * @extends F.CollectionComponent
-		 *
-		 * @param {Object} options						Options for this component and its view. Options not listed below will be passed to the view.
-		 *
-		 * @property {Backbone.Collection} Collection		The collection class this list will be rendered from
-		 * @property {Mixed} ListContainer					The DOM element or jQuery object list items should be appended to
-		 * @property {Backbone.View} ListView				The view class this list will be rendered with
-		 * @property {Template} ListTemplate				The template this list will be rendered with. Renders to a UL tag by default
-		 * @property {Backbone.View} ItemView				The view that individual items will be rendered with
-		 * @property {Template} ItemTemplate				The template that individual items will be rendered with
-		 */
+			A component that can load and render a collection as a list
+			
+			@constructs
+			@extends F.CollectionComponent
+			
+			@param {Object}		options		Options for this component and its view. Options not listed below will be passed to the view.
+			
+			@property {Backbone.Collection}	Collection		The collection class this list will be rendered from
+			@property {Mixed}				ListContainer	The DOM element or jQuery object list items should be appended to
+			@property {Backbone.View}		ListView		The view class this list will be rendered with
+			@property {Template}			ListTemplate	The template this list will be rendered with. Renders to a UL tag by default
+			@property {Backbone.View}		ItemView		The view that individual items will be rendered with
+			@property {Template}			ItemTemplate	The template that individual items will be rendered with
+		*/
 		construct: function(options) {
 			this.view = new this.ListView(_.extend({
 				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
@@ -198,22 +197,26 @@
 	
 		Collection: Backbone.Collection, // Collection component expects to have prototype.Collection or options.Collection
 	
-		/** The template render when there are no results **/
+		/**
+			The template to render when there are no results
+		*/
 		NoResultsTemplate: null,
 
-		/** The view to render when there are no results. Defaults to using ListView. **/
+		/**
+			The view to render when there are no results. Defaults to using ListView
+		*/
 		NoResultsView: null,
 
 		/**
-		 * The view to render when the list is empty
-		 * @todo give a default here
-		**/
+			The view to render when the list is empty
+			@todo give a default here
+		*/
 		ListEmptyView: null,
 
 		/**
-		 * The template to render when a list is empty. Rendered with ListEmptyView if defined, or ItemView otherwise.
-		 * @todo give a default here
-		**/
+			The template to render when a list is empty. Rendered with ListEmptyView if defined, or ItemView otherwise
+			@todo give a default here
+		*/
 		ListEmptyTemplate: null,
 
 		ListTemplate: null,
@@ -233,33 +236,33 @@
 		},
 	
 		/**
-		 * Get the model associated with a list item
-		 *
-		 * @param {Node}	Node or jQuery Object to get model from
-		 *
-		 * @returns {Backbone.Model}	The model associated with the passed DOM element
-		 */
+			Get the model associated with a list item
+			
+			@param {Mixed}	listItem	DOM element or jQuery Object to get model from
+			
+			@returns {Backbone.Model}	The model associated with the passed DOM element
+		*/
 		getModelFromLi: function(listItem) {
 			var viewIndex = $(listItem).data('viewIndex');
 			return (viewIndex !== undefined && this.view.subViews[viewIndex] && this.view.subViews[viewIndex].model) || null;
 		},
 	
 		/**
-		 * Get the view associated with a list item
-		 *
-		 * @param {Node}	Node or jQuery Object to get model from
-		 *
-		 * @returns {Backbone.View}	The view associated with the passed DOM element
+			Get the view associated with a list item
+			
+			@param {Node}	listItem	DOM element  or jQuery Object to get model from
+			
+			@returns {Backbone.View}	The view associated with the passed DOM element
 		 */
 		getViewFromLi: function(listItem) {
 			return this.view.subViews[$(listItem).data('viewIndex')];
 		},
 		
 		/**
-		 * Handles item selection events
-		 *
-		 * @param {Event} evt	The jQuery event object
-		 */
+			Handles item selection events
+			
+			@param {Event}	evt		The jQuery event object
+		*/
 		handleSelect: function(evt) {
 			// Get model from DOM el's data
 			var model = this.getModelFromLi(evt.currentTarget);
@@ -279,14 +282,14 @@
 		
 		
 		/**
-		 * Triggered when and item in the list is selected by tapping or clicking
-		 *
-		 * @name F.ListComponent#list:itemSelected
-		 * @event
-		 *
-		 * @param {Object}	evt					Event object
-		 * @param {jQuery}	evt.listItem		The list item that was touched
-		 * @param {Backbone.Model}	evt.model	The model representing the item in the list
-		 */
+			Triggered when and item in the list is selected by tapping or clicking
+			
+			@name F.ListComponent#list:itemSelected
+			@event
+			
+			@param {Object}			evt				Event object
+			@param {jQuery}			evt.listItem	The list item that was touched
+			@param {Backbone.Model}	evt.model		The model representing the item in the list
+		*/
 	});
 }());

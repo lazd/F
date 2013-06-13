@@ -8,24 +8,26 @@
 		extend: F.EventEmitter,
 		
 		options: {
-			singly: false, // Show only one subcomponent at a time
-			visible: false, // Visible immediately or not
-			debug: false
+			singly: false,		// If true, show only one subcomponent at a time
+			visible: false,		// If true, this component is visible immediately
+			debug: false,		// If true, enable debug mode for this component
+			independent: false	// If true, parent component is never notified when shown
 		},
 		
 		/**
-		 * Generic component class
-		 *
-		 * @extends F.EventEmitter
-		 * @constructs
-		 *
-		 * @param {Object} options	Component options
-		 * @param {Boolean} options.singly		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
-		 * @param {Boolean} options.visible		If true, this component will be visible immediately.
-		 * @param {Boolean} options.debug		If true, show debug messages for this component.
-		 *
-		 * @property {Object} options			Default options for this component. These will be merged with options passed to the constructor.
-		 */
+			Generic component class
+			
+			@extends F.EventEmitter
+			@constructs
+			
+			@param {Object}		[options]					Component options
+			@param {Boolean}	[options.singly=false]		Whether this component will allow multiple sub-components to be visible at once. If true, only one component will be visible at a time.
+			@param {Boolean}	[options.visible=false]		If true, this component will be visible immediately.
+			@param {Boolean}	[options.debug=false]		If true, show debug messages for this component.
+			@param {Boolean}	[options.independent=false]	If true, the parent component will never be notified that this component has been shown. Useful for children of singly components that should not cause their siblings to be hidden when they are shown
+			
+			@property {Object}	options			Default options for this component. These will be merged with options passed to the constructor.
+		*/
 		construct: function(options) {
 			// Merge options up the prototype chain, with passed options overriding
 			this.mergeOptions(options);
@@ -42,6 +44,9 @@
 			this.bind('render');
 		},
 		
+		/**
+			Performs initialization operations after all constructors have been called
+		*/
 		init: function() {
 			// Hide view by default
 			if (this.view) {
@@ -71,15 +76,33 @@
 				});
 			}
 		},
+
+		/**
+			Perform setup operations before this component is shown for the first time, such as adding sub-components
+			
+			@name setup
+			@memberOf F.Component.prototype
+			@function
+		*/
+
+		/**
+			Perform tear-down operations after this component is hidden, such as removing sub-components. This method will not be called unless the setup() method is defined and the component has been shown previously
+			
+			@name teardown
+			@memberOf F.Component.prototype
+			@function
+		*/
 		
 		/**
-		 * Destroy this instance and free associated memory
-		 */
+			Destroy this instance and free associated memory
+		*/
 		destruct: function() {
 			// If this module has a view in this.view, destroy it automatically
 			if (this.view)
 				this.view.remove();
 			
+			this.teardownIfSetup();
+
 			// Destroy sub-components
 			this.removeComponents();
 			
@@ -91,10 +114,10 @@
 		},
 		
 		/**
-		 * Render the view associated with this component, if it has one
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Render the view associated with this component, if it has one
+			
+			@returns {F.Component}	this, chainable
+		*/
 		render: function() {
 			if (this.view) {
 				this.view.render();
@@ -104,32 +127,33 @@
 		},
 
 		/**
-		 * Binds a method to the execution scope of this instance.
-		 *
-		 * @name bind
-		 * @memberOf BaseClass.prototype
-		 * @function
-		 *
-		 * @param {Function} func	The this.method you want to bind
-		 */
+			Binds a method to the execution scope of this instance
+			
+			@name bind
+			@memberOf F.Component.prototype
+			@function
+			
+			@param {String}		name		The name of the method to bind. For example, to bind <code>this.handleClick</code>, you would use <code>this.bind('handleClick')</code>
+		*/
 		bind: function(name) {
 			if (typeof this[name] === 'function')
 				this[name] = this[name].bind(this);
 		},
 
 		/**
-		 * Destoroy the unbind function
-		 */
+			Destroy the unbind function
+			@ignore
+		*/
 		unbind: undefined,
 	
 		/**
-		 * Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it
-		 * 
-		 * @param {String} componentName	Name of the component whose event to bubble
-		 * @param {String} evt				Name of event to bubble up
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Set an event to bubble up the component chain by re-triggering it when the given sub-component triggers it
+			
+			@param {String}		componentName	Name of the component whose event to bubble
+			@param {String}		evt				Name of event to bubble up
+			
+			@returns {F.Component}	this, chainable
+		*/
 		bubble: function(componentName, evt) {
 			if (!this[componentName]) {
 				console.error("%s: cannot set event '%s' for bubbling from component '%s', component does not exist", this.toString(), evt, componentName);
@@ -158,13 +182,13 @@
 		},
 	
 		/**
-		 * Discontinue bubbling of a given event
-		 * 
-		 * @param {String} componentName	Name of the component whose event to stop bubbling
-		 * @param {String} evt				Name of event that was set to bubble
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Discontinue bubbling of a given event
+			
+			@param {String}		componentName	Name of the component whose event to stop bubbling
+			@param {String}		evt				Name of event that was set to bubble
+			
+			@returns {F.Component}	this, chainable
+		*/
 		unbubble: function(componentName, evt) {
 			if (!this._bubbledEvts[componentName] || !this._bubbledEvts[componentName][evt]) {
 				console.warn("%s: cannot discontinue bubbling of event '%s' for component '%s', event was not set for bubbling", this.toString(), evt, componentName);
@@ -178,21 +202,21 @@
 		},
 
 		/**
-		 * Add an instance of another component as a sub-component.
-		 *
-		 * this[subComponent.toString()] is used to reference the sub-component:
-		 * 
-		 *   this.List.show();
-		 * 
-		 * You can give a component an optional custom name as the second argument, then reference as such:
-		 * 
-		 *  this.myCustomComponent.show();
-		 * 
-		 * @param {F.Component} component	Instance of component
-		 * @param {Function} componentName	Optional custom name for this component
-		 *
-		 * @returns {F.Component}	The sub-component that was added
-		 */
+			Add an instance of another component as a sub-component.
+			
+			<code>this[subComponent.toString()]</code> is used to reference the sub-component:
+			
+			  <code>this.List.show();</code>
+			
+			You can give a component an optional custom name as the second argument, then reference as such:
+			
+			 <code>this.myCustomComponent.show();</code>
+			
+			@param {F.Component}	component		Instance of component
+			@param {String}			[componentName]	Optional custom name for this component
+			
+			@returns {F.Component}	The sub-component that was added
+		*/
 		addComponent: function(component, componentName) {
 			// Get the name of the component
 			if (componentName) {
@@ -220,14 +244,14 @@
 		},
 	
 		/**
-		 * Remove and destroy a sub-component
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Remove and destroy a sub-component
+			
+			@param {String}		componentName	Component name
+			
+			@returns {F.Component}	this, chainable
+		*/
 		removeComponent: function(componentName) {
-			var component = this[componentName];
+			var component = this.components[componentName];
 		
 			if (component !== undefined) {
 				this.stopListening(component);
@@ -243,10 +267,10 @@
 		},
 		
 		/**
-		 * Remove and destroy all sub-components
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Remove and destroy all sub-components
+			
+			@returns {F.Component}	this, chainable
+		*/
 		removeComponents: function() {
 			for (var component in this.components) {
 				this.components[component].destruct();
@@ -257,31 +281,33 @@
 		},
 	
 		/**
-		 * Handles showing/hiding components in singly mode, triggering of events
-		 *
-		 * @param {Function} evt	Event object from component:shown
-		 */
+			Handles showing/hiding components in singly mode, triggering of events
+			
+			@param {Object}		evt		Event object from component:shown
+			@ignore
+		*/
 		_handleSubComponentShown: function(evt) {
-			var newComponent = this.components[evt.name];
+			var subComponent = this.components[evt.name];
 
-			if (newComponent !== undefined) {
-				// hide current component(s) for non-overlays
-				if (this.options.singly && !newComponent.options.overlay) {
+			if (subComponent !== undefined) {
+				// hide current component(s) if the shown component isn't independent
+				if (this.options.singly && !subComponent.options.independent) {
 					this.hideAllSubComponents([evt.name]);
 					
 					// Store currently visible subComponent
-					this.currentSubComponent = newComponent;
+					this.currentSubComponent = subComponent;
 				}
 			}
 		},
 	
 		/**
-		 * Show this component and emit an event so parent components can show themselves. Use options.silent to prevent component:shown event from firing
-		 *
-		 * @param {Object} options	Options object
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Show this component and emit an event so parent components can show themselves.
+			
+			@param {Object}		[options]				Options object
+			@param {Boolean}	[options.silent=false]	If true, events will not be triggered
+			
+			@returns {F.Component}	this, chainable
+		*/
 		show: function(options) {
 			options = options || {};
 			
@@ -294,7 +320,7 @@
 					console.log('%s: showing self', this.toString());
 			}
 		
-			if (!options.silent && !this.options.independent) {
+			if (!options.silent) {
 				// Always trigger event before we show ourself so others can hide/show
 				this.trigger('component:shown', {
 					name: this.toString(),
@@ -319,10 +345,14 @@
 		},
 	
 		/**
-		 * Hide this component
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Hide this component
+			
+			@param {Object}		[options]						Options object
+			@param {Boolean}	[options.silent=false]			If true, events will not be triggered
+			@param {Boolean}	[options.hideChildren=true]		If false, children will not be hidden automatically
+			
+			@returns {F.Component}	this, chainable
+		*/
 		hide: function(options) {
 			options = options || {};
 			
@@ -345,13 +375,10 @@
 				});
 			}
 			
-			// Call teardown if we're setup
-			if (this.options.isSetup && typeof this.teardown === 'function') {
-				this.teardown(options);
-				this.options.isSetup = false;
-			}
+			// Perform teardown if necessary
+			this.teardownIfSetup();
 		
-			// Hide children
+			// Hide children unless otherwise specified
 			if (this.options.hideChildren !== false)
 				this.hideAllSubComponents();
 		
@@ -359,36 +386,47 @@
 	
 			return this;
 		},
+
+		/**
+			Calls teardown() if necessary
+		*/
+		teardownIfSetup: function() {
+			// Call teardown if we're setup
+			if (this.options.isSetup && typeof this.teardown === 'function') {
+				this.teardown();
+				this.options.isSetup = false;
+			}
+		},
 	
 		/**
-		 * Check if this component, or F as a whole, is in debug mode and should output debug messages
-		 *
-		 * @returns {Boolean} Component or F is in debug mode
-		 */
+			Check if this component, or F as a whole, is in debug mode and should output debug messages
+			
+			@returns {Boolean} Component or F is in debug mode
+		*/
 		inDebugMode: function() {
 			return this.options.debug || F.options.debug;
 		},
 		
 		/**
-		 * Check if this component is currently visible
-		 *
-		 * @returns {Boolean} Component is visible
-		 */
+			Check if this component is currently visible
+			
+			@returns {Boolean} Component is visible
+		*/
 		isVisible: function() {
 			return this.options.visible;
 		},
 
 		/**
-		 * Show all sub-components
-		 *
-		 * @param {String[]} [except]	List of component names not to show. These components will not be hidden if they are already shown
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Show all sub-components
+			
+			@param {String[]}	[except]	List of component names not to show. These components will not be hidden if they are already shown
+			
+			@returns {F.Component}	this, chainable
+		*/
 		showAllSubComponents: function(except) {
-			except = !_.isArray(except) ? [] : except;
+			except = _.isArray(except) ? except : false;
 			for (var componentName in this.components) {
-				if (~except.indexOf(componentName))
+				if (except && ~except.indexOf(componentName))
 					continue;
 				this.components[componentName].show();
 			}
@@ -397,12 +435,12 @@
 		},
 		
 		/**
-		 * Hide all sub-components
-		 *
-		 * @param {String[]} [except]	List of component names not to hide. These components will not be shown if they are already hidden
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Hide all sub-components
+			
+			@param {String[]}	[except]	List of component names not to hide. These components will not be shown if they are already hidden
+			
+			@returns {F.Component}	this, chainable
+		*/
 		hideAllSubComponents: function(except) {
 			except = _.isArray(except) ? except : false;
 			for (var componentName in this.components) {
@@ -415,18 +453,18 @@
 		},
 		
 		/**
-		 * Set a custom name for this component. Only useful before passing to {@link F.Component.addComponent}
-		 *
-		 * @param {Function} componentName	Component name
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Set a custom name for this component. Only useful before passing to {@link F.Component.addComponent}
+			
+			@param {String}		componentName	Component name
+			
+			@returns {F.Component}	this, chainable
+		*/
 		setName: function(customName) {
 			/**
-			 * Get this component's name
-			 *
-			 * @returns {String}	Component's name; either a custom name given when added with {@link F.Component.addComponent}, or toString method or string from prototype
-			 */
+				Get this component's name
+				
+				@returns {String}	Component's name; either a custom name given when added with {@link F.Component.addComponent}, or toString method or string from prototype
+			*/
 			this.toString = function() {
 				return customName;
 			};
@@ -435,13 +473,13 @@
 		},
 		
 		/**
-		 * Set properties of this instance from an options object, then remove the properties from the options object
-		 *
-		 * @param {Object} options		Options object with many properties
-		 * @param {String[]} props		Properties to copy from options object
-		 *
-		 * @returns {F.Component}	this, chainable
-		 */
+			Set properties of this instance from an options object, then remove the properties from the options object
+			
+			@param {Object}		options		Options object with many properties
+			@param {String[]}	props		Properties to copy from options object
+			
+			@returns {F.Component}	this, chainable
+		*/
 		setPropsFromOptions: function(options, props) {
 			_.each(props, function(prop) {
 				// Add the property to this instance, or use existing property if it's already there
@@ -454,8 +492,8 @@
 		},
 		
 		/**
-		 * Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
-		 */
+			Merge options up the prototype chain. Options defined in the child class take precedence over those defined in the parent class.
+		*/
 		mergeOptions: function(options) {
 			// Create a set of all options in the correct order
 			var optionSets = [];
@@ -481,33 +519,33 @@
 		}
 
 		/**
-		 * Called when view rendering is complete
-		 *
-		 * @name handleRenderComplete
-		 * @memberOf F.Component.prototype
-		 * @function
-		 */
+			Called when view rendering is complete
+			
+			@name handleRenderComplete
+			@memberOf F.Component.prototype
+			@function
+		*/
 		
 		/**
-		 * Triggered when this component is shown
-		 *
-		 * @name F.Component#component:shown
-		 * @event
-		 *
-		 * @param {Object}	evt					Event object
-		 * @param {String}	evt.name			This component's name
-		 * @param {F.Component}	evt.component	This component
-		 */
+			Triggered when this component is shown
+			
+			@name F.Component#component:shown
+			@event
+			
+			@param {Object}			evt					Event object
+			@param {String}			evt.name			This component's name
+			@param {F.Component}	evt.component		This component
+		*/
 
 		/**
-		 * Triggered when this component is hidden
-		 *
-		 * @name F.Component#component:hidden
-		 * @event
-		 *
-		 * @param {Object}	evt					Event object
-		 * @param {String}	evt.name			This component's name
-		 * @param {F.Component}	evt.component	This component
-		 */
+			Triggered when this component is hidden
+			
+			@name F.Component#component:hidden
+			@event
+			
+			@param {Object}			evt					Event object
+			@param {String}			evt.name			This component's name
+			@param {F.Component}	evt.component		This component
+		*/
 	});
 }());
