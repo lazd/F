@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: F.CollectionComponent.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: F.CollectionComponent.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
+	toString: 'CollectionComponent',
+	extend: F.Component,
+	options: {
+		defaultParams: {}
+	},
+	
+	/**
+		A component that can load and render a collection
+		
+		@constructs
+		@extends F.Component
+		
+		@param {Object}		options		Options for this component
+		
+		@property {Object}					defaultParams	Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to &lt;code>load(fetchParams)&lt;/code> will merge &lt;code>fetchParams&lt;/code> with &lt;code>defaultParams&lt;/code>
+		@property {Backbone.Collection}		Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself
+	*/
+	construct: function(options) {
+		// Bind for use as listeners
+		this.bind('addModel');
+		this.bind('removeModel');
+		this.bind('render');
+		
+		this._useCollection(new this.Collection());
+		
+		// Store if this collection has ever been loaded
+		this.collectionLoaded = false;
+	},
+	
+	destruct: function() {
+		this._releaseCollection();
+	},
+	
+	Collection: Backbone.Collection,
+	
+	_useCollection: function(collection) {
+		// Store collection
+		this.collection = collection;
+		
+		// Re-render when the collection is fetched, items are added or removed
+		this.listenTo(this.collection, 'add', this.addModel);
+		this.listenTo(this.collection, 'remove', this.removeModel);
+		this.listenTo(this.collection, 'loaded', this.render); // custom event we call after fetches
+		// this.listenTo(this.collection, 'change', this.render); // Don't re-render on change! let the sub-views do that
+	},
+	
+	_releaseCollection: function() {
+		// Unbind events
+		this.stopListening(this.collection);
+		
+		// Remove reference to collection
+		this.collection = null;
+	},
+	
+	/**
+		Refresh this collection with the last parameters used
+		
+		@param {Function}	callback	Optional callback to execute on successful fetch
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
+	refresh: function(callback) {
+		// Just fetch the collection with the current params
+		this.fetch(this.params, callback);
+		
+		return this;
+	},
+	
+	/**
+		Callback called when model is added to collection
+	*/
+	addModel: function(model) {},
+	
+	/**
+		Callback called when model is removed from collection
+	*/
+	removeModel: function(model) {},
+	
+	/**
+		Clear the parameters from the last fetch. Useful when using refresh() on a filtered list.
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
+	clearParams: function() {
+		this.params = {};
+		
+		return this;
+	},
+	
+	/**
+		Fetch the collection by fetching it from the server
+		
+		@param {Object}		[fetchParams]	Parameters to pass when fetching
+		@param {Function}	[callback]		Callback to execute on successful fetch
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
+	fetch: function(fetchParams, callback) {
+		// Combine new params, if any, with defaults and store, overwriting previous params
+		if (fetchParams)
+			this.params = _.extend({}, this.options.defaultParams, fetchParams);
+		else // Overwrite old params with defaults and send a request with only default params
+			this.params = _.extend({}, this.options.defaultParams);
+		
+		this.trigger('collection:loading', this.collection);
+		
+		// Fetch collection contents
+		this.collection.fetch({
+			data: this.params,
+			success: function() {
+				// Collection event
+				this.collection.trigger('loaded');
+
+				// Component event
+				this.trigger('collection:loaded', this.collection);
+				this.collectionLoaded = true;
+				
+				if (typeof callback === 'function')
+					callback.call(this, this.collection);
+			}.bind(this)
+		});
+		
+		return this;
+	},
+	
+	
+	/**
+		Load a Backbone.Collection directly or create a collection from an array of data
+		
+		@param {Mixed}	collectionOrData	Backbone.Collection to load or Array of Objects with data to create the collection from
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
+	load: function(collectionOrData) {
+		this._releaseCollection();
+
+		if (collectionOrData instanceof Backbone.Collection)
+			this._useCollection(collectionOrData);
+		else
+			this._useCollection(new this.Collection(collectionOrData));
+		
+		return this;
+	},
+	
+	
+	/**
+		Show this component. Provide options.params to fetch with new parameters. The collection will be fetched before showing if it hasn't already
+		
+		@param {Object}		options		Pass fetch parameters with options.params
+		
+		@returns {F.CollectionComponent}	this, chainable
+	*/
+	show: function(_super, options) {
+		options = options || {};
+		if (options.params) {
+			// Fetch the collection from the server
+			this.fetch(options.params, function() {
+				this.show({
+					silent: options.silent
+				});
+			});
+		}
+		else if (!this.collectionLoaded) {
+			// Perform initial load
+			this.refresh(function() {
+				this.show({
+					silent: options.silent
+				}); // show when we're fully loaded
+			});
+		}
+		else {
+			_super.apply(this, arguments);
+		}
+		
+		return this;
+	}
+	
+	
+	/**
+		Triggered when the collection is being loaded from the server
+		
+		@name F.CollectionComponent#collection:loading
+		@event
+		
+		@param {Backbone.Collection}	collection	The collection that is being loaded
+	*/
+	
+	/**
+		Triggered when the collection is loaded from the server
+		
+		@name F.CollectionComponent#collection:loaded
+		@event
+		
+		@param {Backbone.Collection}	collection	The collection that was loaded
+	*/
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="F.CollectionComponent.html">CollectionComponent</a></li><li><a href="F.Component.html">Component</a></li><li><a href="F.EventEmitter.html">EventEmitter</a></li><li><a href="F.FormComponent.html">FormComponent</a></li><li><a href="F.ListComponent.html">ListComponent</a></li><li><a href="F.ModelComponent.html">ModelComponent</a></li><li><a href="F.View.html">View</a></li></ul><h3>Events</h3><ul><li><a href="F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.CollectionComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.CollectionComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.CollectionComponent.html#event:component:shown">component:shown</a></li><li><a href="F.Component.html#event:component:hidden">component:hidden</a></li><li><a href="F.Component.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.FormComponent.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.FormComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.FormComponent.html#event:model:loading">model:loading</a></li><li><a href="F.FormComponent.html#event:model:saved">model:saved</a></li><li><a href="F.FormComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.FormComponent.html#event:model:saving">model:saving</a></li><li><a href="F.ListComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.ListComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.ListComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ListComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ListComponent.html#event:list:itemSelected">list:itemSelected</a></li><li><a href="F.ModelComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ModelComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ModelComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.ModelComponent.html#event:model:loading">model:loading</a></li><li><a href="F.ModelComponent.html#event:model:saved">model:saved</a></li><li><a href="F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.ModelComponent.html#event:model:saving">model:saving</a></li></ul><h3>Namespaces</h3><ul><li><a href="F.html">F</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Jun 13 2013 00:16:51 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -9,8 +9,8 @@ W.Wizard = new Class({
 	
 	construct: function(options) {
 		// Make sure next step is always called in the scope of this
-		this.bind(this.nextStep); // equivalent to: this.nextStep = this.nextStep.bind(this);
-		this.bind(this.prevStep);
+		this.bind('nextStep'); // equivalent to: this.nextStep = this.nextStep.bind(this);
+		this.bind('prevStep');
 		
 		// The main view for the wizard
 		this.view = new this.View({
@@ -57,7 +57,7 @@ W.Wizard = new Class({
 		if (nextStep) {
 			console.log('W: showing step %s', nextStepNum);
 			
-			// Navigate to the step's hash and make sure thr router triggers the function
+			// Navigate to the step's hash and make sure the router triggers the function
 			W.router.navigate('wizard/step'+nextStepNum, { trigger: true });
 		}
 		else {

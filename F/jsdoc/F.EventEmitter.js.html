@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Index</title>
+    <title>JSDoc: Source: F.EventEmitter.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,30 +17,106 @@
 
 <div id="main">
     
-    <h1 class="page-title">Index</h1>
+    <h1 class="page-title">Source: F.EventEmitter.js</h1>
     
     
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Provides observer pattern for basic eventing. Directly uses &lt;a href="http://backbonejs.org/#Events">Backbone.Events&lt;/a>
+ *
+ * @class
+ */
+F.EventEmitter = new Class(
+	Backbone.Events
 
+	/**
+		Bind one or more space separated events, or an events map,
+		to a &lt;code>callback&lt;/code> function. Passing &lt;code>"all"&lt;/code> will bind the callback to
+		all events fired.
+	
+		@name on
+		@memberOf F.EventEmitter.prototype
+		@function
 
-    <h3> </h3>
+		@param {String}		event		Event to listen to
+		@param {Function}	callback	Callback to execute when the event is triggered
+		@param {Object}		[context]	The value of &lt;code>this&lt;/code> when the callback runs
+	*/
+	
+	/**
+		Bind events to only be triggered a single time. After the first time
+		the callback is invoked, it will be removed.
+		
+		@name once
+		@memberOf F.EventEmitter.prototype
+		@function
 
+		@param {String}		event		Name of the event to listen to
+		@param {Function}	callback	Callback to execute when the event is triggered
+		@param {Object}		[context]	The value of &lt;code>this&lt;/code> when the callback runs
+	*/
+	
+	/**
+		Remove one or many callbacks. If &lt;code>context&lt;/code> is null, removes all
+		callbacks with that function. If &lt;code>callback&lt;/code> is null, removes all
+		callbacks for the event. If &lt;code>events&lt;/code> is null, removes all bound
+		callbacks for all events.
+		
+		@name off
+		@memberOf F.EventEmitter.prototype
+		@function
 
+		@param {String}		[event]		Name of the event that is being listened to
+		@param {Function}	[callback]	Callback to remove
+		@param {Object}		[context]	Remove callbacks with the specified context
+	*/
+	
+	/**
+		Trigger one or many events, firing all bound callbacks. Callbacks are
+		passed the same arguments as &lt;code>trigger&lt;/code> is, apart from the event name
+		(unless you're listening on &lt;code>"all"&lt;/code>, which will cause your callback to
+		receive the true name of the event as the first argument).
+		
+		@name trigger
+		@memberOf F.EventEmitter.prototype
+		@function
 
+		@param {String}		event		Name of the event to trigger
+		@param {...Mixed}	[args]		Arguments to pass to callback functions
+	*/
+	
+	/**
+		An inversion-of-control version of &lt;code>on&lt;/code>. Tell &lt;b>this&lt;/b> object to listen to
+		an event in another object keeping track of what it's listening to.
+		
+		@name listenTo
+		@memberOf F.EventEmitter.prototype
+		@function
 
+		@param {Object}		other		The object to listen to
+		@param {String}		event		Name of the event to listen to
+		@param {Function}	callback	Callback to execute when the event is triggered
+	*/
 
+	/**
+		Tell this object to stop listening to either specific events or
+		to every object it's currently listening to.
+	
+		@name stopListening
+		@memberOf F.EventEmitter.prototype
+		@function
 
-
-
-
-    
-
-
-
-
-
+		@param {Object}		[other]		The object that is being listened to
+		@param {String}		[event]		Name of the event that is being listened to
+		@param {Function}	[callback]	Callback to remove
+	*/
+);</code></pre>
+        </article>
+    </section>
 
 
 

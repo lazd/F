@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: F</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Namespace: F</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    F
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">The main F namespace.</div>
+        
+        
+        
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Options for all F components.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="F.js.html">F.js</a>, <a href="F.js.html#line10">line 10</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="F.CollectionComponent.html">CollectionComponent</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.Component.html">Component</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.EventEmitter.html">EventEmitter</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.FormComponent.html">FormComponent</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.ListComponent.html">ListComponent</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.ModelComponent.html">ModelComponent</a></dt>
+            <dd></dd>
+        
+            <dt><a href="F.View.html">View</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="addToSet"><span class="type-signature">&lt;static> </span>addToSet<span class="signature">(object, prop, Value)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a value to a property that should become an array when and only when collisions occurr
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>object</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Object to set the property on</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Proprety to set</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Value</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Mixed</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Value to set</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="F.Utilities.js.html">F.Utilities.js</a>, <a href="F.Utilities.js.html#line28">line 28</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>add pushToArray option to always push to an array</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="extendView"><span class="type-signature">&lt;static> </span>extendView<span class="signature">(component, properties)</span><span class="type-signature"> &rarr; {<a href="F.Component.html">F.Component</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Extend the view of the provided component with a deep copy of the events property
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>component</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Component whose view should be extended</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Properties to mix in to resulting view</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="F.Utilities.js.html">F.Utilities.js</a>, <a href="F.Utilities.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>add pushToArray option to always push to an array</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    this, chainable
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="F.Component.html">F.Component</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="set"><span class="type-signature">&lt;static> </span>set<span class="signature">(object, prop, prop, makeArrays)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set a property of an object using dot notiation
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>object</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional object to set the property on. A new object will be created if no object was passed.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Proprety to set</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Value</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The new value</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>makeArrays</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Use F.addToSet on the property to</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="F.Utilities.js.html">F.Utilities.js</a>, <a href="F.Utilities.js.html#line55">line 55</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>add push option to always push to an array</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object the property was set on or the created object
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="F.CollectionComponent.html">CollectionComponent</a></li><li><a href="F.Component.html">Component</a></li><li><a href="F.EventEmitter.html">EventEmitter</a></li><li><a href="F.FormComponent.html">FormComponent</a></li><li><a href="F.ListComponent.html">ListComponent</a></li><li><a href="F.ModelComponent.html">ModelComponent</a></li><li><a href="F.View.html">View</a></li></ul><h3>Events</h3><ul><li><a href="F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.CollectionComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.CollectionComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.CollectionComponent.html#event:component:shown">component:shown</a></li><li><a href="F.Component.html#event:component:hidden">component:hidden</a></li><li><a href="F.Component.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.FormComponent.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.FormComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.FormComponent.html#event:model:loading">model:loading</a></li><li><a href="F.FormComponent.html#event:model:saved">model:saved</a></li><li><a href="F.FormComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.FormComponent.html#event:model:saving">model:saving</a></li><li><a href="F.ListComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.ListComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.ListComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ListComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ListComponent.html#event:list:itemSelected">list:itemSelected</a></li><li><a href="F.ModelComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ModelComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ModelComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.ModelComponent.html#event:model:loading">model:loading</a></li><li><a href="F.ModelComponent.html#event:model:saved">model:saved</a></li><li><a href="F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.ModelComponent.html#event:model:saving">model:saving</a></li></ul><h3>Namespaces</h3><ul><li><a href="F.html">F</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Jun 13 2013 00:16:52 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -10,8 +10,9 @@ Contacts.Details = new Class({
 	construct: function(options) {
 		// Overwrite defaults directly into options
 		_.extend(options, {
-			template: this.Template,
-			component: this
+			component: this,
+			el: options.el,	// Tell it where to render
+			template: this.Template
 		});
 		
 		// Just create a view here and we're done; F.ModelComponent takes care of loading and rendering
@@ -30,8 +31,8 @@ Contacts.Details = new Class({
 	View: F.View.extend({
 		tagName: 'div',
 		events: {
-			'click .back': "navigateBack",
-			'click .edit': "showEditor"
+			'click .back': 'navigateBack',
+			'click .edit': 'showEditor'
 		}
 	}),
 	

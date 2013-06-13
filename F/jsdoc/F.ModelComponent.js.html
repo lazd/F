@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: F.ModelComponent.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: F.ModelComponent.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
+	toString: 'ModelComponent',
+	extend: F.Component,
+	/**
+		A component that can load and render a model
+		
+		@constructs
+		@extends F.Component
+		
+		@param {Object}		options			Options for this component
+		@param {Object}		options.Model	Model class this component will be operating on. Sets this.Model
+		
+		@property {Backbone.Model}	Model	The model class to operate on. Not an instance of a model, but the model class itself.
+	*/
+	construct: function(options) {
+		this.Model = this.Model || options.Model;
+	},
+	
+	Model: Backbone.Model,
+	
+	/**
+		Refresh the model
+		
+		@param {Function}	callback	Callback to call after successful refresh
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	refresh: function(callback) {
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
+		this.model.fetch({
+			success: function(model, response) {
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Trigger model event
+					this.model.trigger('loaded');
+				
+					// Trigger component event
+					this.trigger('model:loaded', {
+						model: this.model
+					});
+				
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					model: this.model,
+					response: response
+				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
+			}.bind(this)
+		});
+		
+		return this;
+	},
+	
+	/**
+		Use a different item model
+		
+		@param {Backbone.Model}		model	The model to use
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	_setModel: function(model) {
+		this.model = model;
+	
+		if (this.model && this.model.off && this.view) {
+			this.view.setModel(model);
+		}
+		
+		return this;
+	},
+		
+	/**
+		Fetch a model with the given ID
+		
+		@param {String}		itemId		ID of the item to fetch
+		@param {Function}	[callback]	Callback to execute on successful fetch
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	fetch: function(itemId, callback) {
+		var data = {};
+		if (itemId !== undefined) { // add the ID passed to the model data
+			data[this.Model.prototype.idAttribute] = itemId;
+		}
+
+		this.trigger('model:loading', {
+			model: this.model
+		});
+
+		// Create a blank model
+		var model = new this.Model(data);
+	
+		// Fetch model contents
+		model.fetch({
+			// TBD: add fetch options?
+			success: function(model, response) {
+				// Assign the model to the view
+				this._setModel(model);
+				
+				// Allow handleLoadSuccess to cancel triggers
+				var trigger = true;
+				if (typeof this.handleLoadSuccess === 'function')
+					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
+					
+				if (trigger) {
+					// Notify
+					this.trigger('model:loaded', {
+						model: this.model
+					});
+				
+					// Call callback
+					if (typeof callback === 'function')
+						callback.call(this, this.model);
+				}
+			}.bind(this),
+			error: function(model, response) {
+				console.warn('%s: Error loading model', this.toString());
+				
+				this.trigger('model:loadFailed', {
+					model: this.model,
+					response: response
+				});
+				
+				if (typeof this.handleLoadError === 'function')
+					this.handleLoadError(this.model, response);
+			}.bind(this)
+		});
+		
+		return this;
+	},
+	
+	/**
+		Load a Backbone.Model directly or create a model from data
+		
+		@param {mixed}	modelOrData		Backbone.Model to load or Object with data to create model from
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	load: function(modelOrData) {
+		if (modelOrData instanceof Backbone.Model)
+			this._setModel(modelOrData);
+		else
+			this._setModel(new this.Model(modelOrData));
+		
+		// Notify
+		this.trigger('model:loaded', {
+			model: this.model
+		});
+		
+		return this;
+	},
+	
+	/**
+		Save a model to the server
+		
+		@param {Object}		data		Data to apply to model before performing save
+		@param {Function}	callback	Callback to execute on success/failure. Passed an error, the model, and the response from the server
+		@param {Object}		options		Options to pass when calling model.save
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	save: function(data, callback, options) {
+		if (this.model) {
+			if (this.inDebugMode())
+				console.log('%s: Saving...', this.toString());
+			
+			this.trigger('model:saving', {
+				model: this.model
+			});
+			
+			this.model.save(data || {}, _.extend({
+				success: function(model, response) {
+					if (this.inDebugMode())
+						console.log('%s: Save successful', this.toString());
+					
+					if (typeof callback === 'function')
+						callback.call(this, null, this.model, response);
+					
+					if (typeof this.handleSaveSuccess === 'function')
+						this.handleSaveSuccess(this.model, response);
+					
+					this.trigger('model:saved', {
+						model: this.model,
+						response: response
+					});
+				}.bind(this),
+				error: function(model, response) {
+					console.warn('%s: Error saving model', this.toString());
+					
+					if (typeof callback === 'function')
+						callback.call(this, new Error('Error saving model'), this.model, response);
+					
+					if (typeof this.handleSaveError === 'function')
+						this.handleSaveError(this.model, response);
+						
+					this.trigger('model:saveFailed', {
+						model: this.model,
+						response: response
+					});
+				}.bind(this)
+			}, options));
+		}
+		else {
+			console.warn('%s: Cannot save, model is not truthy', this.toString());
+		}
+		return this;
+	},
+	
+	/**
+		Show this component, optionally fetching an item by ID or assigning a new model before render
+		
+		@param {Object}			options			Show options
+		@param {String}			options.id		ID of model to fetch from the server before showing
+		@param {Backbone.Model}	options.model	Model to use directly (don't fetch)
+		
+		@returns {F.ModelComponent}	this, chainable
+	*/
+	show: function(_super, options) {
+		options = options || {};
+		
+		if (options.id) {
+			if (this.inDebugMode()) {
+				console.log('%s: fetching item with ID %s', this.toString(), options.id);
+			}
+			
+			// Load the model by itemId, then show
+			this.fetch(options.id, function(model) {
+				if (this.inDebugMode()) {
+					console.log('%s: fetch complete!', this.toString());
+				}
+				this.show({
+					silent: options.silent
+				}); // pass nothing to show and the view will re-render
+			});
+		}
+		else if (options.model) {
+			if (this.inDebugMode()) {
+				console.log('%s: showing with new model', this.toString(), options.model);
+			}
+			
+			this.load(options.model);
+			this.show({
+				silent: options.silent
+			});
+		}
+		else {
+			_super.apply(this, arguments);
+		}
+			
+		return this;
+	}
+
+	/**
+		Called when a model has been loaded successfully
+		
+		@param {Backbone.Model}	model		The model that was to loaded
+		@param {Object}			response	The response from Backbone
+
+		@returns {Boolean}	If false is returned, events will not be triggered and the callback will not be called
+
+		@name handleLoadSuccess
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
+
+	/**
+		Called when a model fails to load
+		
+		@param {Backbone.Model}	model		The model that failed to load
+		@param {Object}			response	The response from Backbone
+		
+		@name handleLoadError
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
+	
+	/**
+		Called when a model has been saved successfully
+		
+		@param {Backbone.Model}	model		The model that was saved
+		@param {Object}			response	The response from Backbone
+
+		@name handleSaveSuccess
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
+	
+	/**
+		Called when a model fails to save
+		
+		@param {Backbone.Model}	model		The model that failed to save
+		@param {Object}			response	The response from Backbone
+
+		@name handleSaveError
+		@memberOf F.ModelComponent.prototype
+		@function
+	*/
+	
+	/**
+		Triggered when a model is saving
+		
+		@name F.ModelComponent#model:saving
+		@event
+		
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was saved
+	*/
+	
+	/**
+		Triggered when save is unsuccessful
+		
+		@name F.ModelComponent#model:saveFailed
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that failed to save
+		@param {Object}			evt.response	Response from the server
+	*/
+	
+	/**
+		Triggered after a successful save
+		
+		@name F.ModelComponent#model:saved
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that was saved
+		@param {Object}			evt.response	Response from the server
+	*/
+	
+	/**
+		Triggered when the model is being loaded from the server
+		
+		@name F.ModelComponent#model:loading
+		@event
+			
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was loaded
+	*/
+	 
+	/**
+		Triggered when load is unsuccessful
+		
+		@name F.ModelComponent#model:loadFailed
+		@event
+		
+		@param {Object}			evt				Event object
+		@param {Backbone.Model}	evt.model		The model that failed to load
+		@param {Object}			evt.response	Response from the server
+	*/
+	
+	/**
+		Triggered when the model is loaded from the server or passed to load()
+		
+		@name F.ModelComponent#model:loaded
+		@event
+			
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was loaded
+	*/
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="F.CollectionComponent.html">CollectionComponent</a></li><li><a href="F.Component.html">Component</a></li><li><a href="F.EventEmitter.html">EventEmitter</a></li><li><a href="F.FormComponent.html">FormComponent</a></li><li><a href="F.ListComponent.html">ListComponent</a></li><li><a href="F.ModelComponent.html">ModelComponent</a></li><li><a href="F.View.html">View</a></li></ul><h3>Events</h3><ul><li><a href="F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.CollectionComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.CollectionComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.CollectionComponent.html#event:component:shown">component:shown</a></li><li><a href="F.Component.html#event:component:hidden">component:hidden</a></li><li><a href="F.Component.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.FormComponent.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.FormComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.FormComponent.html#event:model:loading">model:loading</a></li><li><a href="F.FormComponent.html#event:model:saved">model:saved</a></li><li><a href="F.FormComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.FormComponent.html#event:model:saving">model:saving</a></li><li><a href="F.ListComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.ListComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.ListComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ListComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ListComponent.html#event:list:itemSelected">list:itemSelected</a></li><li><a href="F.ModelComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ModelComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ModelComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.ModelComponent.html#event:model:loading">model:loading</a></li><li><a href="F.ModelComponent.html#event:model:saved">model:saved</a></li><li><a href="F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.ModelComponent.html#event:model:saving">model:saving</a></li></ul><h3>Namespaces</h3><ul><li><a href="F.html">F</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Jun 13 2013 00:16:51 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

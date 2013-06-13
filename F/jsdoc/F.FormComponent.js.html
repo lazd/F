@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/F.FormComponent.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: components/F.FormComponent.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function() {
+	
+	/* Views
+	*******************/
+	// Available as F.FormComponent.prototype.View
+	var FormView = F.View.extend(/** @lends F.FormComponent.prototype.View# */{
+		tagName: 'form',
+		events: {
+			'submit': 'handleSubmit'
+		}
+	});
+	
+	
+	/* Component
+	*******************/
+	F.FormComponent = new Class(/** @lends F.FormComponent# */{
+		toString: 'FormComponent',
+		extend: F.ModelComponent,
+	
+		/**
+			A component that can display an add/edit form for a model and handle form submission and save events
+			
+			@constructs
+			@extends F.ModelComponent
+			
+			@param {Object}	options		Options for this component and its view. Options not listed below will be passed to the view.
+			
+			@property {Backbone.Model}	Model		The model class that the form will manipulate. Not an instance of the model, but the model class itself
+			@property {Backbone.View}	View		The view class that the form will be rendered to
+			@property {Template}		Template	The template that the form will be rendered with
+		*/
+		construct: function(options) {
+			// Create a new edit view that responds to submit events
+			this.view = new this.View(_.extend({
+				component: this,
+				template: this.Template
+			}, options));
+		
+			// Create a blank model
+			this.model = new this.Model();
+			
+			this.bind('handleSubmit');
+		},
+
+		View: FormView,
+	
+		Template: null,
+
+		/**
+			Clears the form by rendering it with a new, empty model
+			
+			@returns {F.Component}	this, chainable
+		*/
+		clear: function() {
+			// Create a new model instead of resetting the old one
+			this._setModel(new this.Model());
+
+			// Call the load success function
+			var trigger = true;
+			if (typeof this.handleLoadSuccess === 'function')
+				this.handleLoadSuccess(this.model);
+			
+			// Render the view so it will be blank again
+			this.render();
+		
+			return this;
+		},
+		
+		/**
+			Blurs focus from the form, mostly for iOS
+		*/
+		doBlur: function() {
+			// Blur focus to the submit button in order to hide keyboard on iOS
+			// This won't work for every situation, such as forms that don't have submit buttons
+			var $button = this.view.$('[type="submit"], button').filter(':visible').last().focus();
+			setTimeout(function() {
+				$button.blur();
+			}, 10);
+		},
+	
+		/**
+			Handles form submit events
+			
+			@param {Event}	evt		The jQuery event object
+		*/
+		handleSubmit: function(evt) {
+			this.doBlur();
+			
+			// Since this is a DOM event handler, prevent form submission
+			if (evt && evt.preventDefault)
+				evt.preventDefault();
+			
+			this.saveForm();
+		},
+		
+		/**
+			Read data from the form. Override this function customization of extracting your form data
+			
+			@returns {Object}	Data read from form
+		*/
+		extractValuesFromForm: function() {
+			// Get the data from the form fields
+			var $form = this.view.$el;
+			if (this.view.el.tagName !== 'FORM')
+				$form = this.view.$('form');
+				
+			var fields = $form.filter(':not([data-serialize="false"])').serializeArray();
+			
+			// Build a data object from fields
+			var data = {};
+			_.each(fields, function(field) {
+				F.set(data, field.name, field.value, true);
+			});
+			
+			return data;
+		},
+		
+		/**
+			Read the data from the form and store it in the model
+		*/
+		setValuesFromForm: function() {
+			this.model.set(this.extractValuesFromForm());
+		},
+		
+		/**
+			Read the data from the form and perform the save
+			
+			@param {Function}	callback	A callback to execute when the save is complete
+		*/
+		saveForm: function(callback) {
+			// Perform the save, passing our new, modified data
+			this.save(this.extractValuesFromForm(), callback);
+		}
+		
+	});
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="F.CollectionComponent.html">CollectionComponent</a></li><li><a href="F.Component.html">Component</a></li><li><a href="F.EventEmitter.html">EventEmitter</a></li><li><a href="F.FormComponent.html">FormComponent</a></li><li><a href="F.ListComponent.html">ListComponent</a></li><li><a href="F.ModelComponent.html">ModelComponent</a></li><li><a href="F.View.html">View</a></li></ul><h3>Events</h3><ul><li><a href="F.CollectionComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.CollectionComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.CollectionComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.CollectionComponent.html#event:component:shown">component:shown</a></li><li><a href="F.Component.html#event:component:hidden">component:hidden</a></li><li><a href="F.Component.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.FormComponent.html#event:component:shown">component:shown</a></li><li><a href="F.FormComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.FormComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.FormComponent.html#event:model:loading">model:loading</a></li><li><a href="F.FormComponent.html#event:model:saved">model:saved</a></li><li><a href="F.FormComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.FormComponent.html#event:model:saving">model:saving</a></li><li><a href="F.ListComponent.html#event:collection:loaded">collection:loaded</a></li><li><a href="F.ListComponent.html#event:collection:loading">collection:loading</a></li><li><a href="F.ListComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ListComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ListComponent.html#event:list:itemSelected">list:itemSelected</a></li><li><a href="F.ModelComponent.html#event:component:hidden">component:hidden</a></li><li><a href="F.ModelComponent.html#event:component:shown">component:shown</a></li><li><a href="F.ModelComponent.html#event:model:loaded">model:loaded</a></li><li><a href="F.ModelComponent.html#event:model:loadFailed">model:loadFailed</a></li><li><a href="F.ModelComponent.html#event:model:loading">model:loading</a></li><li><a href="F.ModelComponent.html#event:model:saved">model:saved</a></li><li><a href="F.ModelComponent.html#event:model:saveFailed">model:saveFailed</a></li><li><a href="F.ModelComponent.html#event:model:saving">model:saving</a></li></ul><h3>Namespaces</h3><ul><li><a href="F.html">F</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Jun 13 2013 00:16:51 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

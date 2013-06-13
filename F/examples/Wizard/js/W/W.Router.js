@@ -24,8 +24,12 @@ W.Router = Backbone.Router.extend({
 		// that matches the hash path
 		var component = W;
 		_.some(hashParts, function(part) {
-			if (component[part])
+			if (component[part]) {
 				component = component[part];
+
+				// Show each component along the way
+				component.show();
+			}
 			else {
 				console.warn('W.Router: route specifies an invalid part: %s', path);
 				return true;
@@ -33,8 +37,12 @@ W.Router = Backbone.Router.extend({
 		});
 		
 		// Show the component if it has a show() method
-		if (component.show)
+		if (component && component.show) {
 			component.show();
+		}
+		else {
+			console.warn('W.Router: ended up at a component with no show method: %s', path);
+		}
 	},
 	
 	/*
