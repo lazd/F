@@ -105,16 +105,17 @@
 			<section>
 				<section id="stayClassy">
 					<h2>How does &#402; help you stay classy?</h2>
-					<p>&#402; provides an inheritance model, called Class, based on Douglas Crockford's new_constructor pattern (<a href="http://www.yuiblog.com/blog/2010/02/24/video-crockonjs-3/">Video</a>, <a href="http://www.crockford.com/javascript/inheritance.html">Slides</a>)</a>.</p>
+					<p>&#402; uses <a href="http://lazd.github.io/PseudoClass">PseudoClass</a>, an OOP framework that lets you create building blocks that you can extend, mixin, and re-use.</p>
 
-					<p>You can use <span class="code prettyprint">new Class(descriptor)</span> to create a class based on the descriptor object you pass to it. The new keyword can be omitted, but is included because the language makes sense.</p>
+					<p>You can use <span class="code prettyprint">new Class(descriptor)</span> to create a class based on the descriptor object you pass to it.</p>
 					
 					<h2>Properties of the descriptor object</h2>
 					<ul>
 						<li><span class="code">toString</span> A string literal or a function that returns a string. &#402; uses this to refer to sub-components.</li>
 						<li><span class="code">extend</span> The object from which your new class should inherit. Your new class will inherit methods and properties from the class you extend.</li>
-						<li><span class="code">construct</span> optional function that sets up the object for use. construct is called automatically when an instance of your class is instantiated. The parent class' construct function is always called before the child class.</li>
-						<li><span class="code">destruct</span> optional teardown function that should remove your object from the DOM and free memory. The parent class' destruct function is automatically called after the child class'.</li>
+						<li><span class="code">construct</span> optional method that sets up the object for use. construct is called automatically when an instance of your class is instantiated. The parent class' construct method is always called before the child class.</li>
+						<li><span class="code">destruct</span> optional teardown method that should remove your object from the DOM and free memory. The parent class' destruct method is automatically called after the child class'.</li>
+						<li><span class="code">init</span> initialization method that is called after all constructors have been called.</li>
 						<li><span class="code">*</span> Any other properties of the descriptor are added to the prototype of the new class. Methods, properties, and constants should be defined here.</li>
 					</ul>
 				</section>
@@ -151,17 +152,24 @@
 		this.$el.fadeIn();
 	}
 });</code>
+					<p>Alternatively, you can use the static <span class="code">extend</span> method of any class:</p>
+					<code class="prettyprint">var Panel = Widget.extend({
+	toString: 'Panel',
+	show: function() {
+		this.$el.fadeIn();
+	}
+});</code>
 				</section>
 				
 				<section id="superclassMethods">
 					<h2>Calling superclass methods</h2>
-					<p>Call <span class="code prettyprint">this.inherited(arguments)</span> in the child class' method. That's it.</p>
+					<p>Add <span class="code prettyprint">_super</span> as the first argument to the child class' method, then call it using <span class="code prettyprint">_super.call(this, 'arg1')</span> or <span class="code prettyprint">_super.apply(this, arguments)</span>.</p>
 					<code class="prettyprint">var Widget = new Class({
 	toString: 'Button',
 	extend: Widget,
 	tag: 'button',
-	hide: function() {
-		this.inherited(arguments);
+	hide: function(_super) {
+		_super.apply(this, arguments);
 		this.$el.attr('disabled', true);
 	}
 });</code>
@@ -443,10 +451,10 @@ App.HustlerBaby = new Class({
 	// Inherit from Hustler so we get hustle()
 	extend: App.Hustler,
 
-	hustle: function() {
+	hustle: function(_super) {
 		// Instead of re-writing the boilerplate code,
 		// call the parent class' hustle method
-		this.inherited(arguments);
+		_super.apply(this, arguments);
 		
 		// Do additional stuff
 		alert('I just want you to know');
