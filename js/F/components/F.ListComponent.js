@@ -12,7 +12,6 @@
 			// Clumsy standard way of calling parent class' initialize method
 			F.View.prototype.initialize.apply(this, arguments);
 
-			this.collection = options.collection;
 			this.ItemView = options.ItemView || this.ItemView;
 			this.ItemTemplate = options.ItemTemplate || this.ItemTemplate;
 			
@@ -106,9 +105,9 @@
 			this.removeSubViews();
 			
 			// Add and render each list item
-			this.collection.each(this.addSubView);
+			this.component.collection.each(this.addSubView);
 			
-			if (this.collection.isEmpty()) {
+			if (this.component.collection.isEmpty()) {
 				var EmptyView = this.ItemView;
 				var emptyTemplate;
 				
@@ -182,7 +181,6 @@
 		construct: function(options) {
 			this.view = new this.ListView(_.extend({
 				component: this, // pass this as component so ItemView can trigger handleSelect if it likes
-				collection: this.collection,
 				template: this.ListTemplate,
 				ItemView: this.ItemView,
 				ItemTemplate: this.ItemTemplate,
@@ -234,7 +232,7 @@
 			// Add a subview for this model
 			this.view.removeSubView(model);
 		},
-	
+
 		/**
 			Get the model associated with a list item
 			
