@@ -273,7 +273,7 @@
 		*/
 		removeComponents: function() {
 			for (var componentName in this.components) {
-				this.removeComponent(componentName)
+				this.removeComponent(componentName);
 			}
 			
 			return this;
