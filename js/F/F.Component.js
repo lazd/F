@@ -272,9 +272,8 @@
 			@returns {F.Component}	this, chainable
 		*/
 		removeComponents: function() {
-			for (var component in this.components) {
-				this.components[component].destruct();
-				delete this[component];
+			for (var componentName in this.components) {
+				this.removeComponent(componentName)
 			}
 			
 			return this;
