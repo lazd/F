@@ -123,6 +123,10 @@
 				this.view.render();
 			}
 			
+			// Hide our element after render if we're not visible
+			if (!this.isVisible())
+				this.view.$el.hide();
+			
 			return this;
 		},
 
@@ -289,13 +293,18 @@
 			var subComponent = this.components[evt.name];
 
 			if (subComponent !== undefined) {
-				// hide current component(s) if the shown component isn't independent
+				// Hide current component(s) if the shown component isn't independent
 				if (this.options.singly && !subComponent.options.independent) {
 					this.hideAllSubComponents([evt.name]);
 					
 					// Store currently visible subComponent
 					this.currentSubComponent = subComponent;
 				}
+
+				this.trigger('subComponent:shown', {
+					name: evt.name,
+					component: subComponent
+				});
 			}
 		},
 	
@@ -525,6 +534,17 @@
 			@function
 		*/
 		
+		/**
+			Triggered when a subcomponent is shown
+			
+			@name F.Component#subComponent:shown
+			@event
+			
+			@param {Object}			evt					Event object
+			@param {String}			evt.name			The subcomponent's name
+			@param {F.Component}	evt.component		The subcomponent
+		*/
+
 		/**
 			Triggered when this component is shown
 			
