@@ -112,7 +112,7 @@
 				var emptyTemplate;
 				
 				// Determine if we have searched
-				if (_.isEqual(this.component.params, this.component.options.defaultParams) && this.component.ListEmptyTemplate) {
+				if (!this.component.params || _.isEqual(this.component.params, this.component.options.defaultParams) && this.component.ListEmptyTemplate) {
 					emptyTemplate = this.component.ListEmptyTemplate;
 					if (this.component.ListEmptyView)
 						EmptyView = this.component.ListEmptyView;
@@ -123,7 +123,7 @@
 						EmptyView = this.component.NoResultsView;
 				}
 				
-				// Proceed if we have the appropritate template
+				// Proceed if we have the appropriate template
 				if (emptyTemplate) {
 					var view = new EmptyView({
 						template: emptyTemplate,
