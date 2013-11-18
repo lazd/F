@@ -68,7 +68,11 @@
 				this.listenTo(this.view, 'renderComplete', function() {
 					if (typeof this.handleRenderComplete === 'function')
 						this.handleRenderComplete();
-					
+
+					// When the view re-renders, tell the component to teardown and setup again
+					this.teardownIfSetup();
+					this.setupIfNotSetup();
+
 					self.trigger('view:rendered', {
 						component: self,
 						view: self.view
@@ -341,11 +345,7 @@
 				this.view.show();
 			}
 			
-			// Call setup if we're not setup
-			if (!this.options.isSetup && typeof this.setup === 'function') {
-				this.setup(options);
-				this.options.isSetup = true;
-			}
+			this.setupIfNotSetup();
 			
 			this.options.visible = true;
 	
@@ -405,7 +405,18 @@
 				this.options.isSetup = false;
 			}
 		},
-	
+
+		/**
+			Calls setup() if necessary
+		*/
+		setupIfNotSetup: function() {
+			// Call setup if we're not setup
+			if (!this.options.isSetup && typeof this.setup === 'function') {
+				this.setup();
+				this.options.isSetup = true;
+			}
+		},
+
 		/**
 			Check if this component, or F as a whole, is in debug mode and should output debug messages
 			
