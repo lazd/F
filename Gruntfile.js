@@ -1,5 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
+	var manifest = require('./manifest.js');
+
 	// Project configuration.
 	grunt.initConfig({
 	    pkg: grunt.file.readJSON('package.json'),
@@ -8,22 +10,24 @@ module.exports = function(grunt) {
 				'* <%= pkg.homepage %>/\n' +
 				'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>; Licensed <%= pkg.license %> */\n'
 	    },
-		dirs: {
-			build: 'build/'
-		},
 		clean: {
-			build: '<%= dirs.build %>/**'
+			build: 'build//*'
 		},
 		jsdoc: {
 			F: {
 				src: ['js/**'],
-				dest: '<%= dirs.build %>jsdoc'
+				dest: 'build/jsdoc'
 			}
 		},
 		copy: {
 			examples: {
 				files: {
-					'<%= dirs.build %>/': 'examples/**/*'
+					'build/': 'examples/**/*',
+					'build/examples/vendor/underscore.js': 'bower_components/underscore/underscore.js',
+					'build/examples/vendor/backbone.js': 'bower_components/backbone/backbone.js',
+					'build/examples/vendor/jquery.js': 'bower_components/jquery/dist/jquery.js',
+					'build/examples/vendor/handlebars.js': 'bower_components/handlebars/handlebars.js',
+					'build/examples/vendor/less.js': 'bower_components/less/dist/less-1.6.3.js'
 				}
 			}
 		},
@@ -33,19 +37,9 @@ module.exports = function(grunt) {
 			},
 			js: {
 				src: [
-					'node_modules/pseudoclass/source/Class.js',
-
-					'js/F/F.js',
-					'js/F/F.Utilities.js',
-					'js/F/F.EventEmitter.js',
-					'js/F/F.View.js',
-					'js/F/F.Component.js',
-					'js/F/F.ModelComponent.js',
-					'js/F/F.CollectionComponent.js',
-				
-					'js/F/components/*'
-				],
-				dest: '<%= dirs.build %>js/F/F.js'
+					'node_modules/pseudoclass/source/Class.js'
+				].concat(manifest),
+				dest: 'build/js/F/F.js'
 			}
 		},
 		uglify: {
@@ -54,8 +48,23 @@ module.exports = function(grunt) {
 			},
 			js: {
 				files: {
-					'<%= dirs.build %>js/F/F.min.js': '<%= dirs.build %>js/F/F.js'
+					'build/js/F/F.min.js': 'build/js/F/F.js'
 				}
+			}
+		},
+		karma: {
+			options: {
+				configFile: 'karma.conf.js',
+				reporters: ['progress', 'coverage']
+			},
+			// Watch configuration
+			watch: {
+				background: true,
+				reporters: ['progress']
+			},
+			// Single-run configuration for development
+			single: {
+				singleRun: true
 			}
 		},
 		jshint: {
@@ -74,6 +83,7 @@ module.exports = function(grunt) {
 				browser: true,
 				smarttabs: true,
 				predef: [
+					'require',		// Node.js
 					'F',			// component framework
 					'Class',		// modified version of Crockford's new_constructor
 					'$',			// jQuery
@@ -96,23 +106,30 @@ module.exports = function(grunt) {
 			},
 			concatjs: {
 				files: ['js/**/*.js'],
-				tasks: ['jshint', 'concat:js']
+				tasks: ['concat:js']
 			},
 			uglify: {
 				files: ['<config:concat.js.dest>'],
 				tasks: ['uglify']
+			},
+			test: {
+				files: ['js/**/*.js', 'tests/**/*.js'],
+				tasks: ['jshint', 'karma:watch:run']
 			}
 		}
 	});
     
 	// Default task
-	grunt.registerTask('default', ['clean','jshint','copy','concat','uglify']);
+	grunt.registerTask('default', ['clean', 'jshint', 'copy', 'concat', 'uglify']);
 	
-	grunt.registerTask('build', ['clean','jshint','copy','concat','uglify','jsdoc']);
+	grunt.registerTask('build', ['clean', 'jshint', 'copy', 'concat', 'uglify', 'jsdoc']);
 	
-	grunt.registerTask('dev', ['clean','jshint','copy','concat']);
+	grunt.registerTask('dev', ['clean', 'jshint', 'copy', 'concat', 'karma:watch:start', 'watch']);
+
+	grunt.registerTask('test', ['karma:single']);
 	
 	grunt.loadTasks('tasks');
+	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');

@@ -17,6 +17,11 @@ W.Router = Backbone.Router.extend({
 	hash path, find the component that should be shown according to the hash path
 	*/
 	showComponent: function(path) {
+		// For the home page, do nothing. Components are already shown
+		if (!path) {
+			return;
+		}
+
 		// Get each folder in the hash path
 		var hashParts = path.split('/');
 		
