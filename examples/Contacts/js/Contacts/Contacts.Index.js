@@ -66,13 +66,13 @@ Contacts.Index = new Class({
 	// Put the component we'll use in our prototype so it can be overridden
 	ListComponent: Contacts.List,
 	
-	show: function(_super) {
+	show: function() {
 		// End delete mode before we're shown
 		if (this.deleteMode)
 			this.endEditMode();
 
 		// Call the super class' show method
-		_super.apply(this, arguments);
+		this._super.apply(this, arguments);
 
 		// Show the list whenever we're shown
 		this.list.show();

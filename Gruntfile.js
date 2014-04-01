@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 			build: 'build/'
 		},
 		clean: {
-			build: '<%= dirs.build %>'
+			build: '<%= dirs.build %>/**'
 		},
 		jsdoc: {
 			F: {
@@ -50,10 +50,7 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: '<%= meta.banner %>',
-				mangle: {
-					except: ['_super']
-				}
+				banner: '<%= meta.banner %>'
 			},
 			js: {
 				files: {

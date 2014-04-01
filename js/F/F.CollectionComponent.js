@@ -151,7 +151,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		
 		@returns {F.CollectionComponent}	this, chainable
 	*/
-	show: function(_super, options) {
+	show: function(options) {
 		options = options || {};
 		if (options.params) {
 			// Fetch the collection from the server
@@ -170,7 +170,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 			});
 		}
 		else {
-			_super.apply(this, arguments);
+			this._super.apply(this, arguments);
 		}
 		
 		return this;

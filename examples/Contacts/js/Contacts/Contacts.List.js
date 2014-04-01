@@ -28,10 +28,10 @@ Contacts.List = new Class({
 		}
 	}),
 
-	handleSelect: function(_super, evt) {
+	handleSelect: function(evt) {
 		// Don't select elements if we're in delete mode
 		if (!this.editMode) {
-			_super.apply(this, arguments);
+			this._super.apply(this, arguments);
 		}
 	},
 
