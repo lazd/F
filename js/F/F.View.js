@@ -22,7 +22,10 @@
 			
 			@property {Template} template		The template to render this view with
 		*/
-		initialize: function() {
+		initialize: function(options) {
+			// Attach options as this.options, Backbone 1.1 removes this
+			this.options = options;
+
 			if (this.options.container !== undefined && this.options.el !== undefined) {
 				throw new Error('View: should provide either options.el or options.container, never both');
 			}
