@@ -5,7 +5,6 @@
 	
 	@property {Object}	options							Options for all F components.
 	@param {Boolean}	options.debug					If true, show debug messages for all components.
-	@param {Boolean}	options.precompiledTemplates	Set to false if you need Handlebars.template() called on your templates
 */
 var F = F || {};
 
@@ -17,8 +16,7 @@ catch (err) {
 }
 
 F.options = {
-	debug: false,
-	precompiledTemplates: true
+	debug: false
 };
 
 // Let F be a global event hub

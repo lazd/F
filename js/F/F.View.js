@@ -27,13 +27,7 @@
 				throw new Error('View: should provide either options.el or options.container, never both');
 			}
 			
-			var template = this.options.template || this.template;
-			if (template) {
-				if (F.options.precompiledTemplates)
-					this.template = template;
-				else // For pre-compiled templates
-					this.template = Handlebars.template(template);
-			}
+			var template = this.template = this.options.template || this.template;
 			
 			// Always call in our scope so parents can remove change listeners on models by referencing view.render
 			this.render = this.render.bind(this);
