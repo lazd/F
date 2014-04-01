@@ -21,6 +21,7 @@ module.exports = function(grunt) {
 	exports.jsdoc = function(options) {
 		// jsdoc args
 		var args = [
+			'node_modules/jsdoc/jsdoc.js',
 			'-t',
 			'node_modules/jsdoc/templates/default',
 			'-d',
@@ -32,7 +33,7 @@ module.exports = function(grunt) {
 		
 		return grunt.util.spawn(
 			{
-				cmd: 'node_modules/jsdoc/nodejs/bin/jsdoc',
+				cmd: 'node',
 				args: args
 			},
 			function(err, result, code) {
