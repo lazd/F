@@ -60,7 +60,8 @@ module.exports = function(grunt) {
 			// Watch configuration
 			watch: {
 				background: true,
-				reporters: ['progress']
+				reporters: ['progress'],
+				preprocessors: {} // Disable coverage when watching for easier debugging
 			},
 			// Single-run configuration for development
 			single: {
