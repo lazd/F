@@ -82,6 +82,14 @@
 			}
 		},
 
+		show: function() {
+			// Render always, as the superClass method checks for a template and ListComponents don't have to have one
+			this.renderOnce();
+
+			// Show the view
+			this.$el.show();
+		},
+
 		render: function() {
 			if (this.inDebugMode()) {
 				console.log('%s: rendering list view...', this.component && this.component.toString() || 'List view');
@@ -94,7 +102,6 @@
 			if (this.rendered === null) {
 				// Render template
 				if (this.template) {
-					// First, see if the model exists. If so, see if it has toJSON. If so, use model.toJSON. Otherwise, if model exists, use model. Otherwise, use {}
 					this.$el.html(this.template({}));
 				}
 				// Store the last time this view was rendered
