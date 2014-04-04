@@ -14,7 +14,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		@param {Object}		options		Options for this component
 		
 		@property {Object}					defaultParams	Default parameters to send with fetches for this collection. Can be overridden at instantiation. Calls to <code>load(fetchParams)</code> will merge <code>fetchParams</code> with <code>defaultParams</code>
-		@property {Backbone.Collection}		Collection		The collection class to operate on. Not an instance of a collection, but the collection class itself
+		@property {Backbone.Collection}		collection		The collection to use. Will be considered pre-loaded
 	*/
 	construct: function(options) {
 		// Bind for use as listeners
@@ -22,10 +22,11 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.bind('removeModel');
 		this.bind('render');
 		
-		this._useCollection(new this.Collection());
+		// Use the passed in collection
+		this._useCollection(options.collection || new this.Collection());
 		
-		// Store if this collection has ever been loaded
-		this.collectionLoaded = false;
+		// We'll consider a collection loaded if it's passed at instantiation time
+		this.collectionLoaded = !!options.collection;
 	},
 	
 	destruct: function() {
