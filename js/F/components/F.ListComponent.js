@@ -23,6 +23,9 @@
 		},
 
 		addSubView: function(model) {
+			// Do nothing if we haven't been rendered yet
+			if (!this.rendered) return;
+
 			// Create view
 			var view = new this.ItemView({
 				model: model,
@@ -52,6 +55,9 @@
 		},
 
 		removeSubView: function(modelOrViewIndex) {
+			// Do nothing if we haven't been rendered yet
+			if (!this.rendered) return;
+
 			var view = null;
 			var viewIndex = -1;
 			if (typeof viewIndex !== 'Number') {
@@ -236,7 +242,7 @@
 		},
 		
 		removeModel: function(model) {
-			// Add a subview for this model
+			// Remove subview for this model
 			this.view.removeSubView(model);
 		},
 
