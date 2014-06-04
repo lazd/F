@@ -80,8 +80,20 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		if (this.model && this.model.off && this.view) {
 			this.view.setModel(model);
 		}
+
+		// Emit an event when the model changes
+		if (this.model && this.model.on) {
+			this.listenTo(this.model, 'change', this._triggerChange);
+		}
 		
 		return this;
+	},
+
+	/** @ignore */
+	_triggerChange: function() {
+		this.trigger('model:changed', {
+			model: this.model
+		});
 	},
 		
 	/**
@@ -112,20 +124,12 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 				// Assign the model to the view
 				this._setModel(model);
 				
-				// Allow handleLoadSuccess to cancel triggers
-				var trigger = true;
-				if (typeof this.handleLoadSuccess === 'function')
-					trigger = (this.handleLoadSuccess(this.model, response) === false) ? false : true;
-					
+				var trigger = this._handleLoadComplete(response);
 				if (trigger) {
-					// Notify
-					this.trigger('model:loaded', {
-						model: this.model
-					});
-				
-					// Call callback
-					if (typeof callback === 'function')
+					// Only callback of handleLoadSuccess didn't return false
+					if (typeof callback === 'function') {
 						callback.call(this, this.model);
+					}
 				}
 			}.bind(this),
 			error: function(model, response) {
@@ -144,6 +148,24 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		return this;
 	},
 	
+	/** @ignore */
+	_handleLoadComplete: function(response) {
+		// Allow handleLoadSuccess to cancel triggers
+		var trigger = true;
+		if (typeof this.handleLoadSuccess === 'function') {
+			trigger = (this.handleLoadSuccess(this.model, response || { local: true }) === false) ? false : true;
+		}
+
+		if (trigger) {
+			// Notify
+			this.trigger('model:loaded', {
+				model: this.model
+			});
+		}
+
+		return trigger;
+	},
+
 	/**
 		Load a Backbone.Model directly or create a model from data
 		
@@ -157,11 +179,8 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		else
 			this._setModel(new this.Model(modelOrData));
 		
-		// Notify
-		this.trigger('model:loaded', {
-			model: this.model
-		});
-		
+		this._handleLoadComplete();
+
 		return this;
 	},
 	
@@ -370,6 +389,16 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 		@name F.ModelComponent#model:loaded
 		@event
 			
+		@param {Object}			evt			Event object
+		@param {Backbone.Model}	evt.model	The model that was loaded
+	*/
+
+	/**
+		Triggered when the model is changed locally
+
+		@name F.ModelComponent#model:changed
+		@event
+
 		@param {Object}			evt			Event object
 		@param {Backbone.Model}	evt.model	The model that was loaded
 	*/
