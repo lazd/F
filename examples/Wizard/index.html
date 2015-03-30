@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>F Wizard Example</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	
+	<link rel="stylesheet/less" type="text/css" href="css/Wizard.less">
+	
+	<!-- LESS -->
+	<script src="../vendor/less/dist/less.js"></script>
+
+	<!-- jQuery -->
+	<script src="../vendor/jquery.js"></script>
+
+	<!-- Underscore -->
+	<script src="../vendor/underscore.js"></script>
+
+	<!-- Backbone -->
+	<script src="../vendor/backbone.js"></script>
+
+	<!-- Handlebars -->
+	<script src="../vendor/handlebars.js"></script>
+
+	<!-- F: Component framework -->
+	<script src="../../js/F/F.js"></script>
+
+	<!-- F: Component framework -->
+	<script src="../../js/F/F.js"></script>
+	
+	<!-- Test App: Wizard -->
+	<script src="js/W/W.js"></script>
+	<script src="js/W/W.Router.js"></script>
+	<script src="js/W/W.Wizard.js"></script>
+	<script src="js/W/W.Step.js"></script>
+	<script src="js/W/W.Step2.js"></script>
+	<script src="js/W/W.Part.js"></script>
+	
+	<script type="text/javascript">
+		
+		// Enable debug output for F
+		F.options.debug = true;
+		
+		$(function() {
+			W.init();
+		});
+		
+	</script>
+	
+</head>
+<body>
+	<p>This is a sample application built with F.</p>
+	
+	<a href="#wizard/step1">Start the wizard</a>
+	
+	<div id="wizard"></div>
+</body>
+</html>

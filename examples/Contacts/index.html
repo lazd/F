@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+	<title>Contacts</title>
+	<meta charset="utf-8">
+	
+	<!-- Ensure correct presentation on iOS -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	<!-- FontAwesome Icons -->
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+	
+	<!-- iOCSS -->
+	<link rel="stylesheet" type="text/css" href="css/io.css">
+	
+	<!-- jQuery -->
+	<script src="../vendor/jquery.js"></script>
+	
+	<!-- Underscore -->
+	<script src="../vendor/underscore.js"></script>
+	
+	<!-- Backbone -->
+	<script src="../vendor/backbone.js"></script>
+	
+	<!-- Handlebars -->
+	<script src="../vendor/handlebars.js"></script>
+
+	<!-- F: Component framework -->
+	<script src="../../js/F/F.js"></script>
+	
+	<!-- Test App: Contacts -->
+	<script src="js/Contacts/Contacts.js"></script>
+	<script src="js/Contacts/Contacts.Router.js"></script>
+	<script src="js/Contacts/Contacts.List.js"></script>
+	<script src="js/Contacts/Contacts.Index.js"></script>
+	<script src="js/Contacts/Contacts.Details.js"></script>
+	<script src="js/Contacts/Contacts.Editor.js"></script>
+	<script src="js/Contacts/Contacts.App.js"></script>
+	
+	<script type="text/javascript">
+		
+		// Enable debug output for F
+		// F.options.debug = true;
+		
+		$(function() {
+			Contacts.init({
+				el: '#contacts' // Use the #contacts node directly as app's base element
+			});
+		});
+		
+	</script>
+	
+</head>
+<body class="iOCSS" id="contacts">
+</body>
+</html>
