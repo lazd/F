@@ -12,7 +12,7 @@
     "url": "https://github.com/lazd/F/issues"
   },
   "dependencies": {
-    "pseudoclass": "^1.0.2"
+    "pseudoclass": "^1.0.3"
   },
   "scripts": {
     "test": "grunt test",
