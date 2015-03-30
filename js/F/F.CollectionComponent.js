@@ -1,4 +1,4 @@
-F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
+F.CollectionComponent = new PseudoClass(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
 	options: {

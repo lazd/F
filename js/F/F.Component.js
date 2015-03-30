@@ -3,7 +3,7 @@
 		return str.slice(0, 1).toLowerCase()+str.slice(1);	
 	}
 	
-	F.Component = new Class(/** @lends F.Component# */{
+	F.Component = new PseudoClass(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
 		

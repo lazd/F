@@ -13,7 +13,7 @@
 	
 	/* Component
 	*******************/
-	F.FormComponent = new Class(/** @lends F.FormComponent# */{
+	F.FormComponent = new PseudoClass(/** @lends F.FormComponent# */{
 		toString: 'FormComponent',
 		extend: F.ModelComponent,
 	

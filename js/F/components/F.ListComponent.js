@@ -172,7 +172,7 @@
 
 	/* Component
 	*******************/
-	F.ListComponent = new Class(/** @lends F.ListComponent# */{
+	F.ListComponent = new PseudoClass(/** @lends F.ListComponent# */{
 		toString: 'ListComponent',
 		extend: F.CollectionComponent,
 	

@@ -3,7 +3,7 @@
  *
  * @class
  */
-F.EventEmitter = new Class(
+F.EventEmitter = new PseudoClass(
 	Backbone.Events
 
 	/**

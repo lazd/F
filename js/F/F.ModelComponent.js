@@ -1,4 +1,4 @@
-F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
+F.ModelComponent = new PseudoClass(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
 	/**
