@@ -33,7 +33,10 @@ module.exports = function(grunt) {
 		},
 		concat: {
 			options: {
-				banner: '<%= meta.banner %>'
+				banner: '<%= meta.banner %>',
+				sourceMap: true,
+				sourceMapStyle: 'embed',
+				sourceMapName: 'build/js/F/F.min.js.map'
 			},
 			js: {
 				src: [
@@ -44,7 +47,10 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: '<%= meta.banner %>'
+				banner: '<%= meta.banner %>',
+				sourceMap: true,
+				sourceMapIncludeSources: true,
+				sourceMapName: 'build/js/F/F.min.js.map'
 			},
 			js: {
 				files: {
@@ -86,7 +92,7 @@ module.exports = function(grunt) {
 				predef: [
 					'require',		// Node.js
 					'F',			// component framework
-					'Class',		// modified version of Crockford's new_constructor
+					'PseudoClass',	// PseudoClass
 					'$',			// jQuery
 					'jQuery',		// jQuery
 					'console',		// console.log...
