@@ -1,4 +1,4 @@
-IM.Components.Details = new Class({
+IM.Components.Details = new PseudoClass({
 	toString: 'Details',
 	
 	// Extending model component gives us an augmented show(options) method

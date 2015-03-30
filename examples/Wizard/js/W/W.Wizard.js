@@ -1,4 +1,4 @@
-W.Wizard = new Class({
+W.Wizard = new PseudoClass({
 	toString: 'Wizard',
 	
 	extend: F.Component,

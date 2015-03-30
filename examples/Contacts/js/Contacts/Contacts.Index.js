@@ -1,4 +1,4 @@
-Contacts.Index = new Class({
+Contacts.Index = new PseudoClass({
 	toString: 'Index',
 	extend: F.Component,
 	

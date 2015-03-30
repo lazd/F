@@ -1,4 +1,4 @@
-Contacts.Details = new Class({
+Contacts.Details = new PseudoClass({
 	toString: 'Details',
 	
 	/*

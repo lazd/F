@@ -1,4 +1,4 @@
-Contacts.App = new Class({
+Contacts.App = new PseudoClass({
 	toString: 'Contacts',
 	extend: F.Component,
 	

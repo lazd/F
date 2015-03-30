@@ -1,7 +1,7 @@
 /*
 	 A basic component that just renders a view with some data
 */
-W.Part = new Class({
+W.Part = new PseudoClass({
 	toString: 'Part',
 	
 	extend: F.Component,

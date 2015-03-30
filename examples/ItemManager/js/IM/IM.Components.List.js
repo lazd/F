@@ -1,4 +1,4 @@
-IM.Components.List = new Class({
+IM.Components.List = new PseudoClass({
 	toString: 'List',
 	extend: F.ListComponent,
 	

@@ -1,4 +1,4 @@
-W.Step2 = new Class({
+W.Step2 = new PseudoClass({
 	toString: 'Step2',
 	
 	extend: W.Step,

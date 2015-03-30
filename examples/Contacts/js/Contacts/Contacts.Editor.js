@@ -1,4 +1,4 @@
-Contacts.Editor = new Class({
+Contacts.Editor = new PseudoClass({
 	toString: 'Editor',
 	
 	/*
