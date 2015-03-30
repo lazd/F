@@ -110,6 +110,11 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection.fetch({
 			data: this.params,
 			success: function() {
+				if (!this.collection) {
+					// If the collection was released while it was being loaded, get out
+					return;
+				}
+
 				// Collection event
 				this.collection.trigger('loaded');
 
