@@ -1,4 +1,4 @@
-Contacts.List = new Class({
+Contacts.List = new PseudoClass({
 	toString: 'List',
 	extend: F.ListComponent,
 	

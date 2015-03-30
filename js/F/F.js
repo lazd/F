@@ -1,4 +1,4 @@
-/*! F - v1.0.0 - 2015-03-30
+/*! F - v1.0.1 - 2015-03-30
 * https://lazd.github.com/F/
 * Copyright (c) 2015 Larry Davis <lazdnet@gmail.com>; Licensed BSD */
 /*
@@ -445,7 +445,7 @@ F.set = function(obj, prop, value, makeArrays) {
  *
  * @class
  */
-F.EventEmitter = new Class(
+F.EventEmitter = new PseudoClass(
 	Backbone.Events
 
 	/**
@@ -787,7 +787,7 @@ F.EventEmitter = new Class(
 		return str.slice(0, 1).toLowerCase()+str.slice(1);	
 	}
 	
-	F.Component = new Class(/** @lends F.Component# */{
+	F.Component = new PseudoClass(/** @lends F.Component# */{
 		toString: 'Component',
 		extend: F.EventEmitter,
 		
@@ -1364,7 +1364,7 @@ F.EventEmitter = new Class(
 	});
 }());
 
-F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
+F.ModelComponent = new PseudoClass(/** @lends F.ModelComponent# */{
 	toString: 'ModelComponent',
 	extend: F.Component,
 	/**
@@ -1770,7 +1770,7 @@ F.ModelComponent = new Class(/** @lends F.ModelComponent# */{
 	*/
 });
 
-F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
+F.CollectionComponent = new PseudoClass(/** @lends F.CollectionComponent# */{
 	toString: 'CollectionComponent',
 	extend: F.Component,
 	options: {
@@ -1882,6 +1882,11 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		this.collection.fetch({
 			data: this.params,
 			success: function() {
+				if (!this.collection) {
+					// If the collection was released while it was being loaded, get out
+					return;
+				}
+
 				// Collection event
 				this.collection.trigger('loaded');
 
@@ -1984,7 +1989,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 	
 	/* Component
 	*******************/
-	F.FormComponent = new Class(/** @lends F.FormComponent# */{
+	F.FormComponent = new PseudoClass(/** @lends F.FormComponent# */{
 		toString: 'FormComponent',
 		extend: F.ModelComponent,
 	
@@ -2280,7 +2285,7 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 
 	/* Component
 	*******************/
-	F.ListComponent = new Class(/** @lends F.ListComponent# */{
+	F.ListComponent = new PseudoClass(/** @lends F.ListComponent# */{
 		toString: 'ListComponent',
 		extend: F.CollectionComponent,
 	
@@ -2412,3 +2417,5 @@ F.CollectionComponent = new Class(/** @lends F.CollectionComponent# */{
 		*/
 	});
 }());
+
+//# sourceMappingURL=F.min.js.map

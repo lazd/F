@@ -1,4 +1,4 @@
-IM.Components.App = new Class({
+IM.Components.App = new PseudoClass({
 	toString: 'IMApp',
 	extend: F.Component,
 	
